@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-public class NPEFixSafeMojoTest extends BetterAbstractMojoTestCase {
+public class NPEFixMojoTest extends BetterAbstractMojoTestCase {
     private final String projectPath = "src/test/resources/projects/example2/";
 
     @Override
@@ -35,11 +35,11 @@ public class NPEFixSafeMojoTest extends BetterAbstractMojoTestCase {
 
     public void testNPEFixRepair() throws Exception {
         File f = getTestFile(projectPath + "pom.xml");
-        Mojo mojo = lookupConfiguredMojo(f, "npefix-safe");
+        Mojo mojo = lookupConfiguredMojo(f, "npefix");
         assertNotNull(mojo);
-        assertTrue("Wrong class: " + mojo, mojo instanceof NPEFixSafeMojo);
+        assertTrue("Wrong class: " + mojo, mojo instanceof NPEFixMojo);
 
-        NPEFixSafeMojo repair = (NPEFixSafeMojo) mojo;
+        NPEFixMojo repair = (NPEFixMojo) mojo;
         repair.execute();
 
         List<File> patches = Arrays.asList(repair.getResultDirectory()
@@ -50,7 +50,7 @@ public class NPEFixSafeMojoTest extends BetterAbstractMojoTestCase {
         JSONParser parser = new JSONParser();
         JSONObject result = (JSONObject) parser.parse(IOUtils.toString(is));
 
-        assertEquals(((JSONArray) result.get("executions")).size(), 3);
+        assertEquals(((JSONArray) result.get("executions")).size(), 5);
         int successCount = 0;
         for (Object ob : (JSONArray) result.get("executions")) {
             JSONObject res = (JSONObject) ((JSONObject) ob).get("result");
@@ -58,6 +58,6 @@ public class NPEFixSafeMojoTest extends BetterAbstractMojoTestCase {
                 successCount++;
             }
         }
-        assertEquals(successCount, 1);
+        assertEquals(successCount, 3);
     }
 }

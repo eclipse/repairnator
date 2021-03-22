@@ -52,7 +52,7 @@
             <groupId>com.github.spoonlabs</groupId>
             <artifactId>coming</artifactId>
             <!-- see https://repo1.maven.org/maven2/com/github/spoonlabs/coming/ -->
-            <version>5.1.0</version>
+            <version>5.2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -127,11 +127,6 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <version>5.7.0</version>
-        </dependency>
-        <dependency>
-            <groupId>exceptionparser</groupId>
-            <artifactId>exceptionparser</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.inria.gforge.spirals</groupId>
@@ -211,8 +206,8 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
-                    <!--Jan 13, 2020, 2:07 PM GMT-->
-                    <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
+                    <!--Mar 18, 2021, 2:06 PM GMT-->
+                    <version>689e97eab451a671378b3fd55f790a39ce0d21d3</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -226,8 +221,8 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
-                    <!--Jan 13, 2020, 2:07 PM GMT-->
-                    <version>0f47cdb2556b8003d717c62325fef4dbf09a2bae</version>
+                    <!--Mar 18, 2021, 2:06 PM GMT-->
+                    <version>689e97eab451a671378b3fd55f790a39ce0d21d3</version>
                     <exclusions>
                         <exclusion>
                             <groupId>com.sun</groupId>

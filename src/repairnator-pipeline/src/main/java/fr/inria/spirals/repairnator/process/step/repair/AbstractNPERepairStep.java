@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractNPERepairStep extends AbstractRepairStep {
 
-    private String selection = "exploration";
+    protected String selection = "exploration";
     private int nbIteration = 100;
     private String scope = "class";
     private String repairStrategy = "default";

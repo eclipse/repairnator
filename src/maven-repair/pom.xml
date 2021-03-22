@@ -25,7 +25,7 @@
 
         <java.src.version>1.8</java.src.version>
         <java.test.version>1.8</java.test.version>
-        
+
         <npefix.version>0.7</npefix.version>
     </properties>
 
@@ -63,7 +63,8 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
-            <version>3.2.5</version>
+            <!--do not upgrade to >= 3.6.0, as it will cause a compatibility issue with other guava dependencies-->
+            <version>3.5.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -74,7 +75,7 @@
         <dependency>
             <groupId>org.apache.maven.surefire</groupId>
             <artifactId>surefire-report-parser</artifactId>
-            <version>2.20</version>
+            <version>2.21.0</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
@@ -160,6 +161,11 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20160810</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.inria.repairnator</groupId>
+            <artifactId>repairnator-pipeline</artifactId>
+            <version>3.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -288,7 +294,8 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
-                    <version>666abb764bf1819f6c316faf4fe5b559ac583de1</version>
+                    <!--Mar 18, 2021, 2:06 PM GMT-->
+                    <version>689e97eab451a671378b3fd55f790a39ce0d21d3</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -302,7 +309,8 @@
                 <dependency>
                     <groupId>fr.inria.gforge.spirals</groupId>
                     <artifactId>nopol</artifactId>
-                    <version>666abb764bf1819f6c316faf4fe5b559ac583de1</version>
+                    <!--Mar 18, 2021, 2:06 PM GMT-->
+                    <version>689e97eab451a671378b3fd55f790a39ce0d21d3</version>
                     <exclusions>
                         <exclusion>
                             <groupId>com.sun</groupId>
