@@ -28,8 +28,6 @@ public class GitRepositoryPatchNotifierImpl implements PatchNotifier {
         String subject = "[Repairnator] Patched repository: " + inspector.getProjectIdToBeInspected();
         String text = "Hurray !\n\n" +
                 toolname + " has found " + patches.size() + " patch(es) for the following repository: " + inspector.getProjectIdToBeInspected() +".\n";
-
-        text += "Data about patches has been pushed on the following branch: "+ jobStatus.getGitBranchUrl()+".\n\n";
         
         int limit;
         if (patches.size() > LIMIT_NB_PATCH) {
@@ -44,6 +42,15 @@ public class GitRepositoryPatchNotifierImpl implements PatchNotifier {
             text += "\t Patch n°" + i + ": \n";
             text += "\t" + patches.get(i).getDiff() + "\n\n";
         }
+
+        text += "the patch(es) try to fix the following error: \n\n";
+
+        String buildLog = inspector.getBuildLog().stream().reduce((acc, line) -> {
+            acc += line + "\n";
+            return acc;
+        }).orElse("No build logs present\n\n");
+
+        text += buildLog;
 
         for (NotifierEngine engine : this.engines) {
             engine.notify(subject, text);

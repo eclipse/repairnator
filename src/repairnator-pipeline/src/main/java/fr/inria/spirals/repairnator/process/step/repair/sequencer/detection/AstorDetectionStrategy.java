@@ -78,7 +78,7 @@ public class AstorDetectionStrategy implements DetectionStrategy {
     @Override
     public boolean validate(RepairPatch patch) {
         Properties properties = new Properties();
-        return mavenTester.apply(patch, "test", properties);
+        return mavenTester.apply(patch, "clean test", properties);
     }
 
     @Override
