@@ -28,7 +28,6 @@ public class RunInspector4SequencerRepair extends IRunInspector{
 	public void run(ProjectInspector inspector) {
 
         AbstractStep cloneRepo = new CloneCheckoutBranchRepository(inspector);
-        cloneRepo.addNextStep(new CheckoutBuggyBuild(inspector, true));
         cloneRepo.addNextStep(new BuildProject(inspector, false));
 
         AbstractStep initRepoStep = new InitRepoToPush(inspector);

@@ -184,19 +184,6 @@ public class TestPipelineArgs {
         assertEquals(defaultPatchRankingMode.name(), LauncherUtils.getArgPatchRankingMode(arguments));
         assertEquals(defaultPatchRankingMode, config.getPatchRankingMode());
 
-        // travis arguments
-        Integer defaultNextBuildId = TravisInputBuild.NO_PATCH;
-        assertEquals(defaultNextBuildId, TravisLauncherUtils.getArgNextBuild(arguments));
-        boolean defaultNoTravisRepair = false;
-        assertEquals(defaultNoTravisRepair, TravisLauncherUtils.getArgNoTravisRepair(arguments));
-        assertEquals(defaultNoTravisRepair, config.isNoTravisRepair());
-        String defaultJTravisEndpoint = "https://api.travis-ci.org";
-        assertEquals(defaultJTravisEndpoint, TravisLauncherUtils.getArgJTravisEndpoint(arguments));
-        assertEquals(defaultJTravisEndpoint, config.getJTravisEndpoint());
-        String defaultJTravisToken = "";
-        assertEquals(defaultJTravisToken, TravisLauncherUtils.getArgTravisToken(arguments));
-        assertEquals(defaultJTravisToken, config.getTravisToken());
-
         // the default repair tool
         assertEquals(1, ((FlaggedOption) launcher.defineArgs().getByLongFlag("repairTools")).getDefault().length);
         assertEquals("NPEFix", ((FlaggedOption) launcher.defineArgs().getByLongFlag("repairTools")).getDefault()[0]);

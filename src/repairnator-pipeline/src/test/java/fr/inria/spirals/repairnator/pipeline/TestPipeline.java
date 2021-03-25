@@ -53,11 +53,12 @@ public class TestPipeline {
 
     @Test
     public void testPipelineOnlyGitRepository() throws Exception {
-        GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
+        Launcher l = new Launcher(new String[]{
                 "--gitrepo",
                 "--gitrepourl", "https://github.com/surli/failingProject",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
-                "--output", outputFolder.getRoot().getAbsolutePath()
+                "--output", outputFolder.getRoot().getAbsolutePath(),
+                "--launcherMode", "GIT_REPOSITORY"
         });
 
         Patches patchNotifier = new Patches();
@@ -70,11 +71,12 @@ public class TestPipeline {
 
     @Test
     public void testPipelineGitRepositoryAndBranch() throws Exception {
-        GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
+        Launcher l = new Launcher(new String[]{
                 "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepobranch", "astor-jkali-failure",
                 "--repairTools", "AstorJKali",
+                "--launcherMode", "GIT_REPOSITORY",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
         });
@@ -85,11 +87,12 @@ public class TestPipeline {
 
     @Test
     public void testPipelineGitRepositoryAndCommitIdWithFailure() throws Exception {
-        GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
+        Launcher l = new Launcher(new String[]{
                 "--gitrepo",
                 "--gitrepourl", "https://github.com/javierron/failingProject",
                 "--gitrepoidcommit", "883bc40f01902654b1b1df094b2badb28e192097",
                 "--gitrepobranch", "nofixes",
+                "--launcherMode", "GIT_REPOSITORY",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
         });
@@ -100,10 +103,11 @@ public class TestPipeline {
 
     @Test
     public void testPipelineGitRepositoryAndCommitIdWithSuccess() throws Exception {
-        GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
+        Launcher l = new Launcher(new String[]{
                 "--gitrepo",
                 "--gitrepourl", "https://github.com/surli/failingProject",
                 "--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9",
+                "--launcherMode", "GIT_REPOSITORY",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
         });
@@ -119,10 +123,11 @@ public class TestPipeline {
     @Ignore
     @Test
     public void testPipelineGitRepositoryFirstCommit() throws Exception {
-        GitRepositoryLauncher l = new GitRepositoryLauncher(new String[]{
+        Launcher l = new Launcher(new String[]{
                 "--gitrepo",
                 "--gitrepourl", "https://github.com/surli/failingProject",
                 "--gitrepofirstcommit",
+                "--launcherMode", "GIT_REPOSITORY",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
         });

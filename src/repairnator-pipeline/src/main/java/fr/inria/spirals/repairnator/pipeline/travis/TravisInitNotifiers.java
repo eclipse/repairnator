@@ -38,7 +38,7 @@ public class TravisInitNotifiers implements IInitNotifiers {
     }
 
     @Override
-    public PatchNotifier getPatchNotifers() {
+    public PatchNotifier getPatchNotifiers() {
     	return this.patchNotifier;
     }
 }

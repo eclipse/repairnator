@@ -79,7 +79,7 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("LOG_FILENAME="+this.containerName);
         this.envValues.add("GITHUB_OAUTH="+RepairnatorConfig.getInstance().getGithubToken());
         this.envValues.add("RUN_ID="+this.repairnatorConfig.getRunId());
-        this.envValues.add("REPAIR_MODE="+this.repairnatorConfig.getLauncherMode().name().toLowerCase());
+        this.envValues.add("REPAIR_MODE="+this.repairnatorConfig.getLauncherMode().name());
         this.envValues.add("PUSH_URL="+this.repairnatorConfig.getPushRemoteRepo());
         this.envValues.add("MONGODB_HOST="+this.repairnatorConfig.getMongodbHost());
         this.envValues.add("MONGODB_NAME="+this.repairnatorConfig.getMongodbName());
@@ -102,7 +102,13 @@ public class RunnablePipelineContainer implements Runnable {
             this.envValues.add("SMTP_TLS=0");
         }
 
-        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR || this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE) {
+        if (
+            this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR ||
+            this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE ||
+            this.repairnatorConfig.getLauncherMode() == LauncherMode.GIT_REPOSITORY ||
+            this.repairnatorConfig.getLauncherMode() == LauncherMode.SEQUENCER_REPAIR
+
+        ) {
             this.envValues.add("REPAIR_TOOLS=" + StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
         }
 
