@@ -102,6 +102,10 @@ public class TestNopolRepair {
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
         assertThat(allPatches.size(), is(9));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(nopolRepair.getRepairToolName()), notNullValue());
+
+        for (RepairPatch repairPatch : allPatches) {
+            assertTrue(new File(repairPatch.getFilePath()).exists());
+        }
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {

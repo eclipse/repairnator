@@ -100,6 +100,10 @@ public class TestAstorRepair {
 		List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
 		assertThat(allPatches.isEmpty(), is(false));
 		assertThat(inspector.getJobStatus().getToolDiagnostic().get(astorJKaliRepair.getRepairToolName()), notNullValue());
+
+		for (RepairPatch repairPatch : allPatches) {
+			assertTrue(new File(repairPatch.getFilePath()).exists());
+		}
 	}
 
 	@Test
@@ -145,6 +149,10 @@ public class TestAstorRepair {
 		assertThat(finalStatus, is("PATCHED"));
 		List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
 		assertThat(allPatches.isEmpty(), is(false));
+
+		for (RepairPatch repairPatch : allPatches) {
+			assertTrue(new File(repairPatch.getFilePath()).exists());
+		}
 	}
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {

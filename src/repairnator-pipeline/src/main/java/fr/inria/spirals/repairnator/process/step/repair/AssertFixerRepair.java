@@ -140,7 +140,17 @@ public class AssertFixerRepair extends AbstractRepairStep {
 
             if (result.isSuccess()) {
                 success = true;
-                RepairPatch patch = new RepairPatch(this.getRepairToolName(), result.getTestClass(), result.getDiff());
+
+                String path = result.getTestClass().replace(".","/") + ".java";
+                for (File dir : this.getInspector().getJobStatus().getTestDir()) {
+                    String tmpPath = dir.getAbsolutePath() + "/" + path;
+                    if (new File(tmpPath).exists()) {
+                        path = tmpPath;
+                        break;
+                    }
+                }
+
+                RepairPatch patch = new RepairPatch(this.getRepairToolName(), path, result.getDiff());
                 listPatches.add(patch);
             }
         }

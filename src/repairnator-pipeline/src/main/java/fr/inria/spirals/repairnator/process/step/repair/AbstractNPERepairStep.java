@@ -158,9 +158,20 @@ public abstract class AbstractNPERepairStep extends AbstractRepairStep {
 
                         JsonElement diff = execution.getAsJsonObject().get("diff");
                         if (diff != null) {
+                            String path = execution.getAsJsonObject().getAsJsonArray("decisions")
+                                    .get(0).getAsJsonObject().getAsJsonObject("location").get("class")
+                                    .getAsString().replace(".","/") + ".java";
+                            for (File dir : this.getInspector().getJobStatus().getRepairSourceDir()) {
+                                String tmpPath = dir.getAbsolutePath() + "/" + path;
+                                if (new File(tmpPath).exists()) {
+                                    path = tmpPath;
+                                    break;
+                                }
+                            }
+
                             String content = diff.getAsString();
 
-                            RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", content);
+                            RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), path, content);
                             repairPatches.add(repairPatch);
                         } else {
                             this.addStepError("Error while parsing JSON path file: diff content is null.");

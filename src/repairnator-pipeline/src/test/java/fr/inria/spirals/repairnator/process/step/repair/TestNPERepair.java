@@ -102,6 +102,10 @@ public class TestNPERepair {
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
         assertThat(allPatches.size(), is(6));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
+
+        for (RepairPatch repairPatch : allPatches) {
+            assertTrue(new File(repairPatch.getFilePath()).exists());
+        }
     }
 
     @Test
@@ -151,6 +155,10 @@ public class TestNPERepair {
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
         assertThat(allPatches.size(), is(23));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
+
+        for (RepairPatch repairPatch : allPatches) {
+            assertTrue(new File(repairPatch.getFilePath()).exists());
+        }
     }
 
     @Test
@@ -200,6 +208,10 @@ public class TestNPERepair {
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
         assertThat(allPatches.size(), is(23));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
+
+        for (RepairPatch repairPatch : allPatches) {
+            assertTrue(new File(repairPatch.getFilePath()).exists());
+        }
     }
 
     @Test
@@ -249,6 +261,10 @@ public class TestNPERepair {
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
         assertThat(allPatches.size(), is(23));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
+
+        for (RepairPatch repairPatch : allPatches) {
+            assertTrue(new File(repairPatch.getFilePath()).exists());
+        }
     }
 
     @Test
@@ -298,6 +314,10 @@ public class TestNPERepair {
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
         assertThat(allPatches.size(), is(23));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
+
+        for (RepairPatch repairPatch : allPatches) {
+            assertTrue(new File(repairPatch.getFilePath()).exists());
+        }
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {
