@@ -98,6 +98,10 @@ public class TestAssertFixerRepair {
         }
         assertThat(allPatches.size(), is(8));
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(assertFixerRepair.getRepairToolName()), notNullValue());
+
+        for (RepairPatch repairPatch : allPatches) {
+            assertTrue(new File(repairPatch.getFilePath()).exists());
+        }
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {
