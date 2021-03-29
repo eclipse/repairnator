@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator.realtime;
 
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ public class SequencerLearnerScanner implements Runnable {
     public void run() {
         LOGGER.debug("Start running inspect Jobs...");
 
-        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.ALL); // replace for PASSING
+        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.PASSING);
         SequencerCollector collector;
         
         try {

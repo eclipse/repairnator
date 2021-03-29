@@ -78,7 +78,7 @@ public class GithubScanner {
     }
 
     public List<SelectedCommit> fetch(long startTime, long endTime) throws Exception {
-        return GithubAPICommitAdapter.getInstance().getSelectedCommits(startTime, endTime, fetchMode, null);
+        return GithubAPICommitAdapter.getInstance().getSelectedCommits(startTime, endTime, fetchMode, repos);
     }
 
     public void process(SelectedCommit commit) {
@@ -104,6 +104,8 @@ public class GithubScanner {
         switch (value) {
             case "all":
                 return FetchMode.ALL;
+            case "passing":
+                return FetchMode.PASSING;
             case "failed":
             default:
                 return FetchMode.FAILED;
@@ -111,6 +113,6 @@ public class GithubScanner {
     }
 
     public enum FetchMode {
-        FAILED, ALL;
+        FAILED, ALL, PASSING
     }
 }

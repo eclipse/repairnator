@@ -45,6 +45,10 @@ public class GithubAPICommitAdapter {
                 case ALL:
                     res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
                     break;
+                case PASSING:
+                    if(!isGithubActionsFailed)
+                        res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+                    break;
                 case FAILED:
                 default:
                     if(isGithubActionsFailed)
