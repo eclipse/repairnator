@@ -1,27 +1,20 @@
-package fr.inria.spirals.repairnator.process.step.repair;
+package fr.inria.spirals.repairnator.process.step.repair.soraldbot;
 
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
-import fr.inria.spirals.repairnator.process.maven.MavenHelper;
-import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
-import fr.inria.spirals.repairnator.process.testinformation.FailureType;
+import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.Git;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.lang.StringBuilder;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
 import java.net.URISyntaxException;
