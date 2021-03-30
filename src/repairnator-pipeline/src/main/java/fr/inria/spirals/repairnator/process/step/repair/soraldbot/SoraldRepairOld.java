@@ -27,7 +27,7 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 
 import sorald.Main;
 
-public class Sorald extends AbstractRepairStep {
+public class SoraldRepairOld extends AbstractRepairStep {
     public static final String TOOL_NAME = "Sorald";
     public static final String RULE_LINK_TEMPLATE = "https://rules.sonarsource.com/java/RSPEC-";
     private final List<RepairPatch> allPatches = new ArrayList<RepairPatch>();
