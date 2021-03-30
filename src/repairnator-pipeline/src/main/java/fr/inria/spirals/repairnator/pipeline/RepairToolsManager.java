@@ -2,7 +2,7 @@ package fr.inria.spirals.repairnator.pipeline;
 
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.process.step.repair.Sorald;
+import fr.inria.spirals.repairnator.process.step.repair.soraldbot.Sorald;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepairSafe;
 import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.ArrayList;
 
 /**
  * This class defines a java ServiceLoader to automatically discover the available

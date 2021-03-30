@@ -12,7 +12,7 @@ import com.martiansoftware.jsap.JSAPException;
 import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
-import fr.inria.spirals.repairnator.process.step.repair.Sorald;
+import fr.inria.spirals.repairnator.process.step.repair.soraldbot.Sorald;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
