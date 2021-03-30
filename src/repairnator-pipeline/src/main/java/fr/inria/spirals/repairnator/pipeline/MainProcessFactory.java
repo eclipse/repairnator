@@ -12,7 +12,7 @@ import com.martiansoftware.jsap.JSAPException;
 import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
-import fr.inria.spirals.repairnator.process.step.repair.soraldbot.Sorald;
+import fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldRepairOld;
 import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
 
 import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
@@ -138,7 +138,7 @@ public class MainProcessFactory {
 	/* These methods below should be called after all other inits */
 	/* move serializer into project inspector and get to construct */
 	private static GitRepositoryProjectInspector constructInspector4Github(List<SerializerEngine> engines,List<AbstractNotifier> notifiers) {
-		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(Sorald.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
+		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(SoraldRepairOld.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
 		GitRepositoryProjectInspector inspector = InspectorFactory.getGithubInspector(
                 new GithubInputBuild(
@@ -166,7 +166,7 @@ public class MainProcessFactory {
 	private static ProjectInspector constructInspector4Default(BuildToBeInspected buildToBeInspected, List<SerializerEngine> engines, List<AbstractNotifier> notifiers) {
 		ProjectInspector inspector;
 
-		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(Sorald.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
+		boolean shouldStaticAnalysis = getConfig().getRepairTools().contains(SoraldRepairOld.TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
 		LauncherMode launcherMode = getConfig().getLauncherMode();
 		String workspacePath = getConfig().getWorkspacePath();
