@@ -132,8 +132,24 @@ public class LauncherUtils {
         // --sequencerRepair
         jsap.registerParameter(LauncherUtils.defineArgSequencerRepairMode());
 
+        // --patchRanking
+        jsap.registerParameter(LauncherUtils.defineArgPatchRanking());
         // --patchRankingMode
         jsap.registerParameter(LauncherUtils.defineArgPatchRankingMode());
+
+        // --patchClassification
+        jsap.registerParameter(LauncherUtils.defineArgPatchClassification());
+        // --patchClassificationMode
+        jsap.registerParameter(LauncherUtils.defineArgPatchClassificationMode());
+
+        // --patchFiltering
+        jsap.registerParameter(LauncherUtils.defineArgPatchFiltering());
+        // --patchFilteringMode
+        jsap.registerParameter(LauncherUtils.defineArgPatchFilteringMode());
+
+        // --odsPath
+        jsap.registerParameter(LauncherUtils.defineArgODSPath());
+
     }
 
     public static void initCommonConfig(RepairnatorConfig config, JSAPResult arguments) {
@@ -230,6 +246,13 @@ public class LauncherUtils {
         config.setNPERepairStrategy(LauncherUtils.getArgNPERepairStrategy(arguments));
 
         config.setPatchRankingMode(LauncherUtils.getArgPatchRankingMode(arguments));
+        config.setPatchRanking(LauncherUtils.getArgPatchRanking(arguments));
+        config.setPatchClassificationMode(LauncherUtils.getArgPatchClassificationMode(arguments));
+        config.setPatchClassification(LauncherUtils.getArgPatchClassification(arguments));
+        config.setPatchFiltering(LauncherUtils.getArgPatchFiltering(arguments));
+        config.setPatchFilteringMode(LauncherUtils.getArgPatchFilteringMode(arguments));
+
+        config.setODSPath(LauncherUtils.getArgODSPath(arguments).getAbsolutePath());
     }
 
     public static Switch defineArgHelp() {
@@ -947,6 +970,85 @@ public class LauncherUtils {
         return arguments.getString("npeRepairStrategy");
     }
 
+    public static FlaggedOption defineArgODSPath() {
+        FlaggedOption opt = new FlaggedOption("odsPath");
+        opt.setLongFlag("odsPath");
+        opt.setDefault("./repairnator-output/ODSPatches");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setHelp("Path for ODS output");
+        return opt;
+    }
+
+    public static File getArgODSPath(JSAPResult arguments) {
+        File output = new File(arguments.getString("odsPath"));
+        if (!output.exists()) {
+            output.mkdirs();
+        }
+        return output;
+    }
+
+    public static Switch defineArgPatchClassification() {
+        Switch sw = new Switch("patchClassification");
+        sw.setLongFlag("patchClassification");
+        sw.setDefault("false");
+        sw.setHelp("Classify repair patches using the defined mode.");
+        return sw;
+    }
+
+    public static boolean getArgPatchClassification(JSAPResult arguments) {
+        return arguments.getBoolean("patchClassification");
+    }
+
+    public static FlaggedOption defineArgPatchClassificationMode() {
+        FlaggedOption opt = new FlaggedOption("patchClassificationMode");
+        opt.setLongFlag("patchClassificationMode");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault(RepairnatorConfig.PATCH_CLASSIFICATION_MODE.NONE.name());
+        opt.setHelp("Possible string values NONE, ODS.");
+        return opt;
+    }
+
+    public static RepairnatorConfig.PATCH_CLASSIFICATION_MODE getArgPatchClassificationMode(JSAPResult arguments) {
+        return RepairnatorConfig.PATCH_CLASSIFICATION_MODE.valueOf(arguments.getString("patchClassificationMode"));
+    }
+
+    public static Switch defineArgPatchFiltering() {
+        Switch sw = new Switch("patchFiltering");
+        sw.setLongFlag("patchFiltering");
+        sw.setDefault("false");
+        sw.setHelp("Filter repair patches using the defined mode.");
+        return sw;
+    }
+
+    public static boolean getArgPatchFiltering(JSAPResult arguments) {
+        return arguments.getBoolean("patchFiltering");
+    }
+
+    public static FlaggedOption defineArgPatchFilteringMode() {
+        FlaggedOption opt = new FlaggedOption("patchFilteringMode");
+        opt.setLongFlag("patchFilteringMode");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault(RepairnatorConfig.PATCH_FILTERING_MODE.NONE.name());
+        opt.setHelp("Possible string values NONE, ODS_CORRECT.");
+        return opt;
+    }
+
+    public static RepairnatorConfig.PATCH_FILTERING_MODE getArgPatchFilteringMode(JSAPResult arguments) {
+        return RepairnatorConfig.PATCH_FILTERING_MODE.valueOf(arguments.getString("patchFilteringMode"));
+    }
+
+    public static Switch defineArgPatchRanking() {
+        Switch sw = new Switch("patchRanking");
+        sw.setLongFlag("patchRanking");
+        sw.setDefault("false");
+        sw.setHelp("Rank repair patches using the defined mode.");
+        return sw;
+    }
+
+    public static boolean getArgPatchRanking(JSAPResult arguments) {
+        return arguments.getBoolean("patchRanking");
+    }
+
     public static FlaggedOption defineArgPatchRankingMode() {
         FlaggedOption opt = new FlaggedOption("patchRankingMode");
         opt.setLongFlag("patchRankingMode");
@@ -956,8 +1058,8 @@ public class LauncherUtils {
         return opt;
     }
 
-    public static String getArgPatchRankingMode(JSAPResult arguments) {
-        return arguments.getString("patchRankingMode");
+    public static RepairnatorConfig.PATCH_RANKING_MODE getArgPatchRankingMode(JSAPResult arguments) {
+        return RepairnatorConfig.PATCH_RANKING_MODE.valueOf(arguments.getString("patchRankingMode"));
     }
 
     public static void checkPushUrlArg(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {
@@ -968,7 +1070,6 @@ public class LauncherUtils {
             }
         }
     }
-
 
     public static void printUsage(JSAP jsap, LauncherType launcherType) {
         String moduleName = "repairnator-" + launcherType.name().toLowerCase();

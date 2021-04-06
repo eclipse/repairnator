@@ -37,7 +37,7 @@ import sorald.Main;
 public class Sorald extends AbstractRepairStep {
     public static final String TOOL_NAME = "Sorald";
     public static final String RULE_LINK_TEMPLATE = "https://rules.sonarsource.com/java/RSPEC-";
-    private final List<RepairPatch> allPatches = new ArrayList<RepairPatch>();
+    private List<RepairPatch> allPatches = new ArrayList<RepairPatch>();
     private Git forkedGit;
     private String forkedRepo;
 
@@ -110,7 +110,11 @@ public class Sorald extends AbstractRepairStep {
             return StepStatus.buildPatchNotFound(this);
         }
 
-        this.getInspector().getJobStatus().addPatches(this.getRepairToolName(), allPatches);   
+        allPatches = this.performPatchAnalysis(allPatches);
+        if (allPatches.isEmpty()) {
+            return StepStatus.buildPatchNotFound(this);
+        }
+        this.recordPatches(allPatches, MAX_PATCH_PER_TOOL);
         if (this.getConfig().isCreatePR()) {
             this.setPrText(prTextBuilder.toString());
             try {
@@ -123,7 +127,6 @@ public class Sorald extends AbstractRepairStep {
             }
         } 
         System.out.println("All patches : " + allPatches.size());
-        this.notify(allPatches);
         return StepStatus.buildSuccess(this);
     }
 

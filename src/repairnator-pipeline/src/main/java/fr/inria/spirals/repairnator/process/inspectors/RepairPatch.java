@@ -7,6 +7,7 @@ import com.github.difflib.patch.PatchFailedException;
 import fr.inria.coming.codefeatures.RepairnatorFeatures;
 import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
 import fr.inria.coming.main.ComingProperties;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Overfitting;
@@ -23,7 +24,7 @@ import org.apache.log4j.Logger;
 
 public class RepairPatch {
 
-	static final String ODSPath = SequencerConfig.getInstance().ODSPath;
+	static final String ODSPath = RepairnatorConfig.getInstance().getODSPath();
 	protected static Logger log = Logger.getLogger(Thread.currentThread().getName());
 
 	/**
@@ -218,7 +219,7 @@ public class RepairPatch {
 	
 			// create a directory to store the patch: "patches/"+buildId+patchId
 			String buggyClassName = buggyFile.getName().replace(".java", "");
-			String odsFilesPath = SequencerConfig.getInstance().ODSPath;
+			String odsFilesPath = this.ODSPath;
 	
 			String patchPath = odsFilesPath + "/" + buildId + "-" + patchId;
 			Path path = Paths.get(patchPath + '/' + buggyClassName);

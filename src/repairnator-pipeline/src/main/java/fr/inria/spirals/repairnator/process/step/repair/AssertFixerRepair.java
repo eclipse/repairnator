@@ -155,6 +155,10 @@ public class AssertFixerRepair extends AbstractRepairStep {
             }
         }
 
+        listPatches = this.performPatchAnalysis(listPatches);
+        if (listPatches.isEmpty()) {
+            return StepStatus.buildPatchNotFound(this);
+        }
         this.recordPatches(listPatches,MAX_PATCH_PER_TOOL);
         this.recordToolDiagnostic(toolDiagnostic);
 

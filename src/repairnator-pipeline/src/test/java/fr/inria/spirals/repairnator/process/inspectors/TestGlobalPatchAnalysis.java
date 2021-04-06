@@ -135,7 +135,7 @@ public class TestGlobalPatchAnalysis {
 
 		RepairnatorConfig.getInstance().setRepairTools(
 				new HashSet<>(Arrays.asList(nopolRepair.getRepairToolName(), npeRepair.getRepairToolName())));
-		RepairnatorConfig.getInstance().setPatchRankingMode("OVERFITTING");
+		RepairnatorConfig.getInstance().setPatchRankingMode(RepairnatorConfig.PATCH_RANKING_MODE.OVERFITTING);
 
 		cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector))
 				.addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
@@ -163,10 +163,16 @@ public class TestGlobalPatchAnalysis {
 	
 	@Test
 	public void testODSPatchClassification() throws IOException {
+		RepairnatorConfig.getInstance().setPatchClassification(true);
+		RepairnatorConfig.getInstance().setPatchClassificationMode(RepairnatorConfig.PATCH_CLASSIFICATION_MODE.ODS);
+
 		long buildId = 203797975; // surli/failingProject build
 		Build build = this.checkBuildAndReturn(buildId, false);
 
 		tmpDir = Files.createTempDirectory("patch_classification").toFile();
+		new File(tmpDir.getAbsolutePath() + "/ODSPatches").mkdirs();
+		RepairnatorConfig.getInstance().setODSPath(tmpDir.getAbsolutePath() + "/ODSPatches");
+		
 		BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 		ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
@@ -179,26 +185,24 @@ public class TestGlobalPatchAnalysis {
 		cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector))
 				.addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
 				.addNextStep(new ComputeClasspath(inspector, true))
-				.addNextStep(new ComputeSourceDir(inspector, true, false)).addNextStep(nopolRepair);
+				.addNextStep(new ComputeSourceDir(inspector, true, false))
+				.addNextStep(nopolRepair);
 		cloneStep.execute();
 
-		List<RepairPatch> classifyPatcheswithODS = inspector.getJobStatus().getCorrectnessLabeledPatches(Features.ODS,
-				String.valueOf(buildId));
+		List<RepairPatch> patches = inspector.getJobStatus().getAllPatches();
 
-		// There are 10 patches are generated for this failing build
-		assertThat(classifyPatcheswithODS.size(), is(1));
+		// There are 1 patch (10 with Nopol working are generated for this failing build
+		assertThat(patches.size(), is(1));
 
 		int overfittingCount = 0;
 
-		for(RepairPatch patch : classifyPatcheswithODS) {
+		for(RepairPatch patch : patches) {
 			if (ODSLabel.OVERFITTING == patch.getODSLabel()){
 				overfittingCount++;
 			}
 		}
 		
 		assertThat(overfittingCount, is(1));
-
 	}
-
 	
 }
