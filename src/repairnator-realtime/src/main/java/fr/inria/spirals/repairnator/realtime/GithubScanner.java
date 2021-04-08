@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.spirals.repairnator.GithubInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.GithubAPICommitAdapter;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -14,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class GithubScanner {
     static long scanIntervalDelay = 60 * 60 * 1000; // 1 hour
@@ -30,7 +28,7 @@ public class GithubScanner {
         Set<String> repos = null;
         String reposPath = System.getenv("REPOS_PATH");
         if (reposPath != null)
-            repos = new HashSet<String>(FileUtils.readLines(new File(reposPath), "UTF-8"));
+            repos = new HashSet<>(FileUtils.readLines(new File(reposPath), "UTF-8"));
 
         FetchMode fetchMode = parseFetchMode();
 
@@ -106,6 +104,8 @@ public class GithubScanner {
         switch (value) {
             case "all":
                 return FetchMode.ALL;
+            case "passing":
+                return FetchMode.PASSING;
             case "failed":
             default:
                 return FetchMode.FAILED;
@@ -113,6 +113,6 @@ public class GithubScanner {
     }
 
     public enum FetchMode {
-        FAILED, ALL;
+        FAILED, ALL, PASSING
     }
 }
