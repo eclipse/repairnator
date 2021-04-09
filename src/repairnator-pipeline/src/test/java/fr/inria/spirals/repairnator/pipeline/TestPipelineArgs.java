@@ -179,14 +179,6 @@ public class TestPipelineArgs {
         assertEquals(defaultNPERepairStrategy, LauncherUtils.getArgNPERepairStrategy(arguments));
         assertEquals(defaultNPERepairStrategy, config.getNPERepairStrategy());
 
-        // default patch ranking parameters
-        RepairnatorConfig.PATCH_RANKING_MODE defaultPatchRankingMode = RepairnatorConfig.PATCH_RANKING_MODE.NONE;
-        assertEquals(defaultPatchRankingMode, LauncherUtils.getArgPatchRankingMode(arguments));
-        assertEquals(defaultPatchRankingMode, config.getPatchRankingMode());
-        boolean defaultPatchRanking = false;
-        assertEquals(defaultPatchRanking, LauncherUtils.getArgPatchRanking(arguments));
-        assertEquals(defaultPatchRanking, config.isPatchRanking());
-
         // default patch classification parameters
         RepairnatorConfig.PATCH_CLASSIFICATION_MODE defaultPatchClassificationMode = RepairnatorConfig.PATCH_CLASSIFICATION_MODE.NONE;
         assertEquals(defaultPatchClassificationMode, LauncherUtils.getArgPatchClassificationMode(arguments));

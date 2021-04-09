@@ -132,11 +132,6 @@ public class LauncherUtils {
         // --sequencerRepair
         jsap.registerParameter(LauncherUtils.defineArgSequencerRepairMode());
 
-        // --patchRanking
-        jsap.registerParameter(LauncherUtils.defineArgPatchRanking());
-        // --patchRankingMode
-        jsap.registerParameter(LauncherUtils.defineArgPatchRankingMode());
-
         // --patchClassification
         jsap.registerParameter(LauncherUtils.defineArgPatchClassification());
         // --patchClassificationMode
@@ -245,8 +240,6 @@ public class LauncherUtils {
         config.setNPEScope(LauncherUtils.getArgNPEScope(arguments));
         config.setNPERepairStrategy(LauncherUtils.getArgNPERepairStrategy(arguments));
 
-        config.setPatchRankingMode(LauncherUtils.getArgPatchRankingMode(arguments));
-        config.setPatchRanking(LauncherUtils.getArgPatchRanking(arguments));
         config.setPatchClassificationMode(LauncherUtils.getArgPatchClassificationMode(arguments));
         config.setPatchClassification(LauncherUtils.getArgPatchClassification(arguments));
         config.setPatchFiltering(LauncherUtils.getArgPatchFiltering(arguments));
@@ -1035,31 +1028,6 @@ public class LauncherUtils {
 
     public static RepairnatorConfig.PATCH_FILTERING_MODE getArgPatchFilteringMode(JSAPResult arguments) {
         return RepairnatorConfig.PATCH_FILTERING_MODE.valueOf(arguments.getString("patchFilteringMode"));
-    }
-
-    public static Switch defineArgPatchRanking() {
-        Switch sw = new Switch("patchRanking");
-        sw.setLongFlag("patchRanking");
-        sw.setDefault("false");
-        sw.setHelp("Rank repair patches using the defined mode.");
-        return sw;
-    }
-
-    public static boolean getArgPatchRanking(JSAPResult arguments) {
-        return arguments.getBoolean("patchRanking");
-    }
-
-    public static FlaggedOption defineArgPatchRankingMode() {
-        FlaggedOption opt = new FlaggedOption("patchRankingMode");
-        opt.setLongFlag("patchRankingMode");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault(RepairnatorConfig.PATCH_RANKING_MODE.NONE.name());
-        opt.setHelp("Possible string values NONE, OVERFITTING.");
-        return opt;
-    }
-
-    public static RepairnatorConfig.PATCH_RANKING_MODE getArgPatchRankingMode(JSAPResult arguments) {
-        return RepairnatorConfig.PATCH_RANKING_MODE.valueOf(arguments.getString("patchRankingMode"));
     }
 
     public static void checkPushUrlArg(JSAP jsap, JSAPResult arguments, LauncherType launcherType) {

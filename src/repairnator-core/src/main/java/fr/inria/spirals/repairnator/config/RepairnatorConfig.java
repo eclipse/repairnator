@@ -49,11 +49,6 @@ public class RepairnatorConfig {
         }
     }
 
-    public enum PATCH_RANKING_MODE {
-        NONE,
-        OVERFITTING
-    }
-
     public enum PATCH_CLASSIFICATION_MODE {
         NONE,
         ODS
@@ -140,12 +135,10 @@ public class RepairnatorConfig {
     private String npeScope;
     private String npeRepairStrategy;
 
-    private PATCH_RANKING_MODE patchRankingMode;
     private PATCH_CLASSIFICATION_MODE patchClassificationMode;
     private PATCH_FILTERING_MODE patchFilteringMode;
     private boolean patchClassification;
     private boolean patchFiltering;
-    private boolean patchRanking;
 
     // Dockerpool
     private String dockerImageName;
@@ -886,7 +879,6 @@ public class RepairnatorConfig {
                 ", mavenHome=" + mavenHome +
                 ", localMavenRepository=" + localMavenRepository +
                 ", noTravisRepair=" + noTravisRepair +
-                ", rankPatches=" + patchRankingMode +
                 ", jTravisEndpoint=" + jTravisEndpoint +
                 ", travisToken=" + travisToken +
                 '}';
@@ -992,22 +984,6 @@ public class RepairnatorConfig {
 
     public void setODSPath(String ODSPath) {
         this.ODSPath = ODSPath;
-    }
-
-    public PATCH_RANKING_MODE getPatchRankingMode() {
-        return patchRankingMode;
-    }
-
-    public void setPatchRankingMode(PATCH_RANKING_MODE patchRankingMode) {
-        this.patchRankingMode = patchRankingMode;
-    }
-
-    public boolean isPatchRanking() {
-        return patchRanking;
-    }
-
-    public void setPatchRanking(boolean patchRanking) {
-        this.patchRanking = patchRanking;
     }
 
     public PATCH_CLASSIFICATION_MODE getPatchClassificationMode() {

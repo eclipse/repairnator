@@ -1,18 +1,15 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
 import com.google.gson.JsonElement;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig.PATCH_RANKING_MODE;
 import fr.inria.spirals.repairnator.process.inspectors.properties.Properties;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.inspectors.properties.tests.FailureDetail;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.PushState;
+import org.apache.maven.model.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.maven.model.Plugin;
 
 import java.io.File;
 import java.net.URL;
@@ -276,23 +273,6 @@ public class JobStatus {
         return allPatches;
     }
 
-    public List<RepairPatch> getRankedPatches() {
-        return getRankedPatches(Features.P4J);
-    }
-
-    protected List<RepairPatch> getRankedPatches(Features features) {
-        List<RepairPatch> allPatches = getAllPatches();
-        PATCH_RANKING_MODE patchRankingMode = RepairnatorConfig.getInstance().getPatchRankingMode();
-
-        switch (patchRankingMode){
-            case OVERFITTING:
-                allPatches.sort(RepairPatch.rankByOverfittingWithFeatures(features));
-                break;
-        }
-        return allPatches;
-    }
-    
-    
     protected List<RepairPatch> getCorrectnessLabeledPatches(Features features, String buildId) {
         List<RepairPatch> allPatches = getAllPatches();
         return RepairPatch.classifyByODSWithFeatures(allPatches, buildId);

@@ -2,18 +2,15 @@ package fr.inria.spirals.repairnator.process.step.repair;
 
 import com.google.gson.JsonElement;
 import fr.inria.coming.codefeatures.RepairnatorFeatures;
-import fr.inria.coming.core.engine.git.GITRepositoryInspector;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.JenkinsProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.utils.DateUtils;
-import fr.inria.spirals.repairnator.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.eclipse.jgit.api.Git;
@@ -122,28 +119,13 @@ public abstract class AbstractRepairStep extends AbstractStep {
                         (gitInspector.getRepoSlug() + "-" + gitInspector.getGitRepositoryIdCommit()).replace("/", "-")
                 );
             } else {
-                patches = RepairPatch.classifyByODSWithFeatures(patches, this.getInspector().getBuildToBeInspected().getRunId());
+                patches = RepairPatch.classifyByODSWithFeatures(patches, String.format("%d", this.getInspector().getBuggyBuild().getId()));
             }
         } else if (mode.equals(RepairnatorConfig.PATCH_CLASSIFICATION_MODE.NONE)) {
             this.getLogger().info("Classification mode is NONE so no patch will be classified");
         }
 
         patches.forEach(patch -> this.getLogger().debug("patch: " + patch.getFilePath() + " " + patch.getODSLabel()));
-        return patches;
-    }
-
-    private List<RepairPatch> rankPatches(List<RepairPatch> patches) {
-        RepairnatorConfig.PATCH_RANKING_MODE mode = RepairnatorConfig.getInstance().getPatchRankingMode();
-        this.getLogger().info("Ranking patches with mode " + mode.name());
-
-        if (patches.isEmpty()) {
-            return patches;
-        } else if (mode.equals(RepairnatorConfig.PATCH_RANKING_MODE.OVERFITTING)) {
-            this.getLogger().info("Ranking by overfitting score is not supported yet");
-        } else if (mode.equals(RepairnatorConfig.PATCH_RANKING_MODE.NONE)) {
-            this.getLogger().info("Ranking mode is NONE so no patch will be ranked");
-        }
-
         return patches;
     }
 
@@ -171,9 +153,6 @@ public abstract class AbstractRepairStep extends AbstractStep {
         }
         if (RepairnatorConfig.getInstance().isPatchClassification()) {
             patchList = this.classifyPatches(patchList);
-        }
-        if (RepairnatorConfig.getInstance().isPatchRanking()) {
-            patchList = this.rankPatches(patchList);
         }
         if (RepairnatorConfig.getInstance().isPatchFiltering()) {
             patchList = this.filterPatches(patchList);
