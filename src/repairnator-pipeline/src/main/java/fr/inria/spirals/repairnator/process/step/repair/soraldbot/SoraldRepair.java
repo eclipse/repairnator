@@ -4,10 +4,7 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.models.SoraldTargetCommit;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,12 +14,12 @@ public class SoraldRepair extends AbstractRepairStep {
     private SoraldTargetCommit commit;
 
     private void init(){
-        // TODO: set commit
+        commit = new SoraldTargetCommit(getInspector().getGitCommit(), getInspector().getRepoSlug());
     }
 
     @Override
     public String getRepairToolName() {
-        return TOOL_NAME;
+        return SORALD_TOOL_NAME;
     }
 
     @Override
@@ -36,7 +33,7 @@ public class SoraldRepair extends AbstractRepairStep {
         } catch (Exception e) {
             return StepStatus.buildSkipped(this,"Error while repairing with Sorald");
         }
-        
+
         return StepStatus.buildSuccess(this);
     }
 }
