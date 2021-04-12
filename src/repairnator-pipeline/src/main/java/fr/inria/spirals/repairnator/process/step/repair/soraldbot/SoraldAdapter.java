@@ -1,6 +1,8 @@
 package fr.inria.spirals.repairnator.process.step.repair.soraldbot;
 
+import fr.inria.spirals.repairnator.process.step.repair.soraldbot.models.SoraldTargetCommit;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,49 +22,58 @@ import java.util.stream.Collectors;
 
 import static fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldConstants.SORALD_GIT_PATCHES_DIR;
 
-public class SoraldCLAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(SoraldCLAdapter.class);
-    public static final String MINING_STATS_FILENAME = "mining_stats.json";
-    public static final String MINING_TMP_DIR_PATH = "mining_tmp_dir";
-    public static final String MINED_RULES_KEY = "minedRules";
-    public static final String PREVIOUS_COMMIT_REF = "HEAD^";
-    private static SoraldCLAdapter _instance;
+public class SoraldAdapter {
+    private static final Logger logger = LoggerFactory.getLogger(SoraldAdapter.class);
+    private static final String MINING_STATS_FILENAME = "mining_stats.json";
+    private static final String MINING_TMP_DIR_PATH = "mining_tmp_dir";
+    private static final String MINED_RULES_KEY = "minedRules";
+    private static final String PREVIOUS_COMMIT_REF = "HEAD^";
+    private static SoraldAdapter _instance;
 
+    private String patchPrintingMode;
     private String tmpdir;
 
-    public SoraldCLAdapter(String tmpdir) {
+    public SoraldAdapter(String tmpdir, String patchPrintingMode) {
         this.tmpdir = tmpdir;
+        this.patchPrintingMode = patchPrintingMode;
     }
 
-    public static SoraldCLAdapter getInstance(String tmpdir) {
+    public static SoraldAdapter getInstance(String tmpdir, String patchPrintingMode) {
         if (_instance == null)
-            _instance = new SoraldCLAdapter(tmpdir);
-
+            _instance = new SoraldAdapter(tmpdir, patchPrintingMode);
         return _instance;
     }
 
+    // Clones the repo in @repoPath, fixes all violations, returns violation introducing file paths.
+    public Set<String> repairRepoAndReturnViolationIntroducingFiles (SoraldTargetCommit commit, String rule, String repoPath)
+            throws ParseException, GitAPIException, IOException, InterruptedException {
+        logger.info("repairing: " + commit.getCommitUrl());
+
+        File repoDir = cloneRepo(commit.getRepoUrl(), commit.getCommitId(), repoPath);
+        logger.info("repo cloned: " + commit.getRepoName());
+
+        Map<String, Set<String>> ruleToIntroducingFiles = getIntroducedViolations(repoDir);
+        logger.info("number of introduced rules: " + ruleToIntroducingFiles.entrySet().size());
+
+        if(!ruleToIntroducingFiles.containsKey(rule))
+            return null;
+
+        repair(rule, repoDir, patchPrintingMode);
+
+        return ruleToIntroducingFiles.get(rule);
+    }
+
+
     // returns patch files
-    public List<File> repair(String rule, File repoDir, String patchPrintingMode) {
+    public void repair(String rule, File repoDir, String patchPrintingMode) {
         String[] args = new String[]{
                 Constants.REPAIR_COMMAND_NAME,
                 Constants.ARG_ORIGINAL_FILES_PATH, repoDir.getPath(),
                 Constants.ARG_RULE_KEYS, rule,
                 Constants.ARG_WORKSPACE, tmpdir,
-                Constants.ARG_GIT_REPO_PATH, repoDir.getPath(),
                 Constants.ARG_PRETTY_PRINTING_STRATEGY, patchPrintingMode};
 
-        File gitPatchesDir = new File(tmpdir + File.separator + SORALD_GIT_PATCHES_DIR);
-        if (gitPatchesDir.exists()) {
-            try {
-                FileUtils.deleteDirectory(gitPatchesDir);
-            } catch (IOException e) {
-                logger.error("cannot remove SoraldGitPatches dir");
-            }
-        }
-
         Main.main(args);
-
-        return Arrays.asList(gitPatchesDir.listFiles());
     }
 
     /**
@@ -84,7 +95,8 @@ public class SoraldCLAdapter {
         ProcessBuilder processBuilder =
                 new ProcessBuilder("git", "stash")
                         .directory(copyRepoDir).inheritIO();
-        int res = startAndWaitForProcess(processBuilder);
+        Process p = processBuilder.start();
+        int res = p.waitFor();
         if (res != 0) {
             logger.error("cannot stash");
             return new HashMap<String, Set<String>>();
@@ -93,7 +105,8 @@ public class SoraldCLAdapter {
         processBuilder =
                 new ProcessBuilder("git", "checkout", PREVIOUS_COMMIT_REF)
                         .directory(copyRepoDir).inheritIO();
-        res = startAndWaitForProcess(processBuilder);
+        p = processBuilder.start();
+        res = p.waitFor();
         if (res != 0) {
             logger.error("cannot checkout to " + PREVIOUS_COMMIT_REF);
             return new HashMap<String, Set<String>>();
@@ -130,11 +143,6 @@ public class SoraldCLAdapter {
         }
 
         return ret;
-    }
-
-    private int startAndWaitForProcess(ProcessBuilder processBuilder) throws IOException, InterruptedException {
-        Process p = processBuilder.start();
-        return p.waitFor();
     }
 
     /**
@@ -197,5 +205,29 @@ public class SoraldCLAdapter {
         stats.delete();
 
         return ret;
+    }
+
+
+
+    public File cloneRepo(String repoUrl, String commitId, String dirname)
+            throws IOException, GitAPIException {
+        File repoDir = new File(tmpdir + File.separator + dirname);
+
+        if (repoDir.exists())
+            FileUtils.deleteDirectory(repoDir);
+
+        repoDir.mkdirs();
+
+        Git git = Git.cloneRepository()
+                .setURI(repoUrl)
+                .setDirectory(repoDir)
+                .call();
+
+        if (commitId != null)
+            git.checkout().setName(commitId).call();
+
+        git.close();
+
+        return repoDir;
     }
 }
