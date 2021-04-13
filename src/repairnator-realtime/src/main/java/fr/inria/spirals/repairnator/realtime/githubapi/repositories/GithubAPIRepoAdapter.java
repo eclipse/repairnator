@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
 
 public class GithubAPIRepoAdapter {
     public static final int MAX_STARS = 200000;
@@ -53,9 +54,9 @@ public class GithubAPIRepoAdapter {
     }
 
     public Set<String> listJavaRepositories(long intervalStart, int min, int max) throws IOException {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
         String intervalStartStr = df.format(new Date(intervalStart));
-        intervalStartStr = intervalStartStr.substring(0, intervalStartStr.length() - 5) + "Z";
 
         return listJavaRepositories(intervalStartStr, min, max);
     }

@@ -40,14 +40,18 @@ public class DockerPipelineRunner extends DockerPoolManager implements PipelineR
         dockerImageId = RepairnatorConfig.getInstance().getDockerImageName();
     }
 
-    public DockerPipelineRunner() {
+    public DockerPipelineRunner(String runId) {
         LOGGER.info("Init build runner");
         super.setDockerOutputDir("./");
-        super.setRunId("hardcoded-in-constructor");
+        super.setRunId(runId);
         ArrayList<SerializerEngine> engines = new ArrayList<>();
         engines.add(new JSONFileSerializerEngine("."));
         super.setEngines(engines);
         dockerImageId = RepairnatorConfig.getInstance().getDockerImageName();
+    }
+
+    public DockerPipelineRunner() {
+        this("hardcoded-in-constructor");
     }
 
     public void initRunner() {

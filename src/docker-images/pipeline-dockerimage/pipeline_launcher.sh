@@ -10,7 +10,25 @@ function ca {
   fi
 }
 
-args="`ca --dbhost $MONGODB_HOST``ca --dbname $MONGODB_NAME``ca --smtpServer $SMTP_SERVER``ca --smtpPort $SMTP_PORT``ca --smtpUsername $SMTP_USERNAME``ca --smtpPassword $SMTP_PASSWORD``ca --notifyto $NOTIFY_TO``ca --githubUserName $GITHUB_USERNAME``ca --githubUserEmail $GITHUB_USEREMAIL``ca --experimentalPluginRepoList $EXPERIMENTAL_PLUGIN_REPOS``ca --listenermode $LISTEN_MODE``ca --activemqurl $ACTIVEMQ_URL``ca --activemqlistenqueuename $ACTIVEMQ_LISTEN_QUEUE``ca --activemqusername $ACTIVEMQ_USERNAME``ca --activemqpassword $ACTIVEMQ_PASSWORD``ca --pushurl $PUSH_URL``ca --jtravisendpoint $TRAVIS_ENDPOINT``ca --travistoken $TRAVIS_TOKEN`"
+args="`ca --dbhost $MONGODB_HOST`\
+`ca --dbname $MONGODB_NAME`\
+`ca --smtpServer $SMTP_SERVER`\
+`ca --smtpPort $SMTP_PORT`\
+`ca --smtpUsername $SMTP_USERNAME`\
+`ca --smtpPassword $SMTP_PASSWORD`\
+`ca --notifyto $NOTIFY_TO`\
+`ca --githubUserName $GITHUB_USERNAME`\
+`ca --githubUserEmail $GITHUB_USEREMAIL`\
+`ca --experimentalPluginRepoList $EXPERIMENTAL_PLUGIN_REPOS`\
+`ca --listenerMode $LISTEN_MODE`\
+`ca --activemqurl $ACTIVEMQ_URL`\
+`ca --activemqlistenqueuename $ACTIVEMQ_LISTEN_QUEUE`\
+`ca --activemqusername $ACTIVEMQ_USERNAME`\
+`ca --activemqpassword $ACTIVEMQ_PASSWORD`\
+`ca --pushurl $PUSH_URL`\
+`ca --jtravisendpoint $TRAVIS_ENDPOINT`\
+`ca --travistoken $TRAVIS_TOKEN`\
+`ca --launcherMode $REPAIR_MODE`"
 
 if [[ "$CREATE_PR" == 1 ]]; then
   args="$args --createPR"
@@ -38,7 +56,7 @@ LOCAL_REPAIR_MODE=repair
 
 
 # Github XOR Travis
-if [[ -n "$GITHUB_URL" ]] && [[ -s "$GITHUB_SHA" ]]; then
+if [[ -n "$GITHUB_URL" ]] && [[ -n "$GITHUB_SHA" ]]; then
   echo "adding GitHub mode variables"
   args="$args --gitrepo --gitrepourl $GITHUB_URL --gitrepoidcommit $GITHUB_SHA"
 elif [[ -n "$BUILD_ID" ]]; then

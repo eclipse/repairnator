@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.realtime.githubapi.repositories.GithubAPIRep
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GithubAPICommitAdapter {
     private static GithubAPICommitAdapter _instance;
@@ -68,17 +69,18 @@ public class GithubAPICommitAdapter {
                     long intervalStart,
                     long intervalEnd,
                     GithubScanner.FetchMode fetchMode,
-                    Set<String> repos
+                    Set<String> fixedRepos
             ) throws IOException {
-         repos = repos == null ? GithubAPIRepoAdapter.getInstance()
-                .listJavaRepositories(intervalStart, 0, GithubAPIRepoAdapter.MAX_STARS) : repos;
+         final Set<String> repositories = fixedRepos == null ? GithubAPIRepoAdapter.getInstance()
+                .listJavaRepositories(intervalStart, 0, GithubAPIRepoAdapter.MAX_STARS) : fixedRepos;
 
-        int cnt = 0;
-        List<SelectedCommit> selectedCommits = new ArrayList<>();
-        for (String repoName : repos) {
+
+        AtomicInteger cnt = new AtomicInteger(0);
+        List<SelectedCommit> selectedCommits = Collections.synchronizedList(new ArrayList<>());
+        repositories.parallelStream().forEach( repoName -> {
             try {
                 GHRepository repo = GAA.g().getRepository(repoName);
-                System.out.println("Checking commits for: " + repo.getName() + " " + cnt++ + " " + repos.size()
+                System.out.println("Checking commits for: " + repo.getName() + " " + cnt.incrementAndGet() + " " + repositories.size()
                         + " " + new Date(intervalStart));
                 boolean isMaven = false;
                 for (GHTreeEntry treeEntry : repo.getTree("HEAD").getTree()) {
@@ -89,7 +91,7 @@ public class GithubAPICommitAdapter {
                 }
 
                 if (!isMaven) {
-                    continue;
+                    return;
                 }
 
                 selectedCommits.addAll(GithubAPICommitAdapter.getInstance()
@@ -99,7 +101,8 @@ public class GithubAPICommitAdapter {
                 System.err.println("error occurred for: " + repoName);
                 e.printStackTrace();
             }
-        }
+        });
+
         return selectedCommits;
     }
 }
