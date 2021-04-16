@@ -32,7 +32,8 @@ public abstract class BugType {
         if (o == null || getClass() != o.getClass()) return false;
         BugType bugType = (BugType) o;
         return name.equals(bugType.name) &&
-            detail.replace("\n\t", " ").equals(bugType.detail.replace("\n\t", " "));
+            detail.replaceAll("\\s+", "")
+                    .equals(bugType.detail.replaceAll("\\s+", ""));
     }
 
     @Override
