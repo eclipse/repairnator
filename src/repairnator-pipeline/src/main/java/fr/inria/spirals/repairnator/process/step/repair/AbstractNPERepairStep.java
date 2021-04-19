@@ -179,6 +179,10 @@ public abstract class AbstractNPERepairStep extends AbstractRepairStep {
                     }
                 }
 
+                repairPatches = this.performPatchAnalysis(repairPatches);
+                if (repairPatches.isEmpty()) {
+                    return StepStatus.buildPatchNotFound(this);
+                }
                 this.recordPatches(repairPatches, MAX_PATCH_PER_TOOL);
             }
 

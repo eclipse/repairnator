@@ -49,14 +49,14 @@ public class RepairnatorConfig {
         }
     }
 
-    public enum PATCH_RANKING_MODE {
-        NONE,
-        OVERFITTING
-    }
-
     public enum PATCH_CLASSIFICATION_MODE {
         NONE,
         ODS
+    }
+
+    public enum PATCH_FILTERING_MODE {
+        NONE,
+        ODS_CORRECT
     }
    
     /** 
@@ -116,6 +116,7 @@ public class RepairnatorConfig {
     private String localMavenRepository;
     private String jTravisEndpoint;
     private String travisToken;
+    private String ODSPath;
 
     private String gitRepositoryUrl;
     private String gitRepositoryBranch;
@@ -134,10 +135,10 @@ public class RepairnatorConfig {
     private String npeScope;
     private String npeRepairStrategy;
 
-    private PATCH_RANKING_MODE patchRankingMode;
-    
     private PATCH_CLASSIFICATION_MODE patchClassificationMode;
-
+    private PATCH_FILTERING_MODE patchFilteringMode;
+    private boolean patchClassification;
+    private boolean patchFiltering;
 
     // Dockerpool
     private String dockerImageName;
@@ -808,35 +809,6 @@ public class RepairnatorConfig {
         this.npeRepairStrategy = npeRepairStrategy;
     }
 
-    public PATCH_RANKING_MODE getPatchRankingMode() {
-        return patchRankingMode;
-    }
-    
-
-    public void setPatchRankingMode(String patchRankingMode) {
-        for (PATCH_RANKING_MODE mode: PATCH_RANKING_MODE.values()) {
-            if (patchRankingMode.equals(mode.name())) {
-                this.patchRankingMode = PATCH_RANKING_MODE.valueOf(patchRankingMode);
-                return;
-            }
-        }
-        throw new RuntimeException("unknown patch ranking mode: " + patchRankingMode);
-    }
-
-    public PATCH_CLASSIFICATION_MODE getPatchClassificationMode() {
-        return patchClassificationMode;
-    }
-
-    public void setPatchClassificationMode(String patchClassificationMode) {
-        for (PATCH_CLASSIFICATION_MODE mode: PATCH_CLASSIFICATION_MODE.values()) {
-            if (patchClassificationMode.equals(mode.name())) {
-                this.patchClassificationMode = PATCH_CLASSIFICATION_MODE.valueOf(patchClassificationMode);
-                return;
-            }
-        }
-        throw new RuntimeException("unknown patch classification mode: " + patchClassificationMode);
-    }
-
     @Override
     public String toString() {
         String ghToken = this.getGithubToken();
@@ -907,7 +879,6 @@ public class RepairnatorConfig {
                 ", mavenHome=" + mavenHome +
                 ", localMavenRepository=" + localMavenRepository +
                 ", noTravisRepair=" + noTravisRepair +
-                ", rankPatches=" + patchRankingMode +
                 ", jTravisEndpoint=" + jTravisEndpoint +
                 ", travisToken=" + travisToken +
                 '}';
@@ -1005,5 +976,45 @@ public class RepairnatorConfig {
 
     public void setTravisToken(String travisToken) {
         this.travisToken = travisToken;
+    }
+
+    public String getODSPath() {
+        return ODSPath;
+    }
+
+    public void setODSPath(String ODSPath) {
+        this.ODSPath = ODSPath;
+    }
+
+    public PATCH_CLASSIFICATION_MODE getPatchClassificationMode() {
+        return patchClassificationMode;
+    }
+
+    public void setPatchClassificationMode(PATCH_CLASSIFICATION_MODE patchClassificationMode) {
+        this.patchClassificationMode = patchClassificationMode;
+    }
+
+    public boolean isPatchClassification() {
+        return patchClassification;
+    }
+
+    public void setPatchClassification(boolean patchClassification) {
+        this.patchClassification = patchClassification;
+    }
+
+    public PATCH_FILTERING_MODE getPatchFilteringMode() {
+        return patchFilteringMode;
+    }
+
+    public void setPatchFilteringMode(PATCH_FILTERING_MODE patchFilteringMode) {
+        this.patchFilteringMode = patchFilteringMode;
+    }
+
+    public boolean isPatchFiltering() {
+        return patchFiltering;
+    }
+
+    public void setPatchFiltering(boolean patchFiltering) {
+        this.patchFiltering = patchFiltering;
     }
 }

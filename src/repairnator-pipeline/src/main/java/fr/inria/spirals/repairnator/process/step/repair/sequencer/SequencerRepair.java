@@ -247,38 +247,13 @@ public class SequencerRepair extends AbstractRepairStep {
 
         }).collect(Collectors.toList());
 
-        if(listPatches.isEmpty()){
+        List<RepairPatch> analyzedPatches = this.performPatchAnalysis(listPatches);
+        if (analyzedPatches.isEmpty()) {
             return StepStatus.buildPatchNotFound(this);
         }
 
-        GitRepositoryProjectInspector gitInspector = (GitRepositoryProjectInspector)this.getInspector();
-
-        List<RepairPatch> classifiedPatches = RepairPatch.classifyByODSWithFeatures(
-                listPatches,
-                (gitInspector.getRepoSlug() + "-" + gitInspector.getGitRepositoryIdCommit()).replace("/", "-")
-        );
-
-        classifiedPatches.forEach(patch -> {
-            this.getLogger().debug("patch: " + patch.getFilePath() + " " + patch.getODSLabel() + "\n" );
-        });
-
-        this.getLogger().debug("patches passing before overfitting detection: " + classifiedPatches.size() + "\n" );
-
-        List<RepairPatch> filteredPatches = classifiedPatches.stream()
-                                                .filter(patch -> patch.getODSLabel().equals(RepairnatorFeatures.ODSLabel.CORRECT))
-                                                .collect(Collectors.toList());
-
-        this.getLogger().debug("patches marked as CORRECT by overfitting detection: " + filteredPatches.size() + "\n" );
-
-
-        if(filteredPatches.isEmpty()){
-            return StepStatus.buildPatchNotFound(this);
-        }
-
-        notify(filteredPatches);
-        this.recordPatches(filteredPatches, MAX_PATCH_PER_TOOL);
+        this.recordPatches(analyzedPatches, MAX_PATCH_PER_TOOL);
         this.recordToolDiagnostic(toolDiagnostic);
-
         try {
             Files.walk(patchDir)
                     .sorted(Comparator.reverseOrder())

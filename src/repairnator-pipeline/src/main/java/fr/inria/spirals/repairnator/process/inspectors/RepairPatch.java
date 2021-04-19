@@ -7,6 +7,7 @@ import com.github.difflib.patch.PatchFailedException;
 import fr.inria.coming.codefeatures.RepairnatorFeatures;
 import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
 import fr.inria.coming.main.ComingProperties;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
 import fr.inria.spirals.repairnator.process.inspectors.properties.features.Overfitting;
@@ -23,7 +24,6 @@ import org.apache.log4j.Logger;
 
 public class RepairPatch {
 
-	static final String ODSPath = SequencerConfig.getInstance().ODSPath;
 	protected static Logger log = Logger.getLogger(Thread.currentThread().getName());
 
 	/**
@@ -145,11 +145,6 @@ public class RepairPatch {
 		return Objects.hash(toolname, filePath, diff);
 	}
 
-	// ranking algorithms
-	public static Comparator<RepairPatch> rankByOverfittingWithFeatures(Features features) {
-		return (x, y) -> overfittingSort(x, y, features);
-	}
-
 	private static int overfittingSort(RepairPatch patch1, RepairPatch patch2, Features features) { // ascending
 		double score1 = patch1.getOverfittingScore(features);
 		double score2 = patch2.getOverfittingScore(features);
@@ -164,9 +159,11 @@ public class RepairPatch {
 
 	// ODS classification
 	public static List<RepairPatch> classifyByODSWithFeatures(List<RepairPatch> allPatches, String buildId) {
+	    String ODSPath = RepairnatorConfig.getInstance().getODSPath();
 
 		File f = new File(ODSPath);
-		f.mkdir();
+		f.mkdirs();
+
 
 		int len = allPatches.size();
 
@@ -192,8 +189,9 @@ public class RepairPatch {
 	}
 
 	private ODSLabel computeODSLabel(int patchId, String buildId) {
-		
-		ODSLabel label = ODSLabel.UNKNOWN;
+        String ODSPath = RepairnatorConfig.getInstance().getODSPath();
+
+        ODSLabel label = ODSLabel.UNKNOWN;
 
 		try {		
 			File buggyFile = new File(filePath);
@@ -218,7 +216,7 @@ public class RepairPatch {
 	
 			// create a directory to store the patch: "patches/"+buildId+patchId
 			String buggyClassName = buggyFile.getName().replace(".java", "");
-			String odsFilesPath = SequencerConfig.getInstance().ODSPath;
+			String odsFilesPath = ODSPath;
 	
 			String patchPath = odsFilesPath + "/" + buildId + "-" + patchId;
 			Path path = Paths.get(patchPath + '/' + buggyClassName);

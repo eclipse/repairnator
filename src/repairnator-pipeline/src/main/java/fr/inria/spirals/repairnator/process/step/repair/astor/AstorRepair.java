@@ -178,6 +178,7 @@ public abstract class AstorRepair extends AbstractRepairStep {
             }
 
 
+            astorPatches = this.performPatchAnalysis(astorPatches);
             if (astorPatches.isEmpty()) {
                 return StepStatus.buildPatchNotFound(this);
             } else {

@@ -118,7 +118,6 @@ public class RunnablePipelineContainer implements Runnable {
             this.envValues.add("SEQUENCER_THREADS=" + sequencerConfig.threads);
             this.envValues.add("SEQUENCER_BEAM_SIZE=" + sequencerConfig.beamSize);
             this.envValues.add("SEQUENCER_TIMEOUT=" + sequencerConfig.timeout);
-            this.envValues.add("SEQUENCER_ODS_PATH=" + sequencerConfig.ODSPath);
         }
     }
 
@@ -167,7 +166,7 @@ public class RunnablePipelineContainer implements Runnable {
                     .appendBinds(HostConfig.Bind
                             .builder()
                             .from(ODSVolume)
-                            .to(SequencerConfig.getInstance().ODSPath)
+                            .to(RepairnatorConfig.getInstance().getODSPath())
                             .build())
                     .build();
 

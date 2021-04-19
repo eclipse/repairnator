@@ -1,25 +1,20 @@
 package fr.inria.spirals.repairnator.process.inspectors;
 
-import fr.inria.coming.changeminer.entity.FinalResult;
-import fr.inria.coming.codefeatures.RepairnatorFeatures;
-import fr.inria.coming.main.ComingMain;
-import fr.inria.coming.utils.CommandSummary;
+import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.process.inspectors.properties.features.Features;
-import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair;
-import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.files.FileHelper;
-import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.CloneRepository;
+import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.TestProject;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutBuggyBuild;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
+import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
+import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair;
 import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
@@ -29,14 +24,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import fr.inria.coming.codefeatures.RepairnatorFeatures.ODSLabel;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -118,55 +116,17 @@ public class TestGlobalPatchAnalysis {
 	}
 
 	@Test
-	@Ignore
-	public void testRankingPatches() throws IOException {
-		long buildId = 564711868; // surli/failingProject build 564711868
-		Build build = this.checkBuildAndReturn(buildId, false);
-
-		tmpDir = Files.createTempDirectory("test_ranking").toFile();
-		BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
-		ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
-
-		CloneRepository cloneStep = new CloneRepository(inspector);
-		NopolSingleTestRepair nopolRepair = new NopolSingleTestRepair();
-		nopolRepair.setProjectInspector(inspector);
-		NPERepair npeRepair = new NPERepair();
-		npeRepair.setProjectInspector(inspector);
-
-		RepairnatorConfig.getInstance().setRepairTools(
-				new HashSet<>(Arrays.asList(nopolRepair.getRepairToolName(), npeRepair.getRepairToolName())));
-		RepairnatorConfig.getInstance().setPatchRankingMode("OVERFITTING");
-
-		cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector))
-				.addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
-				.addNextStep(new ComputeClasspath(inspector, true))
-				.addNextStep(new ComputeSourceDir(inspector, true, false)).addNextStep(nopolRepair)
-				.addNextStep(npeRepair);
-		cloneStep.execute();
-
-		List<RepairPatch> rankedPatchesP4J = inspector.getJobStatus().getRankedPatches(Features.P4J);
-		List<RepairPatch> rankedPatchesS4R = inspector.getJobStatus().getRankedPatches(Features.S4R);
-
-		// test ranking by P4J overfitting-scores
-		assertThat(rankedPatchesP4J.get(0).getToolname(), is("NopolSingleTest"));
-		assertEquals(rankedPatchesP4J.get(0).getOverfittingScore(Features.P4J), -2590, 1);
-		assertThat(rankedPatchesP4J.get(4).getToolname(), is("NopolSingleTest"));
-		assertEquals(rankedPatchesP4J.get(4).getOverfittingScore(Features.P4J), -410, 1);
-
-		// test ranking by S4R overfitting-scores
-		assertThat(rankedPatchesS4R.get(0).getToolname(), is("NopolSingleTest"));
-		assertEquals(rankedPatchesS4R.get(0).getOverfittingScore(Features.S4R), -0.06, 0.001);
-		assertThat(rankedPatchesS4R.get(1).getToolname(), is("NopolSingleTest"));
-		assertEquals(rankedPatchesS4R.get(1).getOverfittingScore(Features.S4R), -0.05, 0.001);
-	}
-
-	
-	@Test
 	public void testODSPatchClassification() throws IOException {
+		RepairnatorConfig.getInstance().setPatchClassification(true);
+		RepairnatorConfig.getInstance().setPatchClassificationMode(RepairnatorConfig.PATCH_CLASSIFICATION_MODE.ODS);
+
 		long buildId = 203797975; // surli/failingProject build
 		Build build = this.checkBuildAndReturn(buildId, false);
 
 		tmpDir = Files.createTempDirectory("patch_classification").toFile();
+		new File(tmpDir.getAbsolutePath() + "/ODSPatches").mkdirs();
+		RepairnatorConfig.getInstance().setODSPath(tmpDir.getAbsolutePath() + "/ODSPatches");
+		
 		BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
 		ProjectInspector inspector = new ProjectInspector(toBeInspected, tmpDir.getAbsolutePath(), null, null);
 
@@ -179,26 +139,24 @@ public class TestGlobalPatchAnalysis {
 		cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new TestProject(inspector))
 				.addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
 				.addNextStep(new ComputeClasspath(inspector, true))
-				.addNextStep(new ComputeSourceDir(inspector, true, false)).addNextStep(nopolRepair);
+				.addNextStep(new ComputeSourceDir(inspector, true, false))
+				.addNextStep(nopolRepair);
 		cloneStep.execute();
 
-		List<RepairPatch> classifyPatcheswithODS = inspector.getJobStatus().getCorrectnessLabeledPatches(Features.ODS,
-				String.valueOf(buildId));
+		List<RepairPatch> patches = inspector.getJobStatus().getAllPatches();
 
-		// There are 10 patches are generated for this failing build
-		assertThat(classifyPatcheswithODS.size(), is(1));
+		// There are 1 patch (10 with Nopol working are generated for this failing build
+		assertThat(patches.size(), is(1));
 
 		int overfittingCount = 0;
 
-		for(RepairPatch patch : classifyPatcheswithODS) {
+		for(RepairPatch patch : patches) {
 			if (ODSLabel.OVERFITTING == patch.getODSLabel()){
 				overfittingCount++;
 			}
 		}
 		
 		assertThat(overfittingCount, is(1));
-
 	}
-
 	
 }

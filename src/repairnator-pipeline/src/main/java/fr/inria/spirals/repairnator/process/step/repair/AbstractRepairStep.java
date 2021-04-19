@@ -1,17 +1,16 @@
 package fr.inria.spirals.repairnator.process.step.repair;
 
 import com.google.gson.JsonElement;
+import fr.inria.coming.codefeatures.RepairnatorFeatures;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.PatchNotifier;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.JenkinsProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.utils.DateUtils;
-import fr.inria.spirals.repairnator.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.eclipse.jgit.api.Git;
@@ -29,6 +28,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractRepairStep extends AbstractStep {
 
@@ -103,6 +103,62 @@ public abstract class AbstractRepairStep extends AbstractStep {
 
     protected void setPRTitle(String prTitle) {
         this.prTitle = prTitle;
+    }
+
+    private List<RepairPatch> classifyPatches(List<RepairPatch> patches) {
+        RepairnatorConfig.PATCH_CLASSIFICATION_MODE mode = RepairnatorConfig.getInstance().getPatchClassificationMode();
+        this.getLogger().info("Classifying patches with mode " + mode.name());
+
+        if (patches.isEmpty()) {
+            return patches;
+        } else if (mode.equals(RepairnatorConfig.PATCH_CLASSIFICATION_MODE.ODS)) {
+            if (this.getInspector() instanceof GitRepositoryProjectInspector) {
+                GitRepositoryProjectInspector gitInspector = (GitRepositoryProjectInspector) this.getInspector();
+                patches = RepairPatch.classifyByODSWithFeatures(
+                        patches,
+                        (gitInspector.getRepoSlug() + "-" + gitInspector.getGitRepositoryIdCommit()).replace("/", "-")
+                );
+            } else {
+                patches = RepairPatch.classifyByODSWithFeatures(patches, String.format("%d", this.getInspector().getBuggyBuild().getId()));
+            }
+        } else if (mode.equals(RepairnatorConfig.PATCH_CLASSIFICATION_MODE.NONE)) {
+            this.getLogger().info("Classification mode is NONE so no patch will be classified");
+        }
+
+        patches.forEach(patch -> this.getLogger().debug("patch: " + patch.getFilePath() + " " + patch.getODSLabel()));
+        return patches;
+    }
+
+    private List<RepairPatch> filterPatches(List<RepairPatch> patches) {
+        RepairnatorConfig.PATCH_FILTERING_MODE mode = RepairnatorConfig.getInstance().getPatchFilteringMode();
+        this.getLogger().info("Filtering " + patches.size() + " patches with mode " + mode.name());
+
+        if (patches.isEmpty()) {
+            return patches;
+        } else if (mode.equals(RepairnatorConfig.PATCH_FILTERING_MODE.ODS_CORRECT)) {
+            patches = patches.stream()
+                    .filter(patch -> patch.getODSLabel().equals(RepairnatorFeatures.ODSLabel.CORRECT))
+                    .collect(Collectors.toList());
+        } else if (mode.equals(RepairnatorConfig.PATCH_FILTERING_MODE.NONE)) {
+            this.getLogger().info("Filtering mode is NONE so no patch will be filtered");
+        }
+
+        this.getLogger().info("Number of patches after filtering: " + patches.size());
+        return patches;
+    }
+
+    protected List<RepairPatch> performPatchAnalysis(List<RepairPatch> patchList) {
+        if (patchList.isEmpty()) {
+            return patchList;
+        }
+        if (RepairnatorConfig.getInstance().isPatchClassification()) {
+            patchList = this.classifyPatches(patchList);
+        }
+        if (RepairnatorConfig.getInstance().isPatchFiltering()) {
+            patchList = this.filterPatches(patchList);
+        }
+
+        return patchList;
     }
 
     protected void recordPatches(List<RepairPatch> patchList,int patchNbsLimit) {
