@@ -38,6 +38,8 @@ public class TestTestProject {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -48,7 +50,7 @@ public class TestTestProject {
 
     @Test
     public void testTestProjectWhenFailing() throws IOException {
-        long buildId = 207890790; // surli/failingProject build
+        long buildId = 220951452; // repairnator/failingProject
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -79,7 +81,7 @@ public class TestTestProject {
 
     @Test
     public void testTestProjectWhenErroring() throws IOException {
-        long buildId = 208240908; // surli/failingProject build
+        long buildId = 220946365; // repairnator/failingProject erroring-branch
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -110,7 +112,8 @@ public class TestTestProject {
 
     @Test
     public void testTestProjectWhenNotFailing() throws IOException {
-        long buildId = 201176013; // surli/failingProject build
+        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.org");
+        long buildId = 201176013; // fermadeiral/TestingProject
 
         Build build = this.checkBuildAndReturn(buildId, false);
 

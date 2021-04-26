@@ -64,6 +64,7 @@ public class TestProjectInspector {
         config.setRepairTools(new HashSet<>(Arrays.asList("NPEFix", "NopolSingleTest")));
         config.setGithubUserEmail("noreply@github.com");
         config.setGithubUserName("repairnator");
+        config.setJTravisEndpoint("https://api.travis-ci.com");
         Utils.setLoggersLevel(Level.ERROR);
     }
 
@@ -75,7 +76,7 @@ public class TestProjectInspector {
 
     @Test
     public void testPatchFailingProject() throws IOException, GitAPIException {
-        long buildId = 208897371; // surli/failingProject only-one-failing
+        long buildId = 220944190; // repairnator/failingProject only-one-failing
 
         tmpDir = Files.createTempDirectory("test_complete").toFile();
 
@@ -120,7 +121,7 @@ public class TestProjectInspector {
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));
 
-        String remoteBranchName = "surli-failingProject-208897371-20170308-040702";
+        String remoteBranchName = "repairnator-failingProject-220944190-20210323-104424";
         assertEquals(remoteBranchName, inspector.getRemoteBranchName());
 
         verify(notifierEngine, atLeast(1)).notify(anyString(), anyString());
@@ -148,7 +149,7 @@ public class TestProjectInspector {
 
     @Test
     public void testFailingProjectNotBuildable() throws IOException {
-        long buildId = 228303218; // surli/failingProject only-one-failing
+        long buildId = 220945185; // repairnator/failingProject only-one-failing
 
         tmpDir = Files.createTempDirectory("test_complete2").toFile();
 

@@ -54,7 +54,10 @@ public class TestCheckoutBuild {
 
     @Test
     public void testCheckoutBuggyBuild() throws IOException, GitAPIException {
-        long buildId = 207924136; // surli/failingProject build
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
+
+        long buildId = 220946365; // repairnator/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);
@@ -109,7 +112,7 @@ public class TestCheckoutBuild {
 
     @Test
     public void testCheckoutBuildFromPRWithMissingMerge() throws IOException {
-        long buildId = 199527447; // surli/failingProject build
+        long buildId = 199527447; // 4pr0n/ripme build
 
         Build build = this.checkBuildAndReturn(buildId, true);
 
@@ -147,7 +150,7 @@ public class TestCheckoutBuild {
 
     @Test
     public void testCheckoutBuildFromPRWithMerge() throws IOException {
-        long buildId = 199923736; // surli/failingProject build
+        long buildId = 199923736; // 4pr0n/ripme build
 
         Build build = this.checkBuildAndReturn(buildId, true);
 
@@ -179,7 +182,7 @@ public class TestCheckoutBuild {
 
     @Test
     public void testCheckoutBuildFromPROtherRepo() throws IOException {
-        long buildId = 196568333; // surli/failingProject build
+        long buildId = 196568333; // 4pr0n/ripme build
 
         Build build = this.checkBuildAndReturn(buildId, true);
 

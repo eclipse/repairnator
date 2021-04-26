@@ -49,6 +49,7 @@ public class TestNopolRepair {
     public void setup() {
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
+        config.setJTravisEndpoint("https://api.travis-ci.com");
         Utils.setLoggersLevel(Level.ERROR);
     }
 
@@ -60,7 +61,7 @@ public class TestNopolRepair {
 
     @Test
     public void testNopolRepairWithExclusion() throws IOException {
-        long buildId = 207890790; // surli/failingProject build
+        long buildId = 220951452; // repairnator/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, false);
 

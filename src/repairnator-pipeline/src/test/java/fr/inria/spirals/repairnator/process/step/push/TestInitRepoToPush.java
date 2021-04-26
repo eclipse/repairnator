@@ -45,8 +45,10 @@ public class TestInitRepoToPush {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.INFO);
-        RepairnatorConfig.getInstance().setGithubUserEmail("noreply@github.com");
-        RepairnatorConfig.getInstance().setGithubUserName("repairnator");
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setGithubUserEmail("noreply@github.com");
+        config.setGithubUserName("repairnator");
+        config.setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -57,7 +59,7 @@ public class TestInitRepoToPush {
 
     @Test
     public void testInitRepoToPushSimpleCase() throws IOException, GitAPIException {
-        long buildId = 207924136; // surli/failingProject build
+        long buildId = 220946365; // repairnator/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);
@@ -99,7 +101,7 @@ public class TestInitRepoToPush {
     @Ignore
     @Test
     public void testInitRepoShouldRemoveNotificationInTravisYML() throws IOException {
-        long buildId = 331637757;
+        long buildId = 331637757; // apache/rocketmq
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);

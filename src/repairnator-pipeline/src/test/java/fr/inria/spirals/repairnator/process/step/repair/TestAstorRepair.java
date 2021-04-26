@@ -48,6 +48,8 @@ public class TestAstorRepair {
     @Before
 	public void setup() {
 		Utils.setLoggersLevel(Level.ERROR);
+		RepairnatorConfig config = RepairnatorConfig.getInstance();
+		config.setJTravisEndpoint("https://api.travis-ci.com");
 	}
 
     @After
@@ -58,7 +60,7 @@ public class TestAstorRepair {
 
 	@Test
 	public void testAstorJkali() throws IOException {
-		long buildId = 376820338; // surli/failingProject astor-jkali-failure
+		long buildId = 220950805; // repairnator/failingProject astor-jkali-failure
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -108,7 +110,7 @@ public class TestAstorRepair {
 
 	@Test
 	public void testAstorJMut() throws IOException {
-		long buildId = 376847154; // surli/failingProject astor-jkali-failure
+		long buildId = 220950959; // repairnator/failingProject math-85
 
         Build build = this.checkBuildAndReturn(buildId, false);
 

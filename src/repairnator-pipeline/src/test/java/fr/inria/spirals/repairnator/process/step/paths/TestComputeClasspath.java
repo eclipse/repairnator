@@ -52,7 +52,7 @@ public class TestComputeClasspath {
 
     @Test
     public void testComputeClasspathWithSingleModuleProject() throws IOException {
-        long buildId = 201176013; // surli/failingProject build
+        long buildId = 201176013; // fermadeiral/TestingProject build
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
