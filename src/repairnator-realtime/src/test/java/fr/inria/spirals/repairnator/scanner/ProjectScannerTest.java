@@ -21,9 +21,10 @@ import static org.junit.Assert.assertTrue;
 public class ProjectScannerTest {
 
     @Test
-    public void testTestBuildWithFailingWithoutFailingTestAndRepairMode() {
-        long buildId = 230022061; // inria/spoon failing from PR without failing tests
+    public void testBuildWithoutFailingTestAndRepairMode() {
+        long buildId = 220482792; // repairnator/failingProject build without failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
         config.setLauncherMode(LauncherMode.REPAIR);
 
         Optional<Build> buildOptional = config.getJTravis().build().fromId(buildId);
@@ -37,9 +38,10 @@ public class ProjectScannerTest {
     }
 
     @Test
-    public void testTestBuildWithFailingTestAndRepairMode() {
-        long buildId = 364156914; // inria/spoon failing from PR with failing tests
+    public void testBuildWithFailingTestAndRepairMode() {
+        long buildId = 220926535; // repairnator/failingProject build with failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
         config.setLauncherMode(LauncherMode.REPAIR);
 
         Optional<Build> buildOptional = config.getJTravis().build().fromId(buildId);
@@ -53,10 +55,11 @@ public class ProjectScannerTest {
     }
 
     @Test
-    public void testTestBuildWithFailingAndBearsMode() {
-        long buildId = 230022061; // inria/spoon failing from PR without failing tests
+    public void testBuildWithFailingAndBearsMode() {
+        long buildId = 220926535; // repairnator/failingProject build with failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
+        config.setJTravisEndpoint("https://api.travis-ci.com");
 
         Optional<Build> buildOptional = config.getJTravis().build().fromId(buildId);
         assertTrue(buildOptional.isPresent());
@@ -69,10 +72,11 @@ public class ProjectScannerTest {
     }
 
     @Test
-    public void testTestBuildWithPassingAndBearsMode() {
-        long buildId = 230049446; // inria/spoon passing from PR
+    public void testBuildWithPassingAndBearsMode() {
+        long buildId = 220482792; // repairnator/failingProject build without failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
+        config.setJTravisEndpoint("https://api.travis-ci.com");
 
         Optional<Build> buildOptional = config.getJTravis().build().fromId(buildId);
         assertTrue(buildOptional.isPresent());
