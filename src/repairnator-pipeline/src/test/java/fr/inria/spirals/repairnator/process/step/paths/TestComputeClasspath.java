@@ -42,6 +42,7 @@ public class TestComputeClasspath {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -52,7 +53,7 @@ public class TestComputeClasspath {
 
     @Test
     public void testComputeClasspathWithSingleModuleProject() throws IOException {
-        long buildId = 201176013; // fermadeiral/TestingProject build
+        long buildId = 220925392; // repairnator/failingProject -> master
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -98,7 +99,7 @@ public class TestComputeClasspath {
 
     @Test
     public void testComputeClasspathWithMultiModuleProject() throws IOException {
-        long buggyBuildCandidateId = 386269112; // https://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386269112
+        long buggyBuildCandidateId = 224302680; // andre15silva/test-repairnator-bears (this is temporary until the project is moved to the repairnator org)
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 
