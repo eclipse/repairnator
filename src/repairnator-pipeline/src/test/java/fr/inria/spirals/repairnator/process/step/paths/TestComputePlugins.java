@@ -48,7 +48,7 @@ public class TestComputePlugins {
 
     @Test
     public void testComputePluginsWithSingleModuleProject() throws IOException {
-        long buggyBuildCandidateId = 224326881; // repairnator/failingProject -> plugins
+        long buggyBuildCandidateId = 224442109; // repairnator/failingProject -> plugins
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 
