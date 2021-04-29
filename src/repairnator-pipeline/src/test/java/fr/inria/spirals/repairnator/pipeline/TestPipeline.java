@@ -35,9 +35,10 @@ public class TestPipeline {
         // requires env variable M2_HOME and GITHUB_OAUTH
         // (set in Travis config)
         // eg export M2_HOME=/usr/share/maven
-        // from surli/failingBuild
+        // from repairnator/failingBuild
         Launcher l = new Launcher(new String[]{
-                "--build", "564711868",
+                "--jtravisendpoint", "https://api.travis-ci.com",
+                "--build", "220925392",
                 "--repairTools", "NPEFix",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
@@ -55,7 +56,7 @@ public class TestPipeline {
     public void testPipelineOnlyGitRepository() throws Exception {
         Launcher l = new Launcher(new String[]{
                 "--gitrepo",
-                "--gitrepourl", "https://github.com/surli/failingProject",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath(),
                 "--launcherMode", "GIT_REPOSITORY"
@@ -89,7 +90,7 @@ public class TestPipeline {
     public void testPipelineGitRepositoryAndCommitIdWithFailure() throws Exception {
         Launcher l = new Launcher(new String[]{
                 "--gitrepo",
-                "--gitrepourl", "https://github.com/javierron/failingProject",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepoidcommit", "883bc40f01902654b1b1df094b2badb28e192097",
                 "--gitrepobranch", "nofixes",
                 "--launcherMode", "GIT_REPOSITORY",
@@ -105,7 +106,7 @@ public class TestPipeline {
     public void testPipelineGitRepositoryAndCommitIdWithSuccess() throws Exception {
         Launcher l = new Launcher(new String[]{
                 "--gitrepo",
-                "--gitrepourl", "https://github.com/surli/failingProject",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9",
                 "--launcherMode", "GIT_REPOSITORY",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
@@ -125,7 +126,7 @@ public class TestPipeline {
     public void testPipelineGitRepositoryFirstCommit() throws Exception {
         Launcher l = new Launcher(new String[]{
                 "--gitrepo",
-                "--gitrepourl", "https://github.com/surli/failingProject",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepofirstcommit",
                 "--launcherMode", "GIT_REPOSITORY",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),

@@ -57,8 +57,9 @@ public class TestRTScanner {
 
     @Test
     public void testRepositoryWithSuccessfulBuildIsInteresting() {
-        String slug = "INRIA/spoon";
+        String slug = "eclipse/repairnator";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
+        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.com");
         Optional<Repository> repositoryOptional = getOptionalRepository(slug);
 
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());

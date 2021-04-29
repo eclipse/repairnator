@@ -37,6 +37,7 @@ public class TestComputePlugins {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -47,7 +48,7 @@ public class TestComputePlugins {
 
     @Test
     public void testComputePluginsWithSingleModuleProject() throws IOException {
-        long buggyBuildCandidateId = 380717778; // https://travis-ci.org/eclipse/repairnator/builds/380717778
+        long buggyBuildCandidateId = 224442109; // repairnator/failingProject -> plugins
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 
@@ -76,12 +77,12 @@ public class TestComputePlugins {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertTrue(jobStatus.getProperties().getProjectMetrics().getNumberPlugins() >= 7);
+        assertThat(jobStatus.getProperties().getProjectMetrics().getNumberPlugins(), is(1));
     }
 
     @Test
     public void testComputePluginsWithNoPlugin() throws IOException {
-        long buggyBuildCandidateId = 352395977; // https://travis-ci.org/surli/test-repairnator/builds/352395977
+        long buggyBuildCandidateId = 224246334; // repairnator/failingProject -> master
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 
