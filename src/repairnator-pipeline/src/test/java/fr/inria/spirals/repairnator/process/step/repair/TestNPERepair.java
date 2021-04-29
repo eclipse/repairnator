@@ -48,6 +48,8 @@ public class TestNPERepair {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -58,7 +60,7 @@ public class TestNPERepair {
 
     @Test
     public void testNPERepair() throws IOException {
-        long buildId = 252712792; // surli/failingProject build
+        long buildId = 220951790; // repairnator/failingProject simple-npe
         RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
 
         Build build = this.checkBuildAndReturn(buildId, false);
@@ -110,7 +112,7 @@ public class TestNPERepair {
 
     @Test
     public void testNPERepairClassScope() throws IOException {
-        long buildId = 760311031; // andre15silva/failingProject build
+        long buildId = 220951924; // repairnator/failingProject npefix-scope
         RepairnatorConfig.getInstance().setNPEScope("class");
         RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
 
@@ -163,7 +165,7 @@ public class TestNPERepair {
 
     @Test
     public void testNPERepairPackageScope() throws IOException {
-        long buildId = 760311031; // andre15silva/failingProject build
+        long buildId = 220951924; // repairnator/failingProject npefix-scope
         RepairnatorConfig.getInstance().setNPEScope("package");
         RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
 
@@ -216,7 +218,7 @@ public class TestNPERepair {
 
     @Test
     public void testNPERepairStackScope() throws IOException {
-        long buildId = 760311031; // andre15silva/failingProject build
+        long buildId = 220951924; // repairnator/failingProject npefix-scope
         RepairnatorConfig.getInstance().setNPEScope("stack");
         RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
 
@@ -269,7 +271,7 @@ public class TestNPERepair {
 
     @Test
     public void testNPERepairProjectScope() throws IOException {
-        long buildId = 760311031; // andre15silva/failingProject build
+        long buildId = 220951924; // repairnator/failingProject npefix-scope
         RepairnatorConfig.getInstance().setNPEScope("project");
         RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
 

@@ -49,6 +49,8 @@ public class TestGatherTestInformation {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -59,7 +61,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenFailing() throws IOException {
-        long buildId = 207890790; // surli/failingProject build
+        long buildId = 220951452; // repairnator/failingProject
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -110,7 +112,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationOnlyOneErroring() throws IOException {
-        long buildId = 208897371; // surli/failingProject build
+        long buildId = 220944190; // repairnator/failingProject only-one-failing
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -212,7 +214,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenErroring() throws IOException {
-        long buildId = 208240908; // surli/failingProject build
+        long buildId = 220946365; // repairnator/failingProject erroring-branch
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -265,7 +267,8 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenNotFailing() throws IOException {
-        long buildId = 201176013; // surli/failingProject build
+        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.org");
+        long buildId = 201176013; // fermadeiral/TestingProject
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -320,7 +323,8 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenNotFailingWithPassingContract() throws IOException {
-        long buildId = 201176013; // surli/failingProject build
+        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.org");
+        long buildId = 201176013; // fermadeiral/TestingProject
 
         Build build = this.checkBuildAndReturn(buildId, false);
 

@@ -42,6 +42,7 @@ public class TestComputeSourceDir {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -52,7 +53,7 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDir() throws IOException {
-        long buildId = 207924136; // surli/failingProject build
+        long buildId = 224246334; // repairnator/failingProject -> master
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -89,7 +90,7 @@ public class TestComputeSourceDir {
 
     @Test
     public void testComputeSourceDirWithMultiModuleProject() throws IOException {
-        long buildId = 225251586; // Spirals-Team/librepair build
+        long buildId = 224264992; // repairnator/failingProject -> multi-module
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -121,12 +122,18 @@ public class TestComputeSourceDir {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java").getCanonicalFile()}));
+        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {
+                new File(repoDir.getAbsolutePath()+"/src/maven-repair/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/src/repairnator-core/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/src/repairnator-jenkins-plugin/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/src/repairnator-pipeline/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/src/repairnator-realtime/src/main/java").getCanonicalFile(),
+        }));
     }
 
     @Test
     public void testComputeSourceDirWithMultiModuleProject2() throws IOException {
-        long buildId = 225251586; // Spirals-Team/librepair build
+        long buildId = 224120644; // hs-web/hsweb-framework build
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -157,98 +164,29 @@ public class TestComputeSourceDir {
             assertThat(stepStatus.isSuccess(), is(true));
         }
 
-        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder").getCanonicalFile()}));
-    }
-
-    @Test
-    public void testComputeSourceDirWithMultiModuleProject3() throws IOException {
-        long buildId = 225251586; // Spirals-Team/librepair build
-
-        Build build = this.checkBuildAndReturn(buildId, false);
-
-        tmpDir = Files.createTempDirectory("test_computesourcedir2").toFile();
-
-        File repoDir = new File(tmpDir, "repo");
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
-
-
-        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        jobStatus.setFailingModulePath(repoDir.getAbsolutePath());
-
-        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
-
-        CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
-
-        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(computeSourceDir);
-        cloneStep.execute();
-
-        assertThat(computeSourceDir.isShouldStop(), is(false));
-        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(3));
-        StepStatus computeSourceDirStatus = stepStatusList.get(2);
-        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
-
-        for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
-        }
-
-        assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/a-module/src/custom/folder").getCanonicalFile(), new File(repoDir.getAbsolutePath()+"/test-projects/src/main/java").getCanonicalFile()}));
-    }
-
-    @Test
-    public void testComputeSourceDirWithMultiModuleProject4() throws IOException {
-        long buildId = 216674182; // pac4j/pac4j
-        long patchedBuildId = 218753299;
-
-        Build build = this.checkBuildAndReturn(buildId, false);
-        Build patchedBuild = this.checkBuildAndReturn(patchedBuildId, false);
-
-        tmpDir = Files.createTempDirectory("test_computesourcedir3").toFile();
-
-        File repoDir = new File(tmpDir, "repo");
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, patchedBuild, ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES, "");
-
-
-        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        jobStatus.setFailingModulePath(repoDir.getAbsolutePath());
-
-        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
-
-        CloneRepository cloneStep = new CloneRepository(inspector);
-        ComputeSourceDir computeSourceDir = new ComputeSourceDir(inspector, true, false);
-
-        cloneStep.addNextStep(new CheckoutPatchedBuild(inspector, true)).addNextStep(computeSourceDir);
-        cloneStep.execute();
-
-        assertThat(computeSourceDir.isShouldStop(), is(false));
-        List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(3));
-        StepStatus computeSourceDirStatus = stepStatusList.get(2);
-        assertThat(computeSourceDirStatus.getStep(), is(computeSourceDir));
-
-        for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
-        }
-
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {
-                new File(repoDir.getAbsolutePath()+"/pac4j-cas/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-config/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-core/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-gae/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-http/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-jwt/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-ldap/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-mongo/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-oauth/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-oidc/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-openid/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-saml/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-sql/src/main/java").getCanonicalFile(),
-                new File(repoDir.getAbsolutePath()+"/pac4j-stormpath/src/main/java").getCanonicalFile()
+                new File(repoDir.getAbsolutePath()+"/hsweb-authorization/hsweb-authorization-api/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-authorization/hsweb-authorization-basic/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-authorization/hsweb-authorization-oauth2/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-commons/hsweb-commons-api/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-commons/hsweb-commons-crud/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-concurrent/hsweb-concurrent-cache/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-core/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-datasource/hsweb-datasource-api/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-datasource/hsweb-datasource-jta/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-datasource/hsweb-datasource-web/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-logging/hsweb-access-logging-aop/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-logging/hsweb-access-logging-api/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-starter/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-system/hsweb-system-authorization/hsweb-system-authorization-api/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-system/hsweb-system-authorization/hsweb-system-authorization-default/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-system/hsweb-system-authorization/hsweb-system-authorization-oauth2/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-system/hsweb-system-dictionary/src/main/java").getCanonicalFile(),
+                new File(repoDir.getAbsolutePath()+"/hsweb-system/hsweb-system-file/src/main/java").getCanonicalFile()
         }));
     }
 
+    
     // fixme: the test is not passing anymore when executing the whole test suite
     @Ignore
     @Test

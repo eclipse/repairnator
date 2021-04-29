@@ -44,6 +44,8 @@ public class TestAssertFixerRepair {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -54,7 +56,7 @@ public class TestAssertFixerRepair {
 
     @Test
     public void testAssertFixerFixes() throws IOException {
-        long buildId = 365127838; // surli/failingProject build
+        long buildId = 220950016; // repairnator/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, false);
 

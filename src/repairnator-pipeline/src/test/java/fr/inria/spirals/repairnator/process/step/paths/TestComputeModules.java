@@ -37,6 +37,7 @@ public class TestComputeModules {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -47,7 +48,7 @@ public class TestComputeModules {
 
     @Test
     public void testComputeModulesWithSingleModuleProject() throws IOException {
-        long buggyBuildCandidateId = 203797975; // http://travis-ci.org/fermadeiral/TestingProject/builds/203797975
+        long buggyBuildCandidateId = 224246334; // repairnator/failingProject -> master
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 
@@ -81,7 +82,7 @@ public class TestComputeModules {
 
     @Test
     public void testComputeModulesWithMultiModuleProject() throws IOException {
-        long buggyBuildCandidateId = 380717778; // https://travis-ci.org/eclipse/repairnator/builds/380717778
+        long buggyBuildCandidateId = 224264992; // repairnator/failingProject -> multi-module
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 

@@ -48,6 +48,7 @@ public class TestCheckoutBuggyBuildSourceCode {
         Utils.setLoggersLevel(Level.ERROR);
         RepairnatorConfig.getInstance().setGithubUserEmail("noreply@github.com");
         RepairnatorConfig.getInstance().setGithubUserName("repairnator");
+        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -58,8 +59,8 @@ public class TestCheckoutBuggyBuildSourceCode {
 
     @Test
     public void testCheckoutPreviousBuildSourceCodeNoPR() throws IOException, GitAPIException {
-        long buildId = 221992429; // INRIA/spoon
-        long previousBuildId = 218213030;
+        long buildId = 219248073; // repairnator/failingProject -> astor-jkali-failure
+        long previousBuildId = 220950805;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
         Build build = this.checkBuildAndReturn(buildId, false);
@@ -139,8 +140,8 @@ public class TestCheckoutBuggyBuildSourceCode {
 
     @Test
     public void testCheckoutPreviousBuildSourceCodeNoPR2() throws IOException, GitAPIException {
-        long buildId = 222020421; // alibaba/fastjson
-        long previousBuildId = 222016611;
+        long buildId = 220951924; // repairnator/failingProject -> npefix-scope
+        long previousBuildId = 224245043;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
         Build build = this.checkBuildAndReturn(buildId, false);
@@ -220,8 +221,8 @@ public class TestCheckoutBuggyBuildSourceCode {
 
     @Test
     public void testCheckoutPreviousBuildSourceCodeWithPR() throws IOException, GitAPIException {
-        long buildId = 223248816; // HubSpot/Singularity
-        long previousBuildId = 222209171;
+        long buildId = 224246949; // repairnator/failingProject -> sample pr
+        long previousBuildId = 224246458;
         ScannedBuildStatus status = ScannedBuildStatus.PASSING_AND_PASSING_WITH_TEST_CHANGES;
 
         Build build = this.checkBuildAndReturn(buildId, true);

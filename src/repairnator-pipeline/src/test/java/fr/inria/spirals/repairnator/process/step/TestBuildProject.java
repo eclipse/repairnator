@@ -39,6 +39,8 @@ public class TestBuildProject {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -49,7 +51,7 @@ public class TestBuildProject {
 
     @Test
     public void testBuildProject() throws IOException {
-        long buildId = 207924136; // surli/failingProject build
+        long buildId = 220946365; // repairnator/failingProject erroring-branch
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -79,7 +81,7 @@ public class TestBuildProject {
 
     @Test
     public void testBuildProjectWithPomNotInRoot() throws IOException {
-        long buildId = 218036343;
+        long buildId = 220957920; // repairnator/failingProject other-directory-for-pom-file
 
         Build build = this.checkBuildAndReturn(buildId, false);
 

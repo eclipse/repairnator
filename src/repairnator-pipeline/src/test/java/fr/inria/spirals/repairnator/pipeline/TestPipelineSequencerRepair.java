@@ -28,9 +28,11 @@ public class TestPipelineSequencerRepair {
     }
 
     @Test
-    public void TestPipelineSeqeuncerRepairTool() throws Exception{
-        // ec915681fbd6a8b2c30580b2618e62636204abe4 -> javierron/faining project -> test failure
+    public void TestPipelineSequencerRepairTool() throws Exception {
+        // 220926535 -> repairnator/failingProject -> test failure
         Launcher launcher = new Launcher(new String[]{
+                "--jtravisendpoint", "https://api.travis-ci.com",
+                "--build", "220926535",
                 "--sequencerRepair",
                 "--gitrepo",
                 "--gitrepourl", "https://github.com/javierron/failingProject",
@@ -75,8 +77,10 @@ public class TestPipelineSequencerRepair {
 
     @Test
     public void TestPipelineBuildFailBranch() throws Exception{
-        // ec915681fbd6a8b2c30580b2618e62636204abe4 -> javierron/faining project -> syntax error
+        // 713361530 -> repairnator/failingProject -> syntax error
         Launcher launcher = new Launcher(new String[]{
+                "--jtravisendpoint", "https://api.travis-ci.com",
+                "--build", "220941672",
                 "--sequencerRepair",
                 "--gitrepo",
                 "--gitrepourl", "https://github.com/javierron/failingProject",

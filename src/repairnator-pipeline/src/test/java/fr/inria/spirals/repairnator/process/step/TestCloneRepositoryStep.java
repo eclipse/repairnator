@@ -40,6 +40,8 @@ public class TestCloneRepositoryStep {
     @Before
     public void setup() {
         Utils.setLoggersLevel(Level.ERROR);
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
     }
 
     @After
@@ -50,7 +52,7 @@ public class TestCloneRepositoryStep {
 
     @Test
     public void testCloneMasterBuild() throws IOException {
-        long buildId = 207924136; // surli/failingProject build
+        long buildId = 220946365; // repairnator/failingProject erroring-branch
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -85,7 +87,7 @@ public class TestCloneRepositoryStep {
 
     @Test
     public void testCloneBuildWithSubmodule() throws IOException {
-        long buildId = 410212137; // surli/failingProject build
+        long buildId = 220958889; // repairnator/failingProject test-with-submodule
 
         Build build = this.checkBuildAndReturn(buildId, false);
 

@@ -47,6 +47,7 @@ public class TestGlobalPatchAnalysis {
 	public void setup() {
 		RepairnatorConfig config = RepairnatorConfig.getInstance();
 		config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
+		//config.setJTravisEndpoint("https://api.travis-ci.com");
 	}
 
 	@After
@@ -70,7 +71,7 @@ public class TestGlobalPatchAnalysis {
 	@Test
 	@Ignore
 	public void testGatheringPatches() throws IOException {
-		long buildId = 564711868; // surli/failingProject build https://api.travis-ci.org/v3/build/564711868
+		long buildId = 220925392; // repairnator/failingProject build https://api.travis-ci.com/v3/build/220925392
 		Build build = this.checkBuildAndReturn(buildId, false);
 
 		tmpDir = Files.createTempDirectory("test_gathering").toFile();
@@ -120,7 +121,7 @@ public class TestGlobalPatchAnalysis {
 		RepairnatorConfig.getInstance().setPatchClassification(true);
 		RepairnatorConfig.getInstance().setPatchClassificationMode(RepairnatorConfig.PATCH_CLASSIFICATION_MODE.ODS);
 
-		long buildId = 203797975; // surli/failingProject build
+		long buildId = 203797975; // fermadeiral/TestingProject build
 		Build build = this.checkBuildAndReturn(buildId, false);
 
 		tmpDir = Files.createTempDirectory("patch_classification").toFile();

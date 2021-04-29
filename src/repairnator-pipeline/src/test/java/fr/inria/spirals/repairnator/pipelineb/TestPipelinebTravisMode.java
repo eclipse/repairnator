@@ -61,9 +61,10 @@ public class TestPipelinebTravisMode {
         // requires env variable M2_HOME and GITHUB_OAUTH
         // (set in Travis config)
         // eg export M2_HOME=/usr/share/maven
-        // from surli/failingBuild
+        // from repairnator/failingBuild
         TravisMainProcess mainProc = (TravisMainProcess) MainProcessFactory.getTravisMainProcess(new String[]{
-                "--build", "564711868",
+                "--jtravisendpoint", "https://api.travis-ci.com",
+                "--build", "220925392",
                 "--repairTools", "NPEFix",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
