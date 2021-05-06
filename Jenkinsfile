@@ -1,3 +1,5 @@
+@Library('repairnator') _
+
 pipeline {
   agent {
     kubernetes {
