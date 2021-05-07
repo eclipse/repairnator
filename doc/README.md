@@ -101,6 +101,19 @@ This repository is organized as follows:
 
 ## Academic bibliographic references
 
+"[A Software Repair Bot based on Continual Learning](http://arxiv.org/pdf/2012.06824)"  In IEEE Software, 2021. ([doi:10.1109/ms.2021.3070743](https://doi.org/10.1109/ms.2021.3070743))
+
+```
+@article{arXiv-2012.06824,
+ title = {A Software Repair Bot based on Continual Learning},
+ author = {Benoit Baudry and Zimin Chen and Khashayar Etemadi and Han Fu and Davide Ginelli and Steve Kommrusch and Matias Martinez and Martin Monperrus and Javier Ron and He Ye and Zhongxing Yu},
+ journal = {IEEE Software},
+ year = {2021},
+ doi = {10.1109/ms.2021.3070743},
+}
+```
+
+
 "[Repairnator patches programs automatically](https://ubiquity.acm.org/article.cfm?id=3349589)", In Ubiquity, Association for Computing Machinery, vol. July, no. 2, pp. 1-12, 2019. 
 
 ```
