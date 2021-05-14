@@ -1,9 +1,9 @@
 {
   "type": "only_fail",
   "repository": {
-    "name": "surli/failingProject",
-    "githubId": 78415513,
-    "url": "https://github.com/surli/failingProject",
+    "name": "repairnator/failingProject",
+    "githubId": 345049665,
+    "url": "https://github.com/repairnator/failingProject",
     "isFork": false,
     "original": {
       "name": "",
@@ -15,22 +15,22 @@
   },
   "builds": {
     "buggyBuild": {
-      "id": 208897371,
-      "url": "http://travis-ci.org/surli/failingProject/builds/208897371",
-      "date": "Mar 8, 2017 4:07:02 AM"
+      "id": 220944190,
+      "url": "http://travis-ci.org/repairnator/failingProject/builds/220944190",
+      "date": "Mar 23, 2021, 10:44:24 AM"
     }
   },
   "commits": {
     "buggyBuild": {
-      "repoName": "surli/failingProject",
+      "repoName": "repairnator/failingProject",
       "branchName": "only-one-failing",
       "sha": "e17771af92490121d4b1655c0bdf36b3692f1ce3",
-      "url": "http://github.com/surli/failingProject/commit/e17771af92490121d4b1655c0bdf36b3692f1ce3",
+      "url": "http://github.com/repairnator/failingProject/commit/e17771af92490121d4b1655c0bdf36b3692f1ce3",
       "date": "Mar 8, 2017 4:05:44 AM"
     }
   },
   "tests": {
-    "failingModule": "/tmp/test_bears_json_file_failing_build4879665694333003261/surli/failingProject/208897371",
+    "failingModule": "/tmp/test_bears_json_file_failing_build4879665694333003261/repairnator/failingProject",
     "overallMetrics": {
       "numberRunning": 8,
       "numberPassing": 7,
@@ -60,7 +60,7 @@
         "testClass": "nopol_examples.nopol_example_1.NopolExampleTest",
         "testMethod": "test5",
         "failureName": "java.lang.StringIndexOutOfBoundsException",
-        "detail": "String index out of range: -5",
+        "detail": "java.lang.StringIndexOutOfBoundsException: String index out of range: -5\n\tat java.base/java.lang.StringLatin1.charAt(StringLatin1.java:47)\n\tat java.base/java.lang.String.charAt(String.java:693)\n\tat nopol_examples.nopol_example_1.NopolExample.charAt(NopolExample.java:16)\n\tat nopol_examples.nopol_example_1.NopolExampleTest.test5(NopolExampleTest.java:39)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:44)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:271)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:70)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:50)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:238)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:63)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:236)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:53)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:229)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:309)\n\tat org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)\n\tat org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)\n\tat org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)\n\tat org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)\n\tat org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)\n\tat org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)\n\tat org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)",
         "isError": true
       }
     ]
@@ -78,6 +78,7 @@
   },
   "projectMetrics": {
     "numberModules": 1,
+    "numberPlugins": 0,
     "numberSourceFiles": 10,
     "numberTestFiles": 1,
     "numberLibrariesFailingModule": 2,
@@ -137,6 +138,6 @@
         ]
       }
     },
-    "projectRootPomPath": "/tmp/test_bears_json_file_failing_build4879665694333003261/surli/failingProject/208897371/pom.xml"
+    "projectRootPomPath": "/tmp/test_bears_json_file_failing_build4879665694333003261/repairnator/failingProject/pom.xml"
   }
 }

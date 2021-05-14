@@ -95,12 +95,6 @@ public class TestMetrics4BearsJsonFile {
         FileHelper.deleteFile(tmpDir);
     }
 
-    /*
-     FIXME: Previous error was fixed. Path to bears-chema.json is now working.
-     Current issue is that the json file that the result is compared to isn't reproducible.
-     One way to fix the issue would be to set the JSON comparison to LENIENT, and edit the json to contain only the parts that never change between runs.
-     */
-    @Ignore
     @Test
     public void testBearsJsonFileWithPassingPassingBuilds() throws IOException, ProcessingException {
         long buggyBuildCandidateId = 225920540; // https://travis-ci.com/github/repairnator/test-repairnator-bears/builds/225920540
@@ -159,7 +153,7 @@ public class TestMetrics4BearsJsonFile {
             String fieldComparisonFailureName = fieldComparisonFailure.getField();
             if (fieldComparisonFailureName.equals("tests.failingModule") ||
                     fieldComparisonFailureName.equals("reproductionBuggyBuild.projectRootPomPath")) {
-                String path = "repairnator/test-repairnator-bears/386337343";
+                String path = "repairnator/test-repairnator-bears";
                 String expected = (String) fieldComparisonFailure.getExpected();
                 expected = expected.substring(expected.indexOf(path), expected.length());
                 String actual = (String) fieldComparisonFailure.getActual();
@@ -175,14 +169,9 @@ public class TestMetrics4BearsJsonFile {
         }
     }
 
-    /*
-     FIXME: See message of the previous test. Plus, the buildId isn't on travis.com and it has been deleted from travis.org
-     To fix this, another build needs to replace this one, so results may be different.
-     */
-    @Ignore
     @Test
     public void testRepairnatorJsonFileWithFailingBuild() throws IOException, ProcessingException {
-        long buggyBuildCandidateId = 208897371; // https://travis-ci.org/surli/failingProject/builds/208897371
+        long buggyBuildCandidateId = 220944190; // https://travis-ci.com/github/repairnator/failingProject/builds/220944190
 
         tmpDir = Files.createTempDirectory("test_repairnator_json_file_failing_build").toFile();
 
@@ -194,7 +183,7 @@ public class TestMetrics4BearsJsonFile {
         config.setLauncherMode(LauncherMode.REPAIR);
         config.setRepairTools(new HashSet<>(Arrays.asList("NopolSingleTest")));
 
-        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null, null);
+        ProjectInspector inspector = InspectorFactory.getTravisInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null);
         inspector.run();
 
         // check repairnator.json against schema
@@ -235,9 +224,15 @@ public class TestMetrics4BearsJsonFile {
 
         for (FieldComparisonFailure fieldComparisonFailure : result.getFieldFailures()) {
             String fieldComparisonFailureName = fieldComparisonFailure.getField();
-            if (fieldComparisonFailureName.equals("tests.failingModule") ||
+            if (fieldComparisonFailureName.equals("tests.failureDetails[0].detail")) {
+                String expected = (String) fieldComparisonFailure.getExpected();
+                String actual = (String) fieldComparisonFailure.getActual();
+                assertTrue("Property failing: " + fieldComparisonFailureName,
+                        actual.replaceAll("\\s+", "")
+                                .equals(expected.replaceAll("\\s+", "")));
+            } else if (fieldComparisonFailureName.equals("tests.failingModule") ||
                     fieldComparisonFailureName.equals("reproductionBuggyBuild.projectRootPomPath")) {
-                String path = "surli/failingProject/208897371";
+                String path = "repairnator/failingProject";
                 String expected = (String) fieldComparisonFailure.getExpected();
                 expected = expected.substring(expected.indexOf(path), expected.length());
                 String actual = (String) fieldComparisonFailure.getActual();
