@@ -110,11 +110,11 @@ public class ProjectInspector {
 
     public ProjectInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
         this.buildToBeInspected = buildToBeInspected;
-        this.workspace = workspace;
+        this.workspace = new String(workspace);
         this.gitSlug = getRepoSlug();
         this.repoLocalPath = workspace + File.separator + getRepoSlug();
         long buildId = buildToBeInspected != null ? buildToBeInspected.getBuggyBuild().getId() : 0;
-        this.repoToPushLocalPath = repoLocalPath+"_topush_" + buildId;
+        this.repoToPushLocalPath = new String(repoLocalPath + "_topush_" + buildId);
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
         this.serializers = new ArrayList<AbstractDataSerializer>();
         this.gitHelper = new GitHelper();

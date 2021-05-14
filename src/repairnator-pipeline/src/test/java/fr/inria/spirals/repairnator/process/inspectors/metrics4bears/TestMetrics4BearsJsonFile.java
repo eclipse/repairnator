@@ -117,8 +117,14 @@ public class TestMetrics4BearsJsonFile {
 
         ObjectMapper jsonMapper = new ObjectMapper();
         String workingDir = System.getProperty("user.dir");
-        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/") + "repairnator/".length());
-        String jsonSchemaFilePath = workingDir + "resources/bears-schema.json";
+        // In CI the base dir has a diferent name, and it changes with the PR
+        if (workingDir.contains("repairnator/")) {
+            workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/") + "repairnator/".length());
+        } else {
+            // We use the stable part (i.e. the sub-module) to get the workingDir
+            workingDir = workingDir.substring(0, workingDir.lastIndexOf("src/repairnator-pipeline"));
+        }
+        String jsonSchemaFilePath = workingDir + "/resources/bears-schema.json";
         File jsonSchemaFile = new File(jsonSchemaFilePath);
         JsonNode schemaObject = jsonMapper.readTree(jsonSchemaFile);
 
@@ -190,8 +196,14 @@ public class TestMetrics4BearsJsonFile {
 
         ObjectMapper jsonMapper = new ObjectMapper();
         String workingDir = System.getProperty("user.dir");
-        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/") + "repairnator/".length());
-        String jsonSchemaFilePath = workingDir + "resources/repairnator-schema.json";
+        // In CI the base dir has a diferent name, and it changes with the PR
+        if (workingDir.contains("repairnator/")) {
+            workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/") + "repairnator/".length());
+        } else {
+            // We use the stable part (i.e. the sub-module) to get the workingDir
+            workingDir = workingDir.substring(0, workingDir.lastIndexOf("src/repairnator-pipeline"));
+        }
+        String jsonSchemaFilePath = workingDir + "/resources/repairnator-schema.json";
         File jsonSchemaFile = new File(jsonSchemaFilePath);
         JsonNode schemaObject = jsonMapper.readTree(jsonSchemaFile);
 
