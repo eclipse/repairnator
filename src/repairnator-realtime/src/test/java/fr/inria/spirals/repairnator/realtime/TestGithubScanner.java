@@ -28,8 +28,8 @@ public class TestGithubScanner {
         Whitebox.setInternalState(scanner, "runner", runner);
 
         boolean isGithubActionsFailed = false;
-        String commitId = "65eb0ee8cc221bd4fe6d6414feb6ee368131288d";
-        String repoName = "javierron/failingProject";
+        String commitId = "fda5d6161a5602a76e810209491d04cf91f4803b";
+        String repoName = "repairnator/failingProject";
         SelectedCommit commit = new SelectedCommit(isGithubActionsFailed, commitId, repoName);
 
         scanner.process(commit);

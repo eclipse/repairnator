@@ -47,7 +47,7 @@ public class TestGlobalPatchAnalysis {
 	public void setup() {
 		RepairnatorConfig config = RepairnatorConfig.getInstance();
 		config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
-		//config.setJTravisEndpoint("https://api.travis-ci.com");
+		config.setJTravisEndpoint("https://api.travis-ci.com");
 	}
 
 	@After
@@ -121,7 +121,7 @@ public class TestGlobalPatchAnalysis {
 		RepairnatorConfig.getInstance().setPatchClassification(true);
 		RepairnatorConfig.getInstance().setPatchClassificationMode(RepairnatorConfig.PATCH_CLASSIFICATION_MODE.ODS);
 
-		long buildId = 203797975; // fermadeiral/TestingProject build
+		long buildId = 225936611; // https://travis-ci.com/github/repairnator/TestingProject/builds/225936611
 		Build build = this.checkBuildAndReturn(buildId, false);
 
 		tmpDir = Files.createTempDirectory("patch_classification").toFile();

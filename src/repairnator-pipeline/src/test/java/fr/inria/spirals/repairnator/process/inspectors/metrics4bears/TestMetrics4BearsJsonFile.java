@@ -39,8 +39,7 @@ import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestMetrics4BearsJsonFile {
 
@@ -61,6 +60,7 @@ public class TestMetrics4BearsJsonFile {
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setGithubUserEmail("noreply@github.com");
         config.setGithubUserName("repairnator");
+        config.setJTravisEndpoint("https://api.travis-ci.com");
 
         propertiesToIgnore = new ArrayList<>();
         propertiesToIgnore.add("reproductionBuggyBuild.reproductionDateBeginning");
@@ -95,13 +95,16 @@ public class TestMetrics4BearsJsonFile {
         FileHelper.deleteFile(tmpDir);
     }
 
-    // FIXME: this is critical: such test case results in error when running in Travis, but locally, running only this test, the test passes.
-    // Error presented in the Travis log: TestMetrics4BearsJsonFile.testBearsJsonFileWithPassingPassingBuilds:128 » FileNotFound
+    /*
+     FIXME: Previous error was fixed. Path to bears-chema.json is now working.
+     Current issue is that the json file that the result is compared to isn't reproducible.
+     One way to fix the issue would be to set the JSON comparison to LENIENT, and edit the json to contain only the parts that never change between runs.
+     */
     @Ignore
     @Test
     public void testBearsJsonFileWithPassingPassingBuilds() throws IOException, ProcessingException {
-        long buggyBuildCandidateId = 386337343; // https://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386337343
-        long patchedBuildCandidateId = 386348522; // https://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386348522
+        long buggyBuildCandidateId = 225920540; // https://travis-ci.com/github/repairnator/test-repairnator-bears/builds/225920540
+        long patchedBuildCandidateId = 225920529; // https://travis-ci.com/github/repairnator/test-repairnator-bears/builds/225920529
 
         tmpDir = Files.createTempDirectory("test_bears_json_file_passing_passing_builds").toFile();
 
@@ -120,7 +123,7 @@ public class TestMetrics4BearsJsonFile {
 
         ObjectMapper jsonMapper = new ObjectMapper();
         String workingDir = System.getProperty("user.dir");
-        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/"));
+        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/") + "repairnator/".length());
         String jsonSchemaFilePath = workingDir + "resources/bears-schema.json";
         File jsonSchemaFile = new File(jsonSchemaFilePath);
         JsonNode schemaObject = jsonMapper.readTree(jsonSchemaFile);
@@ -156,7 +159,7 @@ public class TestMetrics4BearsJsonFile {
             String fieldComparisonFailureName = fieldComparisonFailure.getField();
             if (fieldComparisonFailureName.equals("tests.failingModule") ||
                     fieldComparisonFailureName.equals("reproductionBuggyBuild.projectRootPomPath")) {
-                String path = "fermadeiral/test-repairnator-bears/386337343";
+                String path = "repairnator/test-repairnator-bears/386337343";
                 String expected = (String) fieldComparisonFailure.getExpected();
                 expected = expected.substring(expected.indexOf(path), expected.length());
                 String actual = (String) fieldComparisonFailure.getActual();
@@ -172,6 +175,10 @@ public class TestMetrics4BearsJsonFile {
         }
     }
 
+    /*
+     FIXME: See message of the previous test. Plus, the buildId isn't on travis.com and it has been deleted from travis.org
+     To fix this, another build needs to replace this one, so results may be different.
+     */
     @Ignore
     @Test
     public void testRepairnatorJsonFileWithFailingBuild() throws IOException, ProcessingException {
@@ -194,7 +201,7 @@ public class TestMetrics4BearsJsonFile {
 
         ObjectMapper jsonMapper = new ObjectMapper();
         String workingDir = System.getProperty("user.dir");
-        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/"));
+        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/") + "repairnator/".length());
         String jsonSchemaFilePath = workingDir + "resources/repairnator-schema.json";
         File jsonSchemaFile = new File(jsonSchemaFilePath);
         JsonNode schemaObject = jsonMapper.readTree(jsonSchemaFile);
