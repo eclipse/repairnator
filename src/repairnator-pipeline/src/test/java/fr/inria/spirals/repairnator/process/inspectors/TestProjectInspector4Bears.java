@@ -66,6 +66,7 @@ public class TestProjectInspector4Bears {
         config.setPushRemoteRepo("");
         config.setGithubUserEmail("noreply@github.com");
         config.setGithubUserName("repairnator");
+        config.setJTravisEndpoint("https://api.travis-ci.com");
         Utils.setLoggersLevel(Level.ERROR);
 
         serializerEngine = mock(SerializerEngine.class);
@@ -88,8 +89,8 @@ public class TestProjectInspector4Bears {
 
     @Test
     public void testFailingPassingProject() throws IOException, GitAPIException {
-        long buildIdPassing = 203800961;
-        long buildIdFailing = 203797975;
+        long buildIdPassing = 226012005; // https://travis-ci.com/github/repairnator/TestingProject/builds/226012005
+        long buildIdFailing = 225936611; // https://travis-ci.com/github/repairnator/TestingProject/builds/225936611
 
         tmpDir = Files.createTempDirectory("test_bears1").toFile();
 
@@ -142,8 +143,8 @@ public class TestProjectInspector4Bears {
 
     @Test
     public void testPassingPassingProject() throws IOException, GitAPIException {
-        long buildIdPassing = 201938881;
-        long buildIdPreviousPassing = 201938325;
+        long buildIdPassing = 226012099; // https://travis-ci.com/github/repairnator/TestingProject/builds/226012099
+        long buildIdPreviousPassing = 226012117; // https://travis-ci.com/github/repairnator/TestingProject/builds/226012117
 
         tmpDir = Files.createTempDirectory("test_bears2").toFile();
 
