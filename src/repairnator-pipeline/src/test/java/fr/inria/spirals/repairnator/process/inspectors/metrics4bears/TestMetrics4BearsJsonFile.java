@@ -39,8 +39,7 @@ import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestMetrics4BearsJsonFile {
 
@@ -61,6 +60,7 @@ public class TestMetrics4BearsJsonFile {
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
         config.setGithubUserEmail("noreply@github.com");
         config.setGithubUserName("repairnator");
+        config.setJTravisEndpoint("https://api.travis-ci.com");
 
         propertiesToIgnore = new ArrayList<>();
         propertiesToIgnore.add("reproductionBuggyBuild.reproductionDateBeginning");
@@ -95,13 +95,10 @@ public class TestMetrics4BearsJsonFile {
         FileHelper.deleteFile(tmpDir);
     }
 
-    // FIXME: this is critical: such test case results in error when running in Travis, but locally, running only this test, the test passes.
-    // Error presented in the Travis log: TestMetrics4BearsJsonFile.testBearsJsonFileWithPassingPassingBuilds:128 » FileNotFound
-    @Ignore
     @Test
     public void testBearsJsonFileWithPassingPassingBuilds() throws IOException, ProcessingException {
-        long buggyBuildCandidateId = 386337343; // https://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386337343
-        long patchedBuildCandidateId = 386348522; // https://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386348522
+        long buggyBuildCandidateId = 225920540; // https://travis-ci.com/github/repairnator/test-repairnator-bears/builds/225920540
+        long patchedBuildCandidateId = 225920529; // https://travis-ci.com/github/repairnator/test-repairnator-bears/builds/225920529
 
         tmpDir = Files.createTempDirectory("test_bears_json_file_passing_passing_builds").toFile();
 
@@ -120,8 +117,14 @@ public class TestMetrics4BearsJsonFile {
 
         ObjectMapper jsonMapper = new ObjectMapper();
         String workingDir = System.getProperty("user.dir");
-        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/"));
-        String jsonSchemaFilePath = workingDir + "resources/bears-schema.json";
+        // In CI the base dir has a diferent name, and it changes with the PR
+        if (workingDir.contains("repairnator/")) {
+            workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/") + "repairnator/".length());
+        } else {
+            // We use the stable part (i.e. the sub-module) to get the workingDir
+            workingDir = workingDir.substring(0, workingDir.lastIndexOf("src/repairnator-pipeline"));
+        }
+        String jsonSchemaFilePath = workingDir + "/resources/bears-schema.json";
         File jsonSchemaFile = new File(jsonSchemaFilePath);
         JsonNode schemaObject = jsonMapper.readTree(jsonSchemaFile);
 
@@ -156,7 +159,7 @@ public class TestMetrics4BearsJsonFile {
             String fieldComparisonFailureName = fieldComparisonFailure.getField();
             if (fieldComparisonFailureName.equals("tests.failingModule") ||
                     fieldComparisonFailureName.equals("reproductionBuggyBuild.projectRootPomPath")) {
-                String path = "fermadeiral/test-repairnator-bears/386337343";
+                String path = "repairnator/test-repairnator-bears";
                 String expected = (String) fieldComparisonFailure.getExpected();
                 expected = expected.substring(expected.indexOf(path), expected.length());
                 String actual = (String) fieldComparisonFailure.getActual();
@@ -172,10 +175,13 @@ public class TestMetrics4BearsJsonFile {
         }
     }
 
+    // FIXME: This test is working locally, but there is an issue with the repoToPushLocalPath when running in CI.
+    // As far as I understood, it is using the repoToPushLocalPath from another test (TestProjectInspector#testPatchFailingProject)
+    // but wasn't able to fix it.
     @Ignore
     @Test
     public void testRepairnatorJsonFileWithFailingBuild() throws IOException, ProcessingException {
-        long buggyBuildCandidateId = 208897371; // https://travis-ci.org/surli/failingProject/builds/208897371
+        long buggyBuildCandidateId = 220944190; // https://travis-ci.com/github/repairnator/failingProject/builds/220944190
 
         tmpDir = Files.createTempDirectory("test_repairnator_json_file_failing_build").toFile();
 
@@ -187,15 +193,21 @@ public class TestMetrics4BearsJsonFile {
         config.setLauncherMode(LauncherMode.REPAIR);
         config.setRepairTools(new HashSet<>(Arrays.asList("NopolSingleTest")));
 
-        ProjectInspector inspector = new ProjectInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null, null);
+        ProjectInspector inspector = InspectorFactory.getTravisInspector(buildToBeInspected, tmpDir.getAbsolutePath(), null);
         inspector.run();
 
         // check repairnator.json against schema
 
         ObjectMapper jsonMapper = new ObjectMapper();
         String workingDir = System.getProperty("user.dir");
-        workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/"));
-        String jsonSchemaFilePath = workingDir + "resources/repairnator-schema.json";
+        // In CI the base dir has a diferent name, and it changes with the PR
+        if (workingDir.contains("repairnator/")) {
+            workingDir = workingDir.substring(0, workingDir.lastIndexOf("repairnator/") + "repairnator/".length());
+        } else {
+            // We use the stable part (i.e. the sub-module) to get the workingDir
+            workingDir = workingDir.substring(0, workingDir.lastIndexOf("src/repairnator-pipeline"));
+        }
+        String jsonSchemaFilePath = workingDir + "/resources/repairnator-schema.json";
         File jsonSchemaFile = new File(jsonSchemaFilePath);
         JsonNode schemaObject = jsonMapper.readTree(jsonSchemaFile);
 
@@ -228,9 +240,15 @@ public class TestMetrics4BearsJsonFile {
 
         for (FieldComparisonFailure fieldComparisonFailure : result.getFieldFailures()) {
             String fieldComparisonFailureName = fieldComparisonFailure.getField();
-            if (fieldComparisonFailureName.equals("tests.failingModule") ||
+            if (fieldComparisonFailureName.equals("tests.failureDetails[0].detail")) {
+                String expected = (String) fieldComparisonFailure.getExpected();
+                String actual = (String) fieldComparisonFailure.getActual();
+                assertTrue("Property failing: " + fieldComparisonFailureName,
+                        actual.replaceAll("\\s+", "")
+                                .equals(expected.replaceAll("\\s+", "")));
+            } else if (fieldComparisonFailureName.equals("tests.failingModule") ||
                     fieldComparisonFailureName.equals("reproductionBuggyBuild.projectRootPomPath")) {
-                String path = "surli/failingProject/208897371";
+                String path = "repairnator/failingProject";
                 String expected = (String) fieldComparisonFailure.getExpected();
                 expected = expected.substring(expected.indexOf(path), expected.length());
                 String actual = (String) fieldComparisonFailure.getActual();

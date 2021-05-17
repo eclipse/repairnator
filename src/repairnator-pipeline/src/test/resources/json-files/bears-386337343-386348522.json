@@ -2,9 +2,9 @@
   "version": "Bears 1.0",
   "type": "passing_passing",
   "repository": {
-    "name": "fermadeiral/test-repairnator-bears",
+    "name": "repairnator/test-repairnator-bears",
     "githubId": 135598437,
-    "url": "https://github.com/fermadeiral/test-repairnator-bears",
+    "url": "https://github.com/repairnator/test-repairnator-bears",
     "isFork": false,
     "original": {
       "name": "",
@@ -16,34 +16,34 @@
   },
   "builds": {
     "buggyBuild": {
-      "id": 386337343,
-      "url": "http://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386337343",
-      "date": "May 31, 2018 4:33:25 PM"
+      "id": 225920540,
+      "url": "http://travis-ci.org/repairnator/test-repairnator-bears/builds/225920540",
+      "date": "May 14, 2021, 11:10:26 AM"
     },
     "fixerBuild": {
-      "id": 386348522,
-      "url": "http://travis-ci.org/fermadeiral/test-repairnator-bears/builds/386348522",
-      "date": "May 31, 2018 5:01:06 PM"
+      "id": 225920529,
+      "url": "http://travis-ci.org/repairnator/test-repairnator-bears/builds/225920529",
+      "date": "May 14, 2021, 11:10:18 AM"
     }
   },
   "commits": {
     "buggyBuild": {
-      "repoName": "fermadeiral/test-repairnator-bears",
+      "repoName": "repairnator/test-repairnator-bears",
       "branchName": "master",
       "sha": "bfdf6af10937db8ecde7a060b55d18864663abd5",
-      "url": "http://github.com/fermadeiral/test-repairnator-bears/commit/bfdf6af10937db8ecde7a060b55d18864663abd5",
+      "url": "http://github.com/repairnator/test-repairnator-bears/commit/bfdf6af10937db8ecde7a060b55d18864663abd5",
       "date": "May 31, 2018 4:32:11 PM"
     },
     "fixerBuild": {
-      "repoName": "fermadeiral/test-repairnator-bears",
+      "repoName": "repairnator/test-repairnator-bears",
       "branchName": "master",
       "sha": "5b2ed0064d4c5e0fade39125cc071bd6593df869",
-      "url": "http://github.com/fermadeiral/test-repairnator-bears/commit/5b2ed0064d4c5e0fade39125cc071bd6593df869",
+      "url": "http://github.com/repairnator/test-repairnator-bears/commit/5b2ed0064d4c5e0fade39125cc071bd6593df869",
       "date": "May 31, 2018 4:59:52 PM"
     }
   },
   "tests": {
-    "failingModule": "/tmp/test_bears_json_file_passing_passing_builds4300363164793498124/fermadeiral/test-repairnator-bears/386337343/test-repairnator-bears-patchstats",
+    "failingModule": "/tmp/test_bears_json_file_passing_passing_builds4300363164793498124/repairnator/test-repairnator-bears/test-repairnator-bears-patchstats",
     "overallMetrics": {
       "numberRunning": 9,
       "numberPassing": 8,
@@ -73,7 +73,7 @@
         "testClass": "PatchStatsTest",
         "testMethod": "testComputeFilesWithCommitThatRenameFile",
         "failureName": "java.lang.AssertionError",
-        "detail": "expected:\u003c10\u003e but was:\u003c9\u003e",
+        "detail": "java.lang.AssertionError: expected:\u003c10\u003e but was:\u003c9\u003e\n\tat org.junit.Assert.fail(Assert.java:88)\n\tat org.junit.Assert.failNotEquals(Assert.java:834)\n\tat org.junit.Assert.assertEquals(Assert.java:645)\n\tat org.junit.Assert.assertEquals(Assert.java:631)\n\tat PatchStatsTest.testComputeFilesWithCommitThatRenameFile(PatchStatsTest.java:62)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)\n\tat org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)\n\tat org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)\n\tat org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)\n\tat org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)\n\tat org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)\n\tat org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)\n\tat org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)\n\tat org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)\n\tat org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)\n\tat org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)\n\tat org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)\n\tat org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)\n\tat org.junit.runners.ParentRunner.run(ParentRunner.java:363)\n\tat org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)\n\tat org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)\n\tat org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)\n\tat org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)\n\tat org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)\n\tat org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)\n\tat org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)",
         "isError": false
       }
     ]
@@ -91,6 +91,7 @@
   },
   "projectMetrics": {
     "numberModules": 2,
+    "numberPlugins": 0,
     "numberSourceFiles": 2,
     "numberTestFiles": 3,
     "numberLibrariesFailingModule": 4,
@@ -146,6 +147,6 @@
         ]
       }
     },
-    "projectRootPomPath": "/tmp/test_bears_json_file_passing_passing_builds4300363164793498124/fermadeiral/test-repairnator-bears/386337343/pom.xml"
+    "projectRootPomPath": "/tmp/test_bears_json_file_passing_passing_builds4300363164793498124/repairnator/test-repairnator-bears/pom.xml"
   }
 }

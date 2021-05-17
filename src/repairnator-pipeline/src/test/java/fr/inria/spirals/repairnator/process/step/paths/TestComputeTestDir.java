@@ -52,7 +52,7 @@ public class TestComputeTestDir {
 
     @Test
     public void testComputeTestDirWithMultiModuleProject() throws IOException {
-        long buggyBuildCandidateId = 224302680; // andre15silva/test-repairnator-bears (this is temporary until the project is moved to the repairnator org)
+        long buggyBuildCandidateId = 225920529; // https://travis-ci.com/github/repairnator/test-repairnator-bears/builds/225920529
 
         Build buggyBuildCandidate = this.checkBuildAndReturn(buggyBuildCandidateId, false);
 

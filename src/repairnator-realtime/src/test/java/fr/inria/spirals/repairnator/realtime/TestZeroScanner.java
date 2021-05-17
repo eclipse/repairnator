@@ -34,6 +34,9 @@ public class TestZeroScanner {
 
     @Before
     public void setup() {
+        RepairnatorConfig config = RepairnatorConfig.getInstance();
+        config.setJTravisEndpoint("https://api.travis-ci.com");
+
         build = new Build();
         buildV2 = new BuildV2();
         buildV2.setCommit(new Commit());
@@ -55,13 +58,13 @@ public class TestZeroScanner {
 
     @Test
     public void TestAttemptJob () {
-        scanner.attemptJob(702053045); //failing job
+        scanner.attemptJob(224246334); // failing job - https://travis-ci.com/github/repairnator/failingProject/builds/224246334
         verify(rtScanner, times(1)).submitBuildToExecution(any(Build.class));
     }
 
     @Test
     public void TestCollectJob () {
-        scanner.collectJob(704352008, "javierron/failingProject"); //passing job
+        scanner.collectJob(220482792, "repairnator/failingProject"); // passing job - https://travis-ci.com/github/repairnator/failingProject/builds/220482792
         verify(collector, times(1)).handle(anyString(), anyString());
     }
 
