@@ -29,13 +29,11 @@ public class TestPipelineSequencerRepair {
 
     @Test
     public void TestPipelineSequencerRepairTool() throws Exception {
-        // 220926535 -> repairnator/failingProject -> test failure
+        // ec915681fbd6a8b2c30580b2618e62636204abe4 -> repairnator/failingProject -> syntax
         Launcher launcher = new Launcher(new String[]{
-                "--jtravisendpoint", "https://api.travis-ci.com",
-                "--build", "220926535",
                 "--sequencerRepair",
                 "--gitrepo",
-                "--gitrepourl", "https://github.com/javierron/failingProject",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepoidcommit", "ec915681fbd6a8b2c30580b2618e62636204abe4",
                 "--launcherMode", "SEQUENCER_REPAIR",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
@@ -58,11 +56,11 @@ public class TestPipelineSequencerRepair {
 
     @Test
     public void TestPipelineBuildPassBranch() throws Exception{
-        // e182ccb9ef41b5adab602ed12bfc71b744ff0241 -> javierron/faining project -> test failure
+        // e182ccb9ef41b5adab602ed12bfc71b744ff0241 -> repairnator/failingProject -> nofixes
         Launcher launcher = new Launcher(new String[]{
                 "--sequencerRepair",
                 "--gitrepo",
-                "--gitrepourl", "https://github.com/javierron/failingProject",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepoidcommit", "e182ccb9ef41b5adab602ed12bfc71b744ff0241",
                 "--launcherMode", "SEQUENCER_REPAIR",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
@@ -77,14 +75,12 @@ public class TestPipelineSequencerRepair {
 
     @Test
     public void TestPipelineBuildFailBranch() throws Exception{
-        // 713361530 -> repairnator/failingProject -> syntax error
+        // ec915681fbd6a8b2c30580b2618e62636204abe4 -> repairnator/failingProject -> syntax error
         Launcher launcher = new Launcher(new String[]{
-                "--jtravisendpoint", "https://api.travis-ci.com",
-                "--build", "220941672",
-                "--sequencerRepair",
                 "--gitrepo",
-                "--gitrepourl", "https://github.com/javierron/failingProject",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepoidcommit", "ec915681fbd6a8b2c30580b2618e62636204abe4",
+                "--sequencerRepair",
                 "--launcherMode", "SEQUENCER_REPAIR",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()

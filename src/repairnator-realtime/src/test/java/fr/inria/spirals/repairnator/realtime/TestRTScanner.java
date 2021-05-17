@@ -24,7 +24,7 @@ public class TestRTScanner {
     
     @Test
     public void testRepositoryWithoutSuccessfulBuildIsNotInteresting() {
-        String slug = "surli/failingProject";
+        String slug = "repairnator/failingProject";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
         Optional<Repository> repositoryOptional = getOptionalRepository(slug);
 
@@ -35,7 +35,7 @@ public class TestRTScanner {
 
     @Test
     public void testRepositoryWithoutCheckstyleIsNotInteresting() {
-        String slug = "surli/test-repairnator";
+        String slug = "repairnator/test-repairnator";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
         Optional<Repository> repositoryOptional = getOptionalRepository(slug);
 

@@ -267,8 +267,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenNotFailing() throws IOException {
-        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.org");
-        long buildId = 201176013; // fermadeiral/TestingProject
+        long buildId = 225938152; // https://travis-ci.com/github/repairnator/TestingProject/builds/225938152
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -323,8 +322,7 @@ public class TestGatherTestInformation {
 
     @Test
     public void testGatherTestInformationWhenNotFailingWithPassingContract() throws IOException {
-        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.org");
-        long buildId = 201176013; // fermadeiral/TestingProject
+        long buildId = 225938152; // https://travis-ci.com/github/repairnator/TestingProject/builds/225938152
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
