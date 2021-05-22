@@ -21,6 +21,48 @@ module.exports = app => {
   //   return context.github.issues.createComment(issueComment)
   // })
 
+  app.on('check_run.completed', async context => {
+    context.log('Check run...');
+    context.log({ conclusion: context.payload.check_run.conclusion})
+    if(
+        context.payload.check_run.name == "Travis CI - Pull Request" && 
+        context.payload.check_run.conclusion == "failure"
+      )  {
+        const isOrg = context.payload.check_run.details_url.includes('travis-ci.org')
+
+        // get the build info
+        const buildInfo = await getBuildInfo(context.payload.check_run.details_url, isOrg)
+
+        // Get the log info
+        const log = await getLog(buildInfo.jobs, isOrg)
+
+        // Extract the relevant info & clean up the log
+        const logInfo = extractLog(log)
+
+        // Form a comment by passing the error message, Travis build URL, commit sha, repo name, and PR#
+        const comment = makeComment(
+          context.payload.check_run.details_url,
+          context.payload.check_run.head_sha,
+          context.payload.repository.full_name,
+          buildInfo.pull,
+          buildInfo.id,
+          buildInfo.state,
+          logInfo.language
+        )
+        
+        if (buildInfo.state === 'failed' && logInfo.language.split('\r\n')[0] === 'java') {          
+          touchMQ(buildInfo.id, isOrg);
+          // Post a comment to the Pull Request
+          const params = context.issue({
+            body: comment,
+            issue_number: buildInfo.pull
+          })
+          return context.github.issues.createComment(params)
+        }  
+      }
+
+  });
+
   app.on('status', async context => {
     // Check if the returned context state is a failure
     // && that the failure comes from a Travis Pull Request build

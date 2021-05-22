@@ -8,7 +8,7 @@ const request = require('request-promise-native')
  */
 module.exports = (buildUrl, isOrg) => {
   // Extract the build ID from the target_url provided by GitHub
-  const buildId = buildUrl.split('/builds/')[1].split('?')[0]
+  const buildId = buildUrl.split('/builds/')[1]
   // Form a URL for the request
   const requestUrl = `https://api.travis-ci.` + (isOrg ? `org` : `com`) + `/v3/build/${buildId}`
   /* alternative request urls
