@@ -48,7 +48,8 @@ public class BranchLauncher implements LauncherAPI{
         	+ "CHECKSTYLE: analyze build failing because of checkstyle. "
         	+ "GIT_REPOSITORY: repairnator repair with Git instead of standard Travis. "
 			+ "KUBERNETES_LISTENER: run repairnator as a Activemq server listening for Travis build ids."
-			+ "SEQUENCER_REPAIR: run the custom SequencerRepair pipeline.");
+			+ "SEQUENCER_REPAIR: run the custom SequencerRepair pipeline."
+			+ "SORALD_REPAIR: run the custom SoraldRepair pipeline.");
         jsap.registerParameter(opt2);
 
 
@@ -78,6 +79,9 @@ public class BranchLauncher implements LauncherAPI{
 		} else if (launcherMode.equals(LauncherMode.SEQUENCER_REPAIR.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
 			return MainProcessFactory.getGithubMainProcess(args);
+		} else if (launcherMode.equals(LauncherMode.SORALD_REPAIR.name())) {
+			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SORALD_REPAIR);
+			return MainProcessFactory.getSoraldMainProcess(args);
 		} else if (launcherMode.equals(LauncherMode.KUBERNETES_LISTENER.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.KUBERNETES_LISTENER);
 			return MainProcessFactory.getPipelineListenerMainProcess(args);
