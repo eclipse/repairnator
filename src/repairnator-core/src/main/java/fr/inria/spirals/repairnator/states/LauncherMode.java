@@ -41,4 +41,9 @@ public enum LauncherMode {
 	 * SEQUENCER_REPAIR: specific pipeline for SequencerRepair repair tool
 	 */
 	SEQUENCER_REPAIR,
+
+	/**
+	 * SORALD_REPAIR: specific pipeline for SoraldRepair repair tool
+	 */
+	SORALD_REPAIR,
 }
