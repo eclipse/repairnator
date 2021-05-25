@@ -125,6 +125,12 @@ public class MainProcessFactory {
 		return githubMainProcess;
 	}
 
+	/* Repair with git Url instead of travis */
+	public static MainProcess getSoraldMainProcess(String[] inputArgs) {
+		// TODO
+		return null;
+	}
+
 	public static MainProcess getPipelineListenerMainProcess(String[] inputArgs) {
 		MainProcess travisMainProcess = getTravisMainProcess(inputArgs);
 		return new PipelineBuildListenerMainProcess(travisMainProcess);
