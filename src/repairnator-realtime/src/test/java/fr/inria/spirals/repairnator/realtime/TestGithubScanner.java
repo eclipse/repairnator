@@ -3,6 +3,7 @@ package fr.inria.spirals.repairnator.realtime;
 import fr.inria.spirals.repairnator.InputBuild;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
 import org.apache.commons.io.FileUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.TestCase.*;
@@ -37,6 +38,7 @@ public class TestGithubScanner {
     }
 
     @Test
+    @Ignore
     public void testFetchingAll() throws Exception {
 
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
@@ -52,6 +54,7 @@ public class TestGithubScanner {
     }
 
     @Test
+    @Ignore
     public void testFetchingFailed() throws Exception {
 
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
@@ -67,6 +70,7 @@ public class TestGithubScanner {
     }
 
     @Test
+    @Ignore
     public void testFetchingPassing() throws Exception {
 
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
