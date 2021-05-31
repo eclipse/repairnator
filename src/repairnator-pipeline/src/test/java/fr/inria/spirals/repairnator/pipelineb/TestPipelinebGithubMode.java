@@ -68,7 +68,7 @@ public class TestPipelinebGithubMode {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                 "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
-                "--gitrepobranch", "master",
+                "--gitrepobranch", "no-infinite-loop",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
         });
