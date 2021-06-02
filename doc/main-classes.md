@@ -15,8 +15,8 @@ The following command line tools must be installed on your machine:
 ```
 $ git clone https://github.com/eclipse/repairnator/
 $ cd repairnator/
+$ mvn clean install -DskipTests -f src/repairnator-core/ && mvn clean install -DskipTests -f src/repairnator-pipeline/
 $ cd src/repairnator-pipeline/
-$ mvn install -DskipTests
 ```
 
 Run it on Travis CI build [413285802](https://travis-ci.org/surli/failingProject/builds/413285802)
