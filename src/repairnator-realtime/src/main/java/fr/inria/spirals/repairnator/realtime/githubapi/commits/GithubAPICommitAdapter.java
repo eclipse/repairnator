@@ -23,7 +23,7 @@ public class GithubAPICommitAdapter {
                     GHRepository repo,
                     long since,
                     long until,
-                    GithubScanner.FetchMode fetchMode
+                    FetchMode fetchMode
             ) throws IOException {
         List<SelectedCommit> res = new ArrayList<>();
 
@@ -60,7 +60,7 @@ public class GithubAPICommitAdapter {
             (
                     long intervalStart,
                     long intervalEnd,
-                    GithubScanner.FetchMode fetchMode,
+                    FetchMode fetchMode,
                     Set<String> repos
             ) throws IOException {
          repos = repos == null ? GithubAPIRepoAdapter.getInstance()
@@ -71,7 +71,7 @@ public class GithubAPICommitAdapter {
         for (String repoName : repos) {
             try {
                 GHRepository repo = GAA.g().getRepository(repoName);
-                System.out.println("Checking commits for: " + repo.getName() + " " + cnt++ + " " + repos.size()
+                System.out.println("Checking commits for: " + repo.getName() + " " + cnt++ + " from " + repos.size()
                         + " " + new Date(intervalStart));
                 boolean isMaven = false;
                 for (GHTreeEntry treeEntry : repo.getTree("HEAD").getTree()) {
@@ -94,5 +94,9 @@ public class GithubAPICommitAdapter {
             }
         }
         return selectedCommits;
+    }
+
+    public enum FetchMode {
+        FAILED, ALL;
     }
 }
