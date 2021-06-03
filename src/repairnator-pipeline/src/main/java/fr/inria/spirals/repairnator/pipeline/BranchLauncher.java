@@ -79,9 +79,6 @@ public class BranchLauncher implements LauncherAPI{
 		} else if (launcherMode.equals(LauncherMode.SEQUENCER_REPAIR.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
 			return MainProcessFactory.getGithubMainProcess(args);
-		} else if (launcherMode.equals(LauncherMode.SORALD_REPAIR.name())) {
-			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SORALD_REPAIR);
-			return MainProcessFactory.getSoraldMainProcess(args);
 		} else if (launcherMode.equals(LauncherMode.KUBERNETES_LISTENER.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.KUBERNETES_LISTENER);
 			return MainProcessFactory.getPipelineListenerMainProcess(args);
