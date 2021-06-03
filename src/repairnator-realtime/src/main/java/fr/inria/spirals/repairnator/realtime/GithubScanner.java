@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class GithubScanner {
+    private final static String SORALD_NAME = "Sorald_Bot",
+            SEQUENCER_NAME = "SequencerRepair";
     static long scanIntervalDelay = 60 * 60 * 1000; // 1 hour
     static long scanIntervalLength = 60 * 60 * 1000; // 1 hour
     static long frequency = 60 * 60 * 1000; // 1 hour
@@ -69,12 +71,17 @@ public class GithubScanner {
 
     public void setup(){
         Set<String> repairTools = new HashSet();
-        repairTools.add(getEnvOrDefault("REPAIR_TOOL", "SequencerRepair"));
+        String repairTool = getEnvOrDefault("REPAIR_TOOL", SEQUENCER_NAME);
+        repairTools.add(repairTool);
         RepairnatorConfig.getInstance().setRepairTools(repairTools);
         RepairnatorConfig.getInstance().setNbThreads(16);
         RepairnatorConfig.getInstance().setPipelineMode(RepairnatorConfig.PIPELINE_MODE.DOCKER.name());
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
-        RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+        if(repairTool.equals(SORALD_NAME)) {
+            RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.GIT_REPOSITORY);
+        } else if(repairTool.equals(SEQUENCER_NAME)) {
+            RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+        }
     }
 
     public List<SelectedCommit> fetch(long startTime, long endTime) throws Exception {
