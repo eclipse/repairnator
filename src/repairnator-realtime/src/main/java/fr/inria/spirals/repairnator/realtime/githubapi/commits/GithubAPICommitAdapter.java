@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.realtime.githubapi.commits;
 
 import fr.inria.spirals.repairnator.realtime.GithubScanner;
 import org.kohsuke.github.*;
+import org.kohsuke.github.GHCheckRun.Conclusion;
 import fr.inria.spirals.repairnator.realtime.githubapi.GAA;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
 import fr.inria.spirals.repairnator.realtime.githubapi.repositories.GithubAPIRepoAdapter;
@@ -28,17 +29,19 @@ public class GithubAPICommitAdapter {
         List<SelectedCommit> res = new ArrayList<>();
 
         GHCommitQueryBuilder query = repo.queryCommits().since(since).until(until);
-        for (GHCommit commit : query.list().toList()) {
+        List<GHCommit> commits = query.list().toList();
+        for (GHCommit commit : commits) {
             boolean isGithubActionsFailed = false;
-            for (GHCheckRun check : commit.getCheckRuns()) {
-                if (check.getApp().getName().equals("GitHub Actions") && !isGithubActionsFailed) {
-                    if (check.getConclusion() != null && (!check.getConclusion().equals("success")
-                            && !check.getConclusion().equals("neutral") && !check.getConclusion().equals("skipped"))) {
+            PagedIterable<GHCheckRun> checkRuns = commit.getCheckRuns();
+            for (GHCheckRun check : checkRuns) {
+                if (check.getApp().getName().equals("GitHub Actions")) {
+                    Conclusion conclusion = check.getConclusion();
+                    if (conclusion != null && (conclusion != Conclusion.SUCCESS
+                            && conclusion != Conclusion.NEUTRAL && conclusion != Conclusion.SKIPPED)) {
                         isGithubActionsFailed = true;
+                        break;
                     }
                 }
-                if (isGithubActionsFailed)
-                    break;
             }
 
             switch(fetchMode) {
