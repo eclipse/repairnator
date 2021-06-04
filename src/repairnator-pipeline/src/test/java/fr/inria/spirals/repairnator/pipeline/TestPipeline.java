@@ -91,8 +91,7 @@ public class TestPipeline {
         Launcher l = new Launcher(new String[]{
                 "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
-                "--gitrepoidcommit", "883bc40f01902654b1b1df094b2badb28e192097",
-                "--gitrepobranch", "nofixes",
+                "--gitrepobranch", "no-infinite-loop",
                 "--launcherMode", "GIT_REPOSITORY",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
