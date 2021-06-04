@@ -3,7 +3,9 @@ package fr.inria.spirals.repairnator.realtime;
 import fr.inria.jtravis.entities.Build;
 import fr.inria.jtravis.entities.Commit;
 import fr.inria.jtravis.entities.v2.BuildV2;
+import fr.inria.spirals.repairnator.InputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,13 +20,8 @@ import static org.mockito.Mockito.*;
 
 public class TestZeroScanner {
 
-    Build build;
-    BuildV2 buildV2;
-
     @Mock
-    BuildHelperV2 buildHelper;
-    @Mock
-    RTScanner rtScanner;
+    DockerPipelineRunner runner;
     @Mock
     SequencerCollector collector;
 
@@ -34,19 +31,8 @@ public class TestZeroScanner {
 
     @Before
     public void setup() {
-        RepairnatorConfig config = RepairnatorConfig.getInstance();
-        config.setJTravisEndpoint("https://api.travis-ci.com");
-
-        build = new Build();
-        buildV2 = new BuildV2();
-        buildV2.setCommit(new Commit());
-
         MockitoAnnotations.initMocks(this);
-
-        when(buildHelper.fromId(anyLong())).thenReturn(Optional.of(build));
-        when(buildHelper.fromIdV2(anyLong())).thenReturn(Optional.of(buildV2));
-
-        scanner.setup();
+        ZeroScanner.setup();
     }
 
     @After
@@ -58,13 +44,17 @@ public class TestZeroScanner {
 
     @Test
     public void TestAttemptJob () {
-        scanner.attemptJob(224246334); // failing job - https://travis-ci.com/github/repairnator/failingProject/builds/224246334
-        verify(rtScanner, times(1)).submitBuildToExecution(any(Build.class));
+        SelectedCommit commit = new SelectedCommit(true, "javierron/failingProject", "65eb0ee8cc221bd4fe6d6414feb6ee368131288d");
+        scanner.attemptJob(commit); //failing job
+        verify(runner, times(1)).submitBuild(any(InputBuild.class));
+
     }
 
     @Test
     public void TestCollectJob () {
-        scanner.collectJob(220482792, "repairnator/failingProject"); // passing job - https://travis-ci.com/github/repairnator/failingProject/builds/220482792
+
+        SelectedCommit commit = new SelectedCommit(false, "javierron/failingProject", "bc7c358653159be5caece027258b822e47dc894c");
+        scanner.collectJob(commit); //passing job
         verify(collector, times(1)).handle(anyString(), anyString());
     }
 
