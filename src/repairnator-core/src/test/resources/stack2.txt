@@ -1,0 +1,22 @@
+java.net.ConnectException: Connection refused: connect]]]
+at org.jnp.interfaces.NamingContext.checkRef(NamingContext.java:1385)
+at org.jnp.interfaces.NamingContext.lookup(NamingContext.java:579)
+at org.jnp.interfaces.NamingContext.lookup(NamingContext.java:572)
+at javax.naming.InitialContext.lookup(InitialContext.java:347)
+at org.jboss.Shutdown.main(Shutdown.java:202)
+Caused by: java.net.ConnectException: Connection refused: connect]]
+at org.jnp.interfaces.NamingContext.getServer(NamingContext.java:254)
+at org.jnp.interfaces.NamingContext.checkRef(NamingContext.java:1370)
+Caused by: java.net.ConnectException: Connection refused: connect]
+at org.jnp.interfaces.NamingContext.getServer(NamingContext.java:228)
+Caused by: java.net.ConnectException: Connection refused: connect
+at java.net.PlainSocketImpl.socketConnect(Native Method)
+at java.net.PlainSocketImpl.doConnect(PlainSocketImpl.java:305)
+at java.net.PlainSocketImpl.connectToAddress(PlainSocketImpl.java:171)
+at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:158)
+at java.net.Socket.connect(Socket.java:452)
+at java.net.Socket.connect(Socket.java:402)
+at java.net.Socket.<init>(Socket.java:309)
+at java.net.Socket.<init>(Socket.java:211)
+at org.jnp.interfaces.TimedSocketFactory.createSocket(TimedSocketFactory.java:69)
+at org.jnp.interfaces.TimedSocketFactory.createSocket(TimedSocketFactory.java:62)
