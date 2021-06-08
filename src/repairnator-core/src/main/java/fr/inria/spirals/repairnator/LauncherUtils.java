@@ -822,7 +822,7 @@ public class LauncherUtils {
 
     public static FlaggedOption defineArgGitCommitHash() {
         FlaggedOption opt = new FlaggedOption("gitcommithash");
-        opt.setLongFlag("gitcommit");
+        opt.setLongFlag("gitcommithash");
         opt.setStringParser(JSAP.STRING_PARSER);
         opt.setHelp("the hash of your git commit");
         return opt;

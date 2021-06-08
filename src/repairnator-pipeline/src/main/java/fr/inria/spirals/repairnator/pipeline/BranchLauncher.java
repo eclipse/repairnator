@@ -48,8 +48,7 @@ public class BranchLauncher implements LauncherAPI{
         	+ "CHECKSTYLE: analyze build failing because of checkstyle. "
         	+ "GIT_REPOSITORY: repairnator repair with Git instead of standard Travis. "
 			+ "KUBERNETES_LISTENER: run repairnator as a Activemq server listening for Travis build ids."
-			+ "SEQUENCER_REPAIR: run the custom SequencerRepair pipeline."
-			+ "SORALD_REPAIR: run the custom SoraldRepair pipeline.");
+			+ "SEQUENCER_REPAIR: run the custom SequencerRepair pipeline.");
         jsap.registerParameter(opt2);
 
 

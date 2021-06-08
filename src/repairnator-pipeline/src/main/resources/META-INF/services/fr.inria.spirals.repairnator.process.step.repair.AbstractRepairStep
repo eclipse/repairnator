@@ -8,4 +8,5 @@ fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRepair
 fr.inria.spirals.repairnator.process.step.repair.nopol.NopolAllTestsRepair
 fr.inria.spirals.repairnator.process.step.repair.NPERepair
 fr.inria.spirals.repairnator.process.step.repair.soraldbot.Sorald
+fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldBot
 fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair

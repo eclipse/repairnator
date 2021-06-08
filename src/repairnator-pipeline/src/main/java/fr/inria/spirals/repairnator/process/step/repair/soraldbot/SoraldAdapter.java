@@ -68,9 +68,9 @@ public class SoraldAdapter {
     public void repair(String rule, File repoDir, String patchPrintingMode) {
         String[] args = new String[]{
                 Constants.REPAIR_COMMAND_NAME,
-                Constants.ARG_ORIGINAL_FILES_PATH, repoDir.getPath(),
-                Constants.ARG_RULE_KEYS, rule,
-                Constants.ARG_WORKSPACE, tmpdir,
+                Constants.ARG_SOURCE, repoDir.getPath(),
+                Constants.ARG_RULE_KEY, rule,
+//                Constants.ARG_TEMP_DIR, tmpdir,
                 Constants.ARG_PRETTY_PRINTING_STRATEGY, patchPrintingMode};
 
         Main.main(args);
@@ -152,32 +152,32 @@ public class SoraldAdapter {
     public Map<String, Set<String>> listViolationLocations(File repoDir) throws IOException, ParseException {
         Map<String, Set<String>> ret = new HashMap<String, Set<String>>();
 
-        File stats = new File(tmpdir + File.separator + MINING_STATS_FILENAME),
-                miningTmpFile = new File(tmpdir + File.separator + MINING_TMP_DIR_PATH);
+        File stats = new File(tmpdir + File.separator + MINING_STATS_FILENAME);
+//                miningTmpFile = new File(tmpdir + File.separator + MINING_TMP_DIR_PATH);
 
         if (stats.exists())
             stats.delete();
 
-        if (miningTmpFile.exists())
-            FileUtils.deleteDirectory(miningTmpFile);
+//        if (miningTmpFile.exists())
+//            FileUtils.deleteDirectory(miningTmpFile);
 
         stats.createNewFile();
 
-        miningTmpFile.mkdirs();
+//        miningTmpFile.mkdirs();
 
         String[] args =
                 new String[]{
                         Constants.MINE_COMMAND_NAME,
-                        Constants.ARG_ORIGINAL_FILES_PATH,
+                        Constants.ARG_SOURCE,
                         repoDir.getPath(),
-                        Constants.ARG_TEMP_DIR,
-                        miningTmpFile.getPath(),
+//                        Constants.ARG_TEMP_DIR,
+//                        miningTmpFile.getPath(),
                         Constants.ARG_STATS_OUTPUT_FILE,
                         stats.getPath(),
                         Constants.ARG_HANDLED_RULES
                 };
 
-        FileUtils.deleteDirectory(miningTmpFile);
+//        FileUtils.deleteDirectory(miningTmpFile);
 
         Main.main(args);
 
