@@ -25,7 +25,7 @@ public class TestGithubScanner {
     public void testBuildSubmission(){
         DockerPipelineRunner runner = mock(DockerPipelineRunner.class);
 
-        GithubScanner scanner = new GithubScanner(GithubAPICommitAdapter.FetchMode.FAILED);
+        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.FAILED);
         Whitebox.setInternalState(scanner, "runner", runner);
 
         boolean isGithubActionsFailed = false;
@@ -42,7 +42,7 @@ public class TestGithubScanner {
 
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
                         .getResource("/GithubScannerTest_repos.txt").getFile()), "UTF-8"));
-        GithubScanner scanner = new GithubScanner(GithubAPICommitAdapter.FetchMode.ALL, repos);
+        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.ALL, repos);
         scanner.setup();
 
         List<SelectedCommit> commits =
@@ -57,7 +57,7 @@ public class TestGithubScanner {
 
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
                 .getResource("/GithubScannerTest_repos.txt").getFile()), "UTF-8"));
-        GithubScanner scanner = new GithubScanner(GithubAPICommitAdapter.FetchMode.FAILED, repos);
+        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.FAILED, repos);
         scanner.setup();
 
         List<SelectedCommit> commits =
