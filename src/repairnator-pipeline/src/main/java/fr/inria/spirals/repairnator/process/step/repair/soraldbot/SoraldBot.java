@@ -6,6 +6,7 @@ import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.models.SoraldTargetCommit;
 import fr.inria.spirals.repairnator.utils.DateUtils;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -18,13 +19,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class SoraldRepair extends AbstractRepairStep {
+public class SoraldBot extends AbstractRepairStep {
     private static final String REPO_PATH = "tmp_repo";
     private static final String RULE_LINK_TEMPLATE = "https://rules.sonarsource.com/java/RSPEC-";
     private SoraldTargetCommit commit;
 
+    private String workingRepoPath;
+
     private void init() {
-        commit = new SoraldTargetCommit(getInspector().getGitCommit(), getInspector().getRepoSlug());
+        commit = new SoraldTargetCommit(getConfig().getGitCommitHash(), getInspector().getRepoSlug());
+        workingRepoPath = getInspector().getWorkspace() + File.separator + REPO_PATH;
     }
 
     @Override
@@ -43,7 +47,10 @@ public class SoraldRepair extends AbstractRepairStep {
                         SoraldAdapter.getInstance(getInspector().getWorkspace(), SoraldConstants.SPOON_SNIPER_MODE)
                                 .repairRepoAndReturnViolationIntroducingFiles(commit, rule, REPO_PATH);
 
-                createPRWithSpecificPatchedFiles(patchedFiles, rule);
+                if(patchedFiles != null && !patchedFiles.isEmpty()){
+                    this.getInspector().getJobStatus().setHasBeenPatched(true);
+                    createPRWithSpecificPatchedFiles(patchedFiles, rule);
+                }
             }
         } catch (Exception e) {
             return StepStatus.buildSkipped(this, "Error while repairing with Sorald");
@@ -63,12 +70,12 @@ public class SoraldRepair extends AbstractRepairStep {
             if (forkedRepo == null) {
                 return;
             }
-            forkedGit = this.createGitBranch4Push(newBranchName);
         }
 
 
-        applyPatches4Sonar(forkedGit, violationIntroducingFiles, rule);
+        applyPatches4Sonar(violationIntroducingFiles, rule);
 
+        forkedGit = this.createGitBranch4Push(newBranchName);
 
         StringBuilder prTextBuilder = new StringBuilder()
                 .append("This PR fixes the violations for the following Sorald rule: \n");
@@ -82,8 +89,11 @@ public class SoraldRepair extends AbstractRepairStep {
         createPullRequest(getInspector().getGitRepositoryBranch(), newBranchName);
     }
 
-    private void applyPatches4Sonar(Git git, Set<String> violationIntroducingFiles, String ruleNumber)
+    private void applyPatches4Sonar(Set<String> violationIntroducingFiles, String ruleNumber)
             throws IOException, GitAPIException, URISyntaxException {
+        FileUtils.copyDirectory(new File(workingRepoPath), new File(getInspector().getRepoLocalPath()));
+
+        Git git = Git.open(new File(this.getInspector().getRepoLocalPath()));
         AddCommand addCommand = git.add();
         violationIntroducingFiles.forEach(f -> addCommand.addFilepattern(f));
         addCommand.setUpdate(true);

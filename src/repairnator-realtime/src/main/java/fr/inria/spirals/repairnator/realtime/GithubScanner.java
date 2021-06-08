@@ -64,7 +64,8 @@ public class GithubScanner {
 
     public List<SelectedCommit> fetch() throws Exception {
         long endTime = System.currentTimeMillis() - scanIntervalDelay;
-        long startTime = endTime - scanIntervalLength;
+//        long startTime = endTime - scanIntervalLength;
+        long startTime = 0L;
 
         return fetch(startTime, endTime);
     }

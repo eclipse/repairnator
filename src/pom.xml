@@ -55,7 +55,7 @@
         <module>repairnator-pipeline</module>
         <module>repairnator-core</module>
         <module>repairnator-realtime</module>
-        <!--<module>maven-repair</module>-->
+        <module>maven-repair</module>
         <module>repairnator-jenkins-plugin</module>
     </modules>
 

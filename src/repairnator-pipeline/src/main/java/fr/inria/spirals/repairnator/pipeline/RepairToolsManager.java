@@ -12,6 +12,8 @@ import fr.inria.spirals.repairnator.process.step.repair.nopol.NopolSingleTestRep
 import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair; 
 import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJGenProgRepair;
 import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJMutRepair;
+import fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldBot;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -77,6 +79,8 @@ public class RepairToolsManager {
         this.repairTools.put(astorJMut.getRepairToolName(),astorJMut);
         AbstractRepairStep sorald = new Sorald();
         this.repairTools.put(sorald.getRepairToolName(),sorald);
+        AbstractRepairStep soraldBot = new SoraldBot();
+        this.repairTools.put(sorald.getRepairToolName(),soraldBot);
     }
 
     public static AbstractRepairStep getStepFromName(String name) {
