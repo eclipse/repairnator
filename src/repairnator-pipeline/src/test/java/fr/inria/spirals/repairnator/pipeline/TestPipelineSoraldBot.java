@@ -40,7 +40,7 @@ public class TestPipelineSoraldBot {
                 "--output", outputFolder.getRoot().getAbsolutePath()
         });
 
-        // config is forced to use SequencerRepair as the only repair tool.
+        // config is forced to use SoraldBot as the only repair tool.
         assertEquals(1, launcher.getConfig().getRepairTools().size());
         assertTrue(launcher.getConfig().getRepairTools().contains("SoraldBot"));
 
