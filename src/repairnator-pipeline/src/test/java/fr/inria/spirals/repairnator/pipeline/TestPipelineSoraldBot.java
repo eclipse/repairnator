@@ -35,7 +35,6 @@ public class TestPipelineSoraldBot {
                 "--sonarRules", "1217",
                 "--repairTools", "SoraldBot",
                 "--launcherMode", "GIT_REPOSITORY",
-                "--createPR", "true",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
         });
