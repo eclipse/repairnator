@@ -267,6 +267,9 @@ public class LegacyLauncher implements LauncherAPI {
             case SEQUENCER_REPAIR:
                 inspector = InspectorFactory.getSequencerRepairInspector(buildToBeInspected, workspacePath, this.notifiers);
                 break;
+            case STYLER_REPAIR:
+                inspector = InspectorFactory.getStylerRepairInspector(buildToBeInspected, workspacePath, this.notifiers);
+                break;
             default:
                 inspector = InspectorFactory.getTravisInspector(buildToBeInspected, workspacePath, this.notifiers);
                 break;

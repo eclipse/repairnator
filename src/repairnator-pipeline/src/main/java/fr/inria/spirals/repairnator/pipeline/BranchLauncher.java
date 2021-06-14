@@ -75,6 +75,9 @@ public class BranchLauncher implements LauncherAPI{
 		} else if (launcherMode.equals(LauncherMode.GIT_REPOSITORY.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.GIT_REPOSITORY);
 			return MainProcessFactory.getGithubMainProcess(args);
+		} else if (launcherMode.equals(LauncherMode.STYLER_REPAIR.name())) {
+			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.STYLER_REPAIR);
+			return MainProcessFactory.getGithubMainProcess(args);
 		} else if (launcherMode.equals(LauncherMode.SEQUENCER_REPAIR.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
 			return MainProcessFactory.getGithubMainProcess(args);

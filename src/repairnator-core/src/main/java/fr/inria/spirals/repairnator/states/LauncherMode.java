@@ -41,4 +41,9 @@ public enum LauncherMode {
 	 * SEQUENCER_REPAIR: specific pipeline for SequencerRepair repair tool
 	 */
 	SEQUENCER_REPAIR,
+
+	/**
+	 * STYLER_REPAIR: specific pipelien for StylerRepair repair tool
+	 */
+	STYLER_REPAIR
 }

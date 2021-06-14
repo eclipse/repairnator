@@ -181,6 +181,9 @@ public class MainProcessFactory {
 			case SEQUENCER_REPAIR:
 				inspector = InspectorFactory.getSequencerRepairInspector(buildToBeInspected, workspacePath, notifiers);
 				break;
+			case STYLER_REPAIR:
+				inspector = InspectorFactory.getStylerRepairInspector(buildToBeInspected, workspacePath, notifiers);
+				break;
 			default:
 				inspector = InspectorFactory.getTravisInspector(buildToBeInspected, workspacePath, notifiers);
 				break;

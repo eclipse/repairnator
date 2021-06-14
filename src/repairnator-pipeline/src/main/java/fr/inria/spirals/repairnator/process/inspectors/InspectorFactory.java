@@ -26,6 +26,9 @@ public class InspectorFactory {
 			case SEQUENCER_REPAIR:
 				inspector.setIRunInspector(new RunInspector4SequencerRepair());
 				break;
+			case STYLER_REPAIR:
+				inspector.setIRunInspector(new RunInspector4StylerRepair());
+				break;
 			default:
 				inspector.setIRunInspector(new RunInspector4DefaultGit());
 				break;
@@ -49,6 +52,12 @@ public class InspectorFactory {
 	public static ProjectInspector getMavenInspector(String workspace, List<AbstractNotifier> notifiers) {
 		ProjectInspector inspector = new ProjectInspector(workspace, notifiers);
 		inspector.setIRunInspector(new RunInspector4Maven());
+		return inspector;
+	}
+
+	public static ProjectInspector getStylerRepairInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers) {
+		ProjectInspector inspector = new ProjectInspector(buildToBeInspected, workspace, notifiers);
+		inspector.setIRunInspector(new RunInspector4StylerRepair());
 		return inspector;
 	}
 }
