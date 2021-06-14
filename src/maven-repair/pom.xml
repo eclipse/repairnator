@@ -166,12 +166,6 @@
             <groupId>fr.inria.repairnator</groupId>
             <artifactId>repairnator-pipeline</artifactId>
             <version>3.3-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>se.kth.castor</groupId>
-                    <artifactId>sorald</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
@@ -265,7 +259,7 @@
                 <plugin>
 	                <groupId>org.apache.maven.plugins</groupId>
 	                <artifactId>maven-plugin-plugin</artifactId>
-	                <version>3.5</version>
+	                <version>3.6.1</version>
 	                <configuration>
 	                    <goalPrefix>repair</goalPrefix>
 	                    <skipErrorNoDescriptorsFound>true
