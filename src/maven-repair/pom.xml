@@ -166,6 +166,12 @@
             <groupId>fr.inria.repairnator</groupId>
             <artifactId>repairnator-pipeline</artifactId>
             <version>3.3-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>se.kth.castor</groupId>
+                    <artifactId>sorald</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
