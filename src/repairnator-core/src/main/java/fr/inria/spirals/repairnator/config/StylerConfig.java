@@ -25,7 +25,7 @@ public final class StylerConfig {
 	}
 
 	private StylerConfig() {
-		this.dockerTag = getEnvOrDefault("STYLER_DOCKER_TAG", "styler:0.1");
+		this.dockerTag = getEnvOrDefault("STYLER_DOCKER_TAG", "andre15silva/styler:0.1");
 		this.snicHost = getEnvOrDefault("SNIC_HOST", "kebnekaise.hpc2n.umu.se");
 		this.snicUsername = System.getenv("SNIC_USERNAME");
 		this.snicPassword = System.getenv("SNIC_PASSWORD");
