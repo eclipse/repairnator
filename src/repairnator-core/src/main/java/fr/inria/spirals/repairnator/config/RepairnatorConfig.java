@@ -59,15 +59,6 @@ public class RepairnatorConfig {
         ODS_CORRECT
     }
    
-    /** 
-      * DEFAULT - the project files is scanned by Sorald as a single unit. If the repair fails then it fails completely and no fixes are produced if there could have been any
-      * SEGMENT - the project is sliced into fix-sized segments to be scanned one by one. If the repair fails for a segment, it will salvage the situation by continuing on with other segments
-      */
-    public enum SORALD_REPAIR_MODE {
-        DEFAULT,
-        SEGMENT
-    }
-
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
@@ -125,9 +116,6 @@ public class RepairnatorConfig {
 
     private String[] sonarRules;
     private boolean isStaticAnalysis;
-    private int soraldMaxFixesPerRule;
-    private int segmentSize;
-    private SORALD_REPAIR_MODE soraldRepairMode;
     private boolean measureSoraldTime;
 
     private String npeSelection;
@@ -751,30 +739,6 @@ public class RepairnatorConfig {
 
     public boolean isStaticAnalysis() {
         return this.isStaticAnalysis;
-    }
-
-    public void setSegmentSize(int segmentSize) {
-        this.segmentSize = segmentSize;
-    }
-
-    public int getSegmentSize() {
-        return this.segmentSize;
-    }
-
-    public void setSoraldRepairMode(SORALD_REPAIR_MODE soraldRepairMode) {
-        this.soraldRepairMode = soraldRepairMode;
-    }
-
-    public SORALD_REPAIR_MODE getSoraldRepairMode() {
-        return this.soraldRepairMode;
-    }
-
-    public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
-        this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
-    }
-
-    public int getSoraldMaxFixesPerRule() {
-        return this.soraldMaxFixesPerRule;
     }
 
     public String getNPESelection() {
