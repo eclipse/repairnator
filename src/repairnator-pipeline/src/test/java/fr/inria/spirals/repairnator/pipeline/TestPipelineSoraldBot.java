@@ -48,7 +48,7 @@ public class TestPipelineSoraldBot {
         List<AbstractStep> steps =  launcher.getInspector().getSteps()
                 .stream()
                 .filter(step -> step.getName().equals("SoraldBot"))
-                .collect(Collectors.toList()); //test fix sequencer repair
+                .collect(Collectors.toList()); //test fix sorald-bot repair
 
         assertEquals(1, steps.size());
     }
