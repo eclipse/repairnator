@@ -85,15 +85,5 @@
         <f:entry title="${%GitBranch}" field="gitBranch">
             <f:textbox />
         </f:entry>
-        <f:entry title="Sorald Repair Mode" field="soraldRepairMode" default="DEFAULT">
-            <f:radio name="soraldRepairMode" title="Default" value="DEFAULT" checked="${instance.soraldRepairMode == 'DEFAULT'}" />
-            <f:radio name="soraldRepairMode" title="Segment" value="SEGMENT" checked="${instance.soraldRepairMode == 'SEGMENT'}" />
-        </f:entry>
-        <f:entry title="${%SegmentSize}" field="segmentSize">
-            <f:number />
-        </f:entry>
-        <f:entry title="${%SoraldMaxFixesPerRule}" field="soraldMaxFixesPerRule">
-            <f:number/>
-        </f:entry>
     </f:advanced>
 </j:jelly>

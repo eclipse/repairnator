@@ -109,12 +109,6 @@ public class LauncherUtils {
 
         // --sonarRules
         jsap.registerParameter(LauncherUtils.defineArgSonarRules());
-        // --soraldRepairMode
-        jsap.registerParameter(LauncherUtils.defineArgSoraldRepairMode());
-        // --segmentSize
-        jsap.registerParameter(LauncherUtils.defineArgSegmentSize());
-        // --soraldMaxFixesPerRule
-        jsap.registerParameter(LauncherUtils.defineArgSoraldMaxFixesPerRule());
 
         // --npeSelection
         jsap.registerParameter(LauncherUtils.defineArgNPESelection());
@@ -231,9 +225,6 @@ public class LauncherUtils {
         }
 
         config.setSonarRules(Arrays.stream(LauncherUtils.getArgSonarRules(arguments).split(",")).distinct().toArray(String[]::new));
-        config.setSegmentSize(LauncherUtils.getArgSegmentSize(arguments));
-        config.setSoraldRepairMode(RepairnatorConfig.SORALD_REPAIR_MODE.valueOf(LauncherUtils.getArgSoraldRepairMode(arguments)));
-        config.setSoraldMaxFixesPerRule(LauncherUtils.getArgSoraldMaxFixesPerRule(arguments));
 
         config.setNPESelection(LauncherUtils.getArgNPESelection(arguments));
         config.setNPENbIteration(LauncherUtils.getArgNPENbIteration(arguments));
@@ -870,45 +861,6 @@ public class LauncherUtils {
 
     public static String getArgSonarRules(JSAPResult arguments) {
         return arguments.getString("sonarRules");
-    }
-
-    public static FlaggedOption defineArgSoraldRepairMode() {
-        FlaggedOption opt = new FlaggedOption("soraldRepairMode");
-        opt.setLongFlag("soraldRepairMode");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault(RepairnatorConfig.SORALD_REPAIR_MODE.DEFAULT.name());
-        opt.setHelp("DEFAULT - default mode , load everything in at once into Sorald. SEGMENT - repair segments of the projects instead, segmentsize can be specified.");
-        return opt;
-    }
-
-    public static String getArgSoraldRepairMode(JSAPResult arguments) {
-        return arguments.getString("soraldRepairMode");
-    }
-
-    public static FlaggedOption defineArgSegmentSize() {
-        FlaggedOption opt = new FlaggedOption("segmentSize");
-        opt.setLongFlag("segmentSize");
-        opt.setStringParser(JSAP.INTEGER_PARSER);
-        opt.setDefault("200");
-        opt.setHelp("Segment size for the segment repair.");
-        return opt;
-    }
-
-    public static Integer getArgSegmentSize(JSAPResult arguments) {
-        return arguments.getInt("segmentSize");
-    }
-
-    public static FlaggedOption defineArgSoraldMaxFixesPerRule() {
-        FlaggedOption opt = new FlaggedOption("soraldMaxFixesPerRule");
-        opt.setLongFlag("soraldMaxFixesPerRule");
-        opt.setStringParser(JSAP.INTEGER_PARSER);
-        opt.setDefault("2000");
-        opt.setHelp("Number of fixes per SonarQube rule.");
-        return opt;
-    }
-
-    public static Integer getArgSoraldMaxFixesPerRule(JSAPResult arguments) {
-        return arguments.getInt("soraldMaxFixesPerRule");
     }
 
     public static FlaggedOption defineArgNPESelection() {

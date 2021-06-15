@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.pipeline;
 
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.process.step.repair.soraldbot.Sorald;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepairSafe;
 import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
@@ -77,10 +76,8 @@ public class RepairToolsManager {
         this.repairTools.put(astorJKali.getRepairToolName(),astorJKali);
         AbstractRepairStep astorJMut = new AstorJMutRepair();
         this.repairTools.put(astorJMut.getRepairToolName(),astorJMut);
-        AbstractRepairStep sorald = new Sorald();
-        this.repairTools.put(sorald.getRepairToolName(),sorald);
         AbstractRepairStep soraldBot = new SoraldBot();
-        this.repairTools.put(sorald.getRepairToolName(),soraldBot);
+        this.repairTools.put(soraldBot.getRepairToolName(),soraldBot);
     }
 
     public static AbstractRepairStep getStepFromName(String name) {

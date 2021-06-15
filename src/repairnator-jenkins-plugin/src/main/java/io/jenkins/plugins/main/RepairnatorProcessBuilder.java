@@ -26,9 +26,6 @@ public class RepairnatorProcessBuilder {
 	private String mavenHome;
 	private String outputDir;
 	private String sonarRules;
-	private String segmentSize;
-	private String soraldMaxFixesPerRule;
-	private String soraldRepairMode;
 	private boolean createPR;
 	private boolean useSmtpTLS;
 	private boolean noTravisRepair;
@@ -127,21 +124,6 @@ public class RepairnatorProcessBuilder {
 	}
 
 
-    public RepairnatorProcessBuilder withSegmentSize(int segmentSize) {
-		this.segmentSize = "" + segmentSize;
-		return this;
-	}
-
-	public RepairnatorProcessBuilder withSoraldRepairMode(String soraldRepairMode) {
-		this.soraldRepairMode = soraldRepairMode;
-		return this;
-	}
-
-	public RepairnatorProcessBuilder withSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
-		this.soraldMaxFixesPerRule = "" + soraldMaxFixesPerRule;
-		return this;
-	}
-
 	public void checkValid() {
 		if (this.javaExec == null || this.javaExec.equals("")) {
 			throw new IllegalArgumentException("Repairnator Process building failed: java executable location is null");
@@ -176,13 +158,7 @@ public class RepairnatorProcessBuilder {
 		cmdList.add("NEW");
 		cmdList.add("--launcherMode");
 		cmdList.add("GIT_REPOSITORY");
-		cmdList.add("--soraldRepairMode");
-		cmdList.add(this.soraldRepairMode);
-		cmdList.add("--segmentSize");
-		cmdList.add(this.segmentSize);
-		cmdList.add("--soraldMaxFixesPerRule");
-		cmdList.add(this.soraldMaxFixesPerRule);
-		
+
 		cmdList.add("--output");
 		cmdList.add(this.outputDir);
 		cmdList.add("--MavenHome");
