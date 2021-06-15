@@ -39,7 +39,12 @@ public class StylerRepair extends AbstractRepairStep {
 
 	@Override
 	protected StepStatus businessExecute() {
-		this.getLogger().info("Starting StylerRepair step");
+		this.getLogger().info("Starting StylerRepair step...");
+
+		if (!this.getInspector().getJobStatus().getPlugins().contains("checkstyle")) {
+			this.addStepError("The project does not have checkstyle as a plugin");
+			return StepStatus.buildSkipped(this);
+		}
 
 		StylerConfig config = StylerConfig.getInstance();
 
