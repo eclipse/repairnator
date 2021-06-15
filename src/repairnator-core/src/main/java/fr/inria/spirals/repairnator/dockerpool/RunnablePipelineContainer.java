@@ -3,15 +3,14 @@ package fr.inria.spirals.repairnator.dockerpool;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
+import fr.inria.spirals.repairnator.InputBuild;
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.config.SequencerConfig;
 import fr.inria.spirals.repairnator.config.StylerConfig;
 import fr.inria.spirals.repairnator.dockerpool.serializer.TreatedBuildTracking;
-import fr.inria.spirals.repairnator.utils.DateUtils;
-import fr.inria.spirals.repairnator.InputBuild;
-import fr.inria.spirals.repairnator.utils.Utils;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-
 import fr.inria.spirals.repairnator.states.LauncherMode;
+import fr.inria.spirals.repairnator.utils.DateUtils;
+import fr.inria.spirals.repairnator.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,8 +106,7 @@ public class RunnablePipelineContainer implements Runnable {
             this.repairnatorConfig.getLauncherMode() == LauncherMode.REPAIR ||
             this.repairnatorConfig.getLauncherMode() == LauncherMode.CHECKSTYLE ||
             this.repairnatorConfig.getLauncherMode() == LauncherMode.GIT_REPOSITORY ||
-            this.repairnatorConfig.getLauncherMode() == LauncherMode.SEQUENCER_REPAIR ||
-            this.repairnatorConfig.getLauncherMode() == LauncherMode.STYLER_REPAIR
+            this.repairnatorConfig.getLauncherMode() == LauncherMode.SEQUENCER_REPAIR
         ) {
             this.envValues.add("REPAIR_TOOLS=" + StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
         }
