@@ -49,6 +49,16 @@ public class TestGatherCheckstyleInformation {
 		FileHelper.deleteFile(tmpDir);
 	}
 
+	/**
+	 * This test runs on a test project created specifically for Repairnator's CI.
+	 * It analyzes a branch with 2 checkstyler violations, and the model returns
+	 * 1 possible patch.
+	 *
+	 * The Styler models for it are shipped with the container so that no access to
+	 * the model store is required during CI.
+	 *
+	 * @throws IOException
+	 */
 	@Test
 	public void testGatherCheckstyleInformationWhenFailing() throws IOException {
 		long buildId = 228999402; // andre15silva/stylerTestProject -> master
@@ -85,6 +95,15 @@ public class TestGatherCheckstyleInformation {
 		assertThat(violations.size(), is(2));
 	}
 
+	/**
+	 * This test runs on a test project created specifically for Repairnator's CI.
+	 * It analyzes a branch with no checkstyler violations.
+	 *
+	 * The Styler models for it are shipped with the container so that no access to
+	 * the model store is required during CI.
+	 *
+	 * @throws IOException
+	 */
 	@Test
 	public void testGatherCheckstyleInformationWhenPassing() throws IOException {
 		long buildId = 229002078; // andre15silva/stylerTestProject -> passing

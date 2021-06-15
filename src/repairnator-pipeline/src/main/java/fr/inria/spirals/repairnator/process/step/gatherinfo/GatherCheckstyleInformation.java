@@ -14,6 +14,12 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * Pipeline step for collecting information of a checkstyle run.
+ *
+ * If the plugin in configured in the project's pom, then the step
+ * collects all the violations, if any, detected by checkstyler.
+ */
 public class GatherCheckstyleInformation extends AbstractStep {
 
 	private int nbViolations;

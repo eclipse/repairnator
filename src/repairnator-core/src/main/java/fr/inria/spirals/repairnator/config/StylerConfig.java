@@ -2,7 +2,13 @@ package fr.inria.spirals.repairnator.config;
 
 import static fr.inria.spirals.repairnator.utils.Utils.getEnvOrDefault;
 
-public class StylerConfig {
+/**
+ * Configuration manager for Styler repair step:
+ * Config values are read directly as environment variables,
+ * so that we avoid adding more options through the launcher's
+ * command line args.
+ */
+public final class StylerConfig {
 	private final String dockerTag;
 	private final String snicHost;
 	private final String snicUsername;
