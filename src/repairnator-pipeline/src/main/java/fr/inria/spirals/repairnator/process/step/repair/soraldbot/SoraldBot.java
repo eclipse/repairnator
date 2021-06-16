@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step.repair.soraldbot;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
+import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.models.SoraldTargetCommit;
@@ -10,13 +11,23 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.kohsuke.github.GHBranch;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -69,7 +80,6 @@ public class SoraldBot extends AbstractRepairStep {
 
                 if(patchedFiles != null && !patchedFiles.isEmpty()){
                     this.getInspector().getJobStatus().setHasBeenPatched(true);
-//                    getConfig().setPush(true);
                     createPRWithSpecificPatchedFiles(patchedFiles, rule);
                 }
             }
@@ -83,6 +93,15 @@ public class SoraldBot extends AbstractRepairStep {
     private void createPRWithSpecificPatchedFiles(Set<String> violationIntroducingFiles, String rule)
             throws GitAPIException, IOException, URISyntaxException {
 
+        String diffStr = applyPatches4SonarAndGetDiffStr(violationIntroducingFiles, rule);
+        List<RepairPatch> repairPatches = new ArrayList<RepairPatch>();
+        RepairPatch repairPatch = new RepairPatch(this.getRepairToolName(), "", diffStr);
+        repairPatches.add(repairPatch);
+
+        notify(repairPatches);
+
+
+
         String newBranchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
         String forkedRepo = null;
         Git forkedGit = null;
@@ -94,8 +113,6 @@ public class SoraldBot extends AbstractRepairStep {
         }
 
 
-        applyPatches4Sonar(violationIntroducingFiles, rule);
-
         forkedGit = this.createGitBranch4Push(newBranchName);
 
         StringBuilder prTextBuilder = new StringBuilder()
@@ -105,7 +122,7 @@ public class SoraldBot extends AbstractRepairStep {
         setPrText(prTextBuilder.toString());
         setPRTitle("Fix Sorald violations");
 
-        
+
         pushPatches(forkedGit, forkedRepo, newBranchName);
         createPullRequest(originalBranchName, newBranchName);
     }
@@ -126,7 +143,7 @@ public class SoraldBot extends AbstractRepairStep {
         return branch.get();
     }
 
-    private void applyPatches4Sonar(Set<String> violationIntroducingFiles, String ruleNumber)
+    private String applyPatches4SonarAndGetDiffStr(Set<String> violationIntroducingFiles, String ruleNumber)
             throws IOException, GitAPIException, URISyntaxException {
         FileUtils.copyDirectory(new File(workingRepoPath), new File(getInspector().getRepoLocalPath()));
 
@@ -138,5 +155,74 @@ public class SoraldBot extends AbstractRepairStep {
 
         git.commit().setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent())
                 .setMessage("Proposal for patching Sorald rule " + ruleNumber).call();
+
+        String diffStr = getDiffStrForLatestCommit(git.getRepository());
+
+        git.close();
+
+        return diffStr;
+    }
+
+    private String getDiffStrForLatestCommit(Repository repo) throws IOException {
+        String hashID = repo.getAllRefs().get("HEAD").getObjectId().getName();
+
+        RevCommit newCommit;
+        try (RevWalk walk = new RevWalk(repo)) {
+            newCommit = walk.parseCommit(repo.resolve(hashID));
+        }
+
+        return getDiffOfCommit(newCommit, repo);
+    }
+
+
+    //Helper gets the diff as a string.
+    private String getDiffOfCommit(RevCommit newCommit, Repository repo) throws IOException {
+
+        //Get commit that is previous to the current one.
+        RevCommit oldCommit = getPrevHash(newCommit, repo);
+        if(oldCommit == null){
+            return "Start of repo";
+        }
+        //Use treeIterator to diff.
+        AbstractTreeIterator oldTreeIterator = getCanonicalTreeParser(oldCommit, repo);
+        AbstractTreeIterator newTreeIterator = getCanonicalTreeParser(newCommit, repo);
+        OutputStream outputStream = new ByteArrayOutputStream();
+        try (DiffFormatter formatter = new DiffFormatter(outputStream)) {
+            formatter.setRepository(repo);
+            formatter.format(oldTreeIterator, newTreeIterator);
+        }
+        String diff = outputStream.toString();
+        return diff;
+    }
+
+    //Helper function to get the previous commit.
+    public RevCommit getPrevHash(RevCommit commit, Repository repo)  throws  IOException {
+
+        try (RevWalk walk = new RevWalk(repo)) {
+            // Starting point
+            walk.markStart(commit);
+            int count = 0;
+            for (RevCommit rev : walk) {
+                // got the previous commit.
+                if (count == 1) {
+                    return rev;
+                }
+                count++;
+            }
+            walk.dispose();
+        }
+        //Reached end and no previous commits.
+        return null;
+    }
+
+    //Helper function to get the tree of the changes in a commit. Written by Rüdiger Herrmann
+    private AbstractTreeIterator getCanonicalTreeParser(ObjectId commitId, Repository repo) throws IOException {
+        try (RevWalk walk = new RevWalk(repo)) {
+            RevCommit commit = walk.parseCommit(commitId);
+            ObjectId treeId = commit.getTree().getId();
+            try (ObjectReader reader = repo.newObjectReader()) {
+                return new CanonicalTreeParser(null, reader, treeId);
+            }
+        }
     }
 }
