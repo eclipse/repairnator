@@ -33,7 +33,7 @@ import java.util.*;
 
 /*
     Performs Sorald repair on a given commit for a given sonar_rule.
-    Note: getConfig().push and getConfig().isCreate should be set to true to create a PR.
+    Note: getConfig().isCreate should be set to true to create a PR.
  */
 public class SoraldBot extends AbstractRepairStep {
     private static final String REPO_PATH = "tmp_repo";
@@ -99,7 +99,6 @@ public class SoraldBot extends AbstractRepairStep {
         repairPatches.add(repairPatch);
 
         notify(repairPatches);
-
 
 
         String newBranchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
