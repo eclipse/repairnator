@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.spirals.repairnator.InputBuild;
+import fr.inria.spirals.repairnator.realtime.githubapi.commits.GithubAPICommitAdapter;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;

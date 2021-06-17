@@ -11,9 +11,6 @@ public class Config {
 	private HashMap<String,String> stringConfig;
 	private String[] tools;
 	private String sonarRules;
-	private String soraldRepairMode;
-	private int soraldMaxFixesPerRule;
-	private int segmentSize;
 	private File workspaceDir;
 
 	public Config(){
@@ -149,30 +146,6 @@ public class Config {
 
 	public void switchQuiet() {
 		this.quiet = !this.quiet;
-	}
-
-	public void setSoraldRepairMode(String soraldRepairMode) {
-		this.soraldRepairMode = soraldRepairMode;
-	}
-
-	public String getSoraldRepairMode() {
-		return this.soraldRepairMode;
-	}
-
-	public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
-		this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
-	}
-
-	public int getSoraldMaxFixesPerRule() {
-		return this.soraldMaxFixesPerRule;
-	}
-
-	public void setSegmentSize(int segmentSize) {
-		this.segmentSize = segmentSize;
-	}
-
-	public int getSegmentSize() {
-		return this.segmentSize;
 	}
 
 	public void setWorkspaceDir(File workspaceDir) {

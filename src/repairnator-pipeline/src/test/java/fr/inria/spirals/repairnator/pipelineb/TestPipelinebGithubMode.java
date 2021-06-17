@@ -96,26 +96,6 @@ public class TestPipelinebGithubMode {
     }
 
     @Test
-    public void testSoraldWithSuccess() throws Exception {
-        GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
-                "--gitrepo",
-                "--gitrepourl", "https://github.com/henry-lp/SonarQubeRepairTests",
-                "--gitrepobranch", "master",
-                "--sonarRules", "2116",
-                "--repairTools", "Sorald",
-                "--soraldMaxFixesPerRule", "1",
-                "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
-                "--output", outputFolder.getRoot().getAbsolutePath(),
-        });
-
-        Patches patchNotifier = new Patches();
-        mainProc.setPatchNotifier(patchNotifier);
-        mainProc.run();
-        assertEquals("PATCHED", mainProc.getInspector().getFinding());
-        assertEquals(1, patchNotifier.allpatches.size());
-    }
-
-    @Test
     public void testPipelineGitRepositoryFirstCommit() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
                 "--gitrepo",

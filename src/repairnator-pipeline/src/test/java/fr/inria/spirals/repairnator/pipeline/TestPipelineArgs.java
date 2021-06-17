@@ -155,15 +155,6 @@ public class TestPipelineArgs {
         String defaultSonarRules = "2116";
         assertEquals(defaultSonarRules, LauncherUtils.getArgSonarRules(arguments));
         assertArrayEquals(Arrays.stream(defaultSonarRules.split(",")).distinct().toArray(String[]::new), config.getSonarRules());
-        RepairnatorConfig.SORALD_REPAIR_MODE defaultSoraldRepairMode = RepairnatorConfig.SORALD_REPAIR_MODE.DEFAULT;
-        assertEquals(defaultSoraldRepairMode.name(), LauncherUtils.getArgSoraldRepairMode(arguments));
-        assertEquals(defaultSoraldRepairMode, config.getSoraldRepairMode());
-        Integer defaultSegmentSize = 200;
-        assertEquals(defaultSegmentSize, LauncherUtils.getArgSegmentSize(arguments));
-        assertEquals((int) defaultSegmentSize, config.getSegmentSize());
-        Integer defaultMaxFixesPerRule = 2000;
-        assertEquals(defaultMaxFixesPerRule, LauncherUtils.getArgSoraldMaxFixesPerRule(arguments));
-        assertEquals((int) defaultMaxFixesPerRule, config.getSoraldMaxFixesPerRule());
 
         // default NPEFix rules
         String defaultNPESelection = "exploration";
