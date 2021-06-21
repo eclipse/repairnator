@@ -145,7 +145,7 @@
         <dependency>
             <groupId>fr.inria.repairnator</groupId>
             <artifactId>repairnator-core</artifactId>
-            <version>3.3</version>
+            <version>3.4</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
