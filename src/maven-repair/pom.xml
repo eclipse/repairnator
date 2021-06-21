@@ -166,11 +166,11 @@
 
     <repositories>
         <repository>
-            <id>codedance on Github</id>
-            <url>https://tdurieux.github.io/maven-repository/snapshots/</url>
+            <id>Sonatype</id>
+            <url>https://oss.sonatype.org/content/repositories/releases/</url>
         </repository>
         <repository>
-            <id>releases codedance on Github</id>
+            <id>tdurieux maven</id>
             <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
     </repositories>
