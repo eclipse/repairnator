@@ -82,7 +82,7 @@ public class TravisLauncherUtils {
         FlaggedOption opt = new FlaggedOption("jtravisendpoint");
         opt.setLongFlag("jtravisendpoint");
         opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault("https://api.travis-ci.org");
+        opt.setDefault("https://api.travis-ci.com");
         opt.setHelp("The endpoint where JTravis points its requests");
         return opt;
     }
