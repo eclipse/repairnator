@@ -165,13 +165,6 @@
             <id>tdurieux maven</id>
             <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
-        <repository>
-            <!-- for gzoltar -->
-            <id>sachaproject.gforge.inria.fr-release</id>
-            <name>Maven Repository for GZoltar snapshot</name>
-            <url>http://sachaproject.gforge.inria.fr/repositories/releases/</url>
-            <snapshots/>
-        </repository>
     </repositories>
 
     <distributionManagement>
