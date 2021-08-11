@@ -109,12 +109,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.gzoltar</groupId>
-            <artifactId>gzoltar</artifactId>
-            <version>0.1.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-compat</artifactId>
             <version>3.2.5</version>
