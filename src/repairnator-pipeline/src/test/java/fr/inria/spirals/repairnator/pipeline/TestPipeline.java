@@ -55,7 +55,6 @@ public class TestPipeline {
     @Test
     public void testPipelineOnlyGitRepository() throws Exception {
         Launcher l = new Launcher(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath(),
@@ -73,7 +72,6 @@ public class TestPipeline {
     @Test
     public void testPipelineGitRepositoryAndBranch() throws Exception {
         Launcher l = new Launcher(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepobranch", "astor-jkali-failure",
                 "--repairTools", "AstorJKali",
@@ -89,7 +87,6 @@ public class TestPipeline {
     @Test
     public void testPipelineGitRepositoryAndCommitIdWithFailure() throws Exception {
         Launcher l = new Launcher(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepobranch", "no-infinite-loop",
                 "--launcherMode", "GIT_REPOSITORY",
@@ -104,7 +101,6 @@ public class TestPipeline {
     @Test
     public void testPipelineGitRepositoryAndCommitIdWithSuccess() throws Exception {
         Launcher l = new Launcher(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9",
                 "--launcherMode", "GIT_REPOSITORY",
@@ -124,7 +120,6 @@ public class TestPipeline {
     @Test
     public void testPipelineGitRepositoryFirstCommit() throws Exception {
         Launcher l = new Launcher(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepofirstcommit",
                 "--launcherMode", "GIT_REPOSITORY",

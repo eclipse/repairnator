@@ -50,9 +50,6 @@ public class BranchLauncher implements LauncherAPI{
 			+ "KUBERNETES_LISTENER: run repairnator as a Activemq server listening for Travis build ids."
 			+ "SEQUENCER_REPAIR: run the custom SequencerRepair pipeline.");
         jsap.registerParameter(opt2);
-
-
-
         return jsap;
 	}
 
