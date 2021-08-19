@@ -55,7 +55,6 @@ Moreover, the launcher mode should be set to `--launcherMode GIT_REPOSITORY` to 
 
 Additional parameters:
 * `--sonarRules`: the rules Sorald should analyze for warnings after input. Input format: 2116,1656... .
-* `--gitrepo`: required only in the new version.
 * `--gitrepourl`: the url of the target repo that should be fixed. Required only in the new version.
 * `--gitcommithash`: the hash number of the commit that Sorald will fix its changed files. Required only in the new version.
 
