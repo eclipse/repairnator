@@ -4,7 +4,9 @@ This page describes the usage of all main classes of Repairnator.
 
 ## Pipeline fr.inria.spirals.repairnator.pipeline.Launcher
 
-It tries to repair a Travis CI build.
+### Travis CI launcher
+
+By default, it analyzes Travis CI builds. This is equivalent to using the option `--launcherMode REPAIR`
 
 The following command line tools must be installed on your machine:
   - Oracle Java: some dependencies need tools.jar in the classpath;
@@ -19,14 +21,14 @@ $ mvn clean install -DskipTests -f src/repairnator-core/ && mvn clean install -D
 $ cd src/repairnator-pipeline/
 ```
 
-Run it on Travis CI build [413285802](https://travis-ci.org/surli/failingProject/builds/413285802)
+Run it on Travis CI build [224246334](https://travis-ci.com/github/repairnator/failingProject/builds/224246334)
 
 ```
 export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # your Token
 export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 
-java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 413285802
+java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN -b 224246334
 ```
 
 Options
@@ -106,20 +108,20 @@ The environment variable M2_HOME should be set and refer to the path of your Mav
 To use Nopol, you must add tools.jar in your classpath from your installed JDK.
 ```
 
-## Pipeline fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher
+### GitHub launcher
 
-It is also possible to run it on a GitHub repository that contains a Java Maven project, e.g., this one: https://github.com/surli/failingProject.
+It is also possible to run it on a GitHub repository that contains a Java Maven project, e.g., this one: https://github.com/repairnator/failingProject.
+
+For that, we need to specify the launcher mode with the option `--launcherMode GIT_REPOSITORY`, and the parameter `--gitrepourl` for specifying a Git repository URL.
+The URL has the following format: `https://github.com/user/repo` (without the final `.git`).
 
 ```
 export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # your Token
 export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 
-java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl https://github.com/surli/failingProject
-
+java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN --launcherMode GIT_REPOSITORY --gitrepourl https://github.com/repairnator/failingProject
 ```
-
-To run Repairnator directly on a Git repository, it is necessary to use the `GIT_REPOSITORY` launcher mode, using the parameter `gitrepo` and specifying a Git repository URL with the parameter `gitrepourl`. The URL has the following format: https://github.com/user/repo (without the final `.git`).
 
 In addition to the Launcher options, the `GIT_REPOSITORY` launcher mode offers other options, which are the following:
 
@@ -129,10 +131,6 @@ Options
 Usage: java <repairnator-pipeline name> [option(s)]
 
 Options:
-
-  [--gitrepo]
-        This mode allows to use Repairnator to analyze bugs present in a Git
-        repository.
 
   [--gitrepourl <gitRepositoryUrl>]
         Specify a Git repository URL (only in GIT_REPOSITORY mode).
@@ -161,7 +159,7 @@ export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # your Token
 export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 
-java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl <git-repository-url> --gitrepofirstcommit
+java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN --launcherMode GIT_REPOSITORY --gitrepourl <git-repository-url> --gitrepofirstcommit
 ```
 
 ### gitrepoidcommit
@@ -175,7 +173,7 @@ export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # your Token
 export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 
-java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl <git-repository-url> --gitrepoidcommit <git-sha>
+java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN --launcherMode GIT_REPOSITORY --gitrepourl <git-repository-url> --gitrepoidcommit <git-sha>
 ```
 
 ### gitrepobranch
@@ -189,7 +187,7 @@ export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # your Token
 export TOOLS_JAR=/usr/lib/jvm/default-java/lib/tools.jar
 
-java -cp $TOOLS_JAR:target/repairnator-pipeline*.jar fr.inria.spirals.repairnator.pipeline.GitRepositoryLauncher --ghOauth $GITHUB_TOKEN --gitrepo --gitrepourl <git-repository-url> --gitrepobranch <branch-name>
+java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --ghOauth $GITHUB_TOKEN --launcherMode GIT_REPOSITORY --gitrepourl <git-repository-url> --gitrepobranch <branch-name>
 ```
 
 
