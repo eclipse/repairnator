@@ -1,4 +1,5 @@
 # Documentation of Repairnator
+# Documentation of Repairnator
 
 This directory provides the official documentation about the Repairnator project.
 
@@ -25,7 +26,7 @@ A first way to contribute is to look at the label [good-first-issue](https://git
 To fix a specific Travis CI build:
 
 ```
-docker run -e BUILD_ID=564711868 -e GITHUB_OAUTH=<GITHUB TOKEN> repairnator/pipeline
+docker run -e BUILD_ID=235838150 -e GITHUB_OAUTH=<GITHUB TOKEN> repairnator/pipeline
 ```
 
 It is possible to create your own GitHub token from [this page](https://github.com/settings/tokens), by selecting `public_repo` referring to the scope that has to be associated with the token.
