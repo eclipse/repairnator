@@ -47,7 +47,7 @@ public class TestPipelineBuildListenerMainProcess {
         assertEquals(1, buildListener.extractBuiltId(textMessage));
 
         try {
-            textMessage.setText("{\"buildId\":\"2\",\"CI\":\"travis-ci.org\"}");
+            textMessage.setText("{\"buildId\":\"2\",\"CI\":\"travis-ci.com\"}");
         } catch (MessageNotWriteableException e) {
             e.printStackTrace();
         }
@@ -61,7 +61,7 @@ public class TestPipelineBuildListenerMainProcess {
         assertEquals(3, buildListener.extractBuiltId(bytesMessage));
 
         ActiveMQBytesMessage bytesMessageInJson = new ActiveMQBytesMessage();
-        bytesMessageInJson.setContent(new ByteSequence("{\"buildId\":\"4\",\"CI\":\"travis-ci.org\"}".getBytes()));
+        bytesMessageInJson.setContent(new ByteSequence("{\"buildId\":\"4\",\"CI\":\"travis-ci.com\"}".getBytes()));
         bytesMessageInJson.setReadOnlyBody(true);
         // a bytes message whose content is formatted in json
         assertEquals(4, buildListener.extractBuiltId(bytesMessageInJson));

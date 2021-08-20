@@ -33,7 +33,6 @@ public class TestPipelineSoraldBot {
     @Test
     public void TestPipelineSoraldRepairTool() throws Exception {
         Launcher launcher = new Launcher(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/khaes-kth/Sorald-CI-Sample",
                 "--gitcommithash", "e2e0e568412cd05efb4475715f457473b3777437",
                 "--sonarRules", "1217",

@@ -21,8 +21,8 @@ Then, just run the script `launch_rtscanner.sh`.
 
 ## `repair_buggy_build.sh`
 
-From a Travis URL like this one: https://travis-ci.org/surli/test-repairnator/builds/352395977 you can retrieve a Build ID by taking the last part of the URL.
-Here it is: `352395977`.
+From a Travis URL like this one: https://app.travis-ci.com/github/repairnator/test-repairnator/builds/235838150 you can retrieve a Build ID by taking the last part of the URL.
+Here it is: `235838150`.
 
 All you have to do to launch Repairnator to reproduce and try fixing this build is then to go in `repairnator/scripts/` and launch `repair_buggy_build.sh` with the build ID as argument:
 
@@ -34,7 +34,7 @@ vi ~/repairnator.cfg
 cd src/scripts
 
 # start a Docker container and run Repairnator on your specified Build ID.
-./repair_buggy_build.sh 352395977
+./repair_buggy_build.sh 235838150
 
 # When the Docker container is done you can find logs and serialized files in the `$HOME_REPAIR/logs` path.
 ls $HOME_REPAIR/logs

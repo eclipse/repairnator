@@ -206,7 +206,6 @@ public class RepairnatorProcessBuilder {
 			cmdList.add(String.join(",",this.notifyTo));
 		}
 
-		cmdList.add("--gitrepo");
 		if (this.useSmtpTLS) {
 			cmdList.add("--smtpTLS");
 		}

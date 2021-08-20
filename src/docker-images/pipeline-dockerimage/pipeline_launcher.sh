@@ -58,7 +58,7 @@ LOCAL_REPAIR_MODE=repair
 # Github XOR Travis
 if [[ -n "$GITHUB_URL" ]] && [[ -n "$GITHUB_SHA" ]]; then
   echo "adding GitHub mode variables"
-  args="$args --gitrepo --gitrepourl $GITHUB_URL --gitrepoidcommit $GITHUB_SHA"
+  args="$args --gitrepourl $GITHUB_URL --gitrepoidcommit $GITHUB_SHA"
 elif [[ -n "$BUILD_ID" ]]; then
   echo "adding Travis mode variables"
   args="$args -b $BUILD_ID"
