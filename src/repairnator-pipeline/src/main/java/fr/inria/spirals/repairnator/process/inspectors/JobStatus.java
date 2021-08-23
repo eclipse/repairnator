@@ -7,6 +7,7 @@ import fr.inria.spirals.repairnator.process.inspectors.properties.tests.FailureD
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.PushState;
+import fr.spoonlabs.flacoco.api.Suspiciousness;
 import org.apache.maven.model.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,11 @@ public class JobStatus {
      * List of patches indexed by the name of the tool to produce them
      */
     private Map<String, List<RepairPatch>> listOfPatches;
+
+    /**
+     * Flacoco results (used in the fault localization mode)
+     */
+    private Map<String, Suspiciousness> flacocoResults;
 
     /**
      * Diagnostic about repair tool on the form of a JsonElement
@@ -319,5 +325,13 @@ public class JobStatus {
             }
         }
         return failureNames;
+    }
+
+    public Map<String, Suspiciousness> getFlacocoResults() {
+        return flacocoResults;
+    }
+
+    public void setFlacocoResults(Map<String, Suspiciousness> flacocoResults) {
+        this.flacocoResults = flacocoResults;
     }
 }

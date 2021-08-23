@@ -125,6 +125,8 @@ public class LauncherUtils {
         jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
         // --sequencerRepair
         jsap.registerParameter(LauncherUtils.defineArgSequencerRepairMode());
+        // --faultLocalization
+        jsap.registerParameter(LauncherUtils.defineArgFaultLocalizationMode());
 
         // --patchClassification
         jsap.registerParameter(LauncherUtils.defineArgPatchClassification());
@@ -148,6 +150,8 @@ public class LauncherUtils {
             config.setLauncherMode(LauncherMode.CHECKSTYLE);
         } else if (LauncherUtils.getArgSequencerRepairMode(arguments)) {
             config.setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+        } else if (LauncherUtils.getArgFaultLocalizationMode(arguments)) {
+            config.setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
         } else {
             config.setLauncherMode(LauncherMode.REPAIR);
         }
@@ -309,6 +313,18 @@ public class LauncherUtils {
 
     public static boolean getArgSequencerRepairMode(JSAPResult arguments) {
         return arguments.getBoolean("sequencerRepair");
+    }
+
+    public static Switch defineArgFaultLocalizationMode() {
+        Switch sw = new Switch("faultLocalization");
+        sw.setLongFlag("faultLocalization");
+        sw.setDefault("false");
+        sw.setHelp("This mode allows to use repairnator's fault localization mode.");
+        return sw;
+    }
+
+    public static boolean getArgFaultLocalizationMode(JSAPResult arguments) {
+        return arguments.getBoolean("faultLocalization");
     }
 
     public static Switch defineArgBearsMode() {

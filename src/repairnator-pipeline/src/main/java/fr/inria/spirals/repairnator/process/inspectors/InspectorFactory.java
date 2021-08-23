@@ -18,13 +18,21 @@ public class InspectorFactory {
 		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4SequencerRepair());
 	}
 
+	public static ProjectInspector getFaultLocalizationInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers){
+		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4FaultLocalization());
+	}
+
 	public static GitRepositoryProjectInspector getGithubInspector(GithubInputBuild build, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractNotifier> notifiers) {
 		GitRepositoryProjectInspector inspector = new GitRepositoryProjectInspector(build, isGitRepositoryFirstCommit, workspace, notifiers);
 
+		System.out.println(RepairnatorConfig.getInstance());
 		switch (RepairnatorConfig.getInstance().getLauncherMode()){
 			case SEQUENCER_REPAIR:
 				inspector.setIRunInspector(new RunInspector4SequencerRepair());
+				break;
+			case FAULT_LOCALIZATION:
+				inspector.setIRunInspector(new RunInspector4FaultLocalization());
 				break;
 			default:
 				inspector.setIRunInspector(new RunInspector4DefaultGit());
