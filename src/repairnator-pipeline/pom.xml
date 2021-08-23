@@ -111,7 +111,7 @@
         <dependency>
             <groupId>eu.stamp-project</groupId>
             <artifactId>assert-fixer</artifactId>
-            <version>1.0.8</version>
+            <version>1.0.9-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
