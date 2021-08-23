@@ -59,9 +59,6 @@ public class BranchLauncher implements LauncherAPI{
 
 		String launcherMode = jsapResult.getString("launcherMode");
 
-		System.out.println(launcherMode);
-
-
 		if (launcherMode.equals(LauncherMode.REPAIR.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
 			return MainProcessFactory.getTravisMainProcess(args);
@@ -82,7 +79,7 @@ public class BranchLauncher implements LauncherAPI{
 			return MainProcessFactory.getPipelineListenerMainProcess(args);
 		} else if (launcherMode.equals(LauncherMode.FAULT_LOCALIZATION.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
-			return MainProcessFactory.getGithubMainProcess(args);
+			return MainProcessFactory.getTravisMainProcess(args);
 		} else {
 			LOGGER.warn("Unknown launcher mode. Please choose the following: REPAIR, BEARS, CHECKSTYLE, GIT_REPOSITORY, KUBERNETES_LISTENER, JENKINS_PLUGIN, FAULT_LOCALIZATION");
 			return null;

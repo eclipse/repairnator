@@ -27,6 +27,11 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
 
     @Override
     protected StepStatus businessExecute() {
+        if (!this.getInspector().getBuggyBuild().isPullRequest()) {
+            this.getLogger().warn("Fault localization suggestions are not available outside pull requests");
+            return StepStatus.buildSkipped(this, "Fault localization suggestions are not available outside pull requests.");
+        }
+
         try {
             pushReviewComments(this.getInspector().getJobStatus().getFlacocoResults());
         } catch (IOException e) {
@@ -41,7 +46,7 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
     private void pushReviewComments(Map<String, Suspiciousness> results) throws IOException {
         GitHub gitHub = GitHub.connectUsingOAuth(RepairnatorConfig.getInstance().getGithubToken());
         GHRepository originalRepository = gitHub.getRepository(this.getInspector().getRepoSlug());
-        GHPullRequest pullRequest = originalRepository.getPullRequest(2);
+        GHPullRequest pullRequest = originalRepository.getPullRequest(this.getInspector().getBuggyBuild().getPullRequestNumber());
         Map<String, Map<Integer, Integer>> diffMapping = computeDiffMapping(pullRequest.getDiffUrl());
         GHPullRequestReviewBuilder reviewBuilder = pullRequest.createReview();
 
