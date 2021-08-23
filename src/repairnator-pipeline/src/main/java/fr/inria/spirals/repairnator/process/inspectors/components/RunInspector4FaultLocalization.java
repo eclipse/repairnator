@@ -33,7 +33,6 @@ public class RunInspector4FaultLocalization extends IRunInspector {
                 .addNextStep(new FlacocoLocalization(inspector, true));
 
         PushFaultLocalizationSuggestions finalStep = new PushFaultLocalizationSuggestions(inspector, true);
-        cloneRepo.addNextStep(finalStep);
         inspector.setFinalStep(finalStep);
 
         inspector.printPipeline();

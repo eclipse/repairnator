@@ -40,7 +40,6 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
         }
 
         return StepStatus.buildSuccess(this);
-
     }
 
     private void pushReviewComments(Map<String, Suspiciousness> results) throws IOException {
