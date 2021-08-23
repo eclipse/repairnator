@@ -22,7 +22,6 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.kohsuke.github.GHBranch;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,7 +52,7 @@ public class SoraldBot extends AbstractRepairStep {
         try {
             originalBranchName = getOriginalBranch();
         } catch (IOException e) {
-            getLogger().error("IOException while looking for the original branch");
+            getLogger().error("IOException while looking for the original branch: " + e.getLocalizedMessage());
         }
 
         return commit != null && workingRepoPath != null && originalBranchName != null;
@@ -127,7 +126,7 @@ public class SoraldBot extends AbstractRepairStep {
     }
 
     private String getOriginalBranch() throws IOException {
-        GitHub github = new GitHubBuilder().withOAuthToken(RepairnatorConfig.getInstance().getGithubToken()).build();
+        GitHub github = RepairnatorConfig.getInstance().getGithub();
         GHRepository repo = github.getRepository(getInspector().getRepoSlug());
         Map<String, GHBranch> branches = repo.getBranches();
         Optional<String> branch = branches

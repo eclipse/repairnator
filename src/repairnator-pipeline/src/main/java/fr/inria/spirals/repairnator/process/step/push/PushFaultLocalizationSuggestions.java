@@ -43,7 +43,7 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
     }
 
     private void pushReviewComments(Map<String, Suspiciousness> results) throws IOException {
-        GitHub gitHub = GitHub.connectUsingOAuth(RepairnatorConfig.getInstance().getGithubToken());
+        GitHub gitHub = RepairnatorConfig.getInstance().getGithub();
         GHRepository originalRepository = gitHub.getRepository(this.getInspector().getRepoSlug());
         GHPullRequest pullRequest = originalRepository.getPullRequest(this.getInspector().getBuggyBuild().getPullRequestNumber());
         Map<String, Map<Integer, Integer>> diffMapping = computeDiffMapping(pullRequest.getDiffUrl());

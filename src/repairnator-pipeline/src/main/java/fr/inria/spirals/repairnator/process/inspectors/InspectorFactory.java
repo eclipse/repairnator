@@ -26,13 +26,9 @@ public class InspectorFactory {
     		String workspace, List<AbstractNotifier> notifiers) {
 		GitRepositoryProjectInspector inspector = new GitRepositoryProjectInspector(build, isGitRepositoryFirstCommit, workspace, notifiers);
 
-		System.out.println(RepairnatorConfig.getInstance());
 		switch (RepairnatorConfig.getInstance().getLauncherMode()){
 			case SEQUENCER_REPAIR:
 				inspector.setIRunInspector(new RunInspector4SequencerRepair());
-				break;
-			case FAULT_LOCALIZATION:
-				inspector.setIRunInspector(new RunInspector4FaultLocalization());
 				break;
 			default:
 				inspector.setIRunInspector(new RunInspector4DefaultGit());
