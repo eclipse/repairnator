@@ -55,7 +55,7 @@ public class TestFlacocoLocalization {
 
     @Test
     public void testFlacocoLocalization() throws IOException {
-        long buildId = 235987498; // repairnator/failingProject build
+        long buildId = 236072272; // repairnator/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, true);
 
@@ -89,11 +89,12 @@ public class TestFlacocoLocalization {
         // assert that fault localization results are stored
         Map<String, Suspiciousness> results = inspector.getJobStatus().getFlacocoResults();
         assertThat(results, notNullValue());
-        assertThat(results.size(), is(3));
+        assertThat(results.size(), is(4));
 
         assertThat(results.get("nopol_examples/nopol_example_3/NopolExample@-@3"), notNullValue());
         assertThat(results.get("nopol_examples/nopol_example_3/NopolExample@-@9"), notNullValue());
-        assertThat(results.get("nopol_examples/nopol_example_3/NopolExample@-@11"), notNullValue());
+        assertThat(results.get("nopol_examples/nopol_example_3/NopolExample@-@10"), notNullValue());
+        assertThat(results.get("nopol_examples/nopol_example_3/NopolExample@-@12"), notNullValue());
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {
