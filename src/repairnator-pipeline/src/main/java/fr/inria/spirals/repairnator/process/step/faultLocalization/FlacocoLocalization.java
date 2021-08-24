@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.step.faultLocalization;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.JobStatus;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
@@ -42,8 +43,7 @@ public class FlacocoLocalization extends AbstractStep {
         flacocoConfig.setProjectPath(jobStatus.getFailingModulePath());
         flacocoConfig.setClasspath(jobStatus.getRepairClassPath().stream()
                 .map(URL::getPath).reduce((x, y) -> x + File.pathSeparator + y).orElse(""));
-        flacocoConfig.setThreshold(0);
-        flacocoConfig.setIncludeZeros(true);
+        flacocoConfig.setThreshold(RepairnatorConfig.getInstance().getFlacocoThreshold());
     }
 
 }

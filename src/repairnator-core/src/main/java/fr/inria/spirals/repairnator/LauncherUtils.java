@@ -119,6 +119,9 @@ public class LauncherUtils {
         // --npeRepairStrategy
         jsap.registerParameter(LauncherUtils.defineArgNPERepairStrategy());
 
+        // --flacocoTreshold
+        jsap.registerParameter(LauncherUtils.defineArgFlacocoThreshold());
+
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // --checkstyle
@@ -234,6 +237,8 @@ public class LauncherUtils {
         config.setNPENbIteration(LauncherUtils.getArgNPENbIteration(arguments));
         config.setNPEScope(LauncherUtils.getArgNPEScope(arguments));
         config.setNPERepairStrategy(LauncherUtils.getArgNPERepairStrategy(arguments));
+
+        config.setFlacocoThreshold(LauncherUtils.getArgFlacocoThreshold(arguments));
 
         config.setPatchClassificationMode(LauncherUtils.getArgPatchClassificationMode(arguments));
         config.setPatchClassification(LauncherUtils.getArgPatchClassification(arguments));
@@ -929,6 +934,19 @@ public class LauncherUtils {
 
     public static String getArgNPERepairStrategy(JSAPResult arguments) {
         return arguments.getString("npeRepairStrategy");
+    }
+
+    public static FlaggedOption defineArgFlacocoThreshold() {
+        FlaggedOption opt = new FlaggedOption("flacocoThreshold");
+        opt.setLongFlag("flacocoThreshold");
+        opt.setStringParser(JSAP.DOUBLE_PARSER);
+        opt.setDefault("0.5");
+        opt.setHelp("Threshold for flacoco fault localization");
+        return opt;
+    }
+
+    public static Double getArgFlacocoThreshold(JSAPResult arguments) {
+        return arguments.getDouble("flacocoThreshold");
     }
 
     public static FlaggedOption defineArgODSPath() {
