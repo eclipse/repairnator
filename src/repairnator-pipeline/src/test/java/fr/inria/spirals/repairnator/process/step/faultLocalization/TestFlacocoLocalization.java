@@ -16,7 +16,8 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.states.ScannedBuildStatus;
 import fr.inria.spirals.repairnator.utils.Utils;
-import fr.spoonlabs.flacoco.api.Suspiciousness;
+import fr.spoonlabs.flacoco.api.result.Location;
+import fr.spoonlabs.flacoco.api.result.Suspiciousness;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
@@ -87,14 +88,14 @@ public class TestFlacocoLocalization {
         }
 
         // assert that fault localization results are stored
-        Map<String, Suspiciousness> results = inspector.getJobStatus().getFlacocoResults();
+        Map<Location, Suspiciousness> results = inspector.getJobStatus().getFlacocoResult().getDefaultSuspiciousnessMap();
         assertThat(results, notNullValue());
         assertThat(results.size(), is(4));
 
-        assertThat(results.get("nopol_examples/nopol_example_3/NopolExample@-@3"), notNullValue());
-        assertThat(results.get("nopol_examples/nopol_example_3/NopolExample@-@9"), notNullValue());
-        assertThat(results.get("nopol_examples/nopol_example_3/NopolExample@-@10"), notNullValue());
-        assertThat(results.get("nopol_examples/nopol_example_3/NopolExample@-@12"), notNullValue());
+        assertThat(results.get(new Location("nopol_examples.nopol_example_3.NopolExample", 3)), notNullValue());
+        assertThat(results.get(new Location("nopol_examples.nopol_example_3.NopolExample", 9)), notNullValue());
+        assertThat(results.get(new Location("nopol_examples.nopol_example_3.NopolExample", 10)), notNullValue());
+        assertThat(results.get(new Location("nopol_examples.nopol_example_3.NopolExample", 12)), notNullValue());
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {

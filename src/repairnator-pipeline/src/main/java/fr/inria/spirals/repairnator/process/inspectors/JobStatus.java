@@ -7,7 +7,9 @@ import fr.inria.spirals.repairnator.process.inspectors.properties.tests.FailureD
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.testinformation.FailureLocation;
 import fr.inria.spirals.repairnator.states.PushState;
-import fr.spoonlabs.flacoco.api.Suspiciousness;
+import fr.spoonlabs.flacoco.api.result.FlacocoResult;
+import fr.spoonlabs.flacoco.api.result.Location;
+import fr.spoonlabs.flacoco.api.result.Suspiciousness;
 import org.apache.maven.model.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +38,9 @@ public class JobStatus {
     private Map<String, List<RepairPatch>> listOfPatches;
 
     /**
-     * Flacoco results (used in the fault localization mode)
+     * Flacoco result (used in the fault localization mode)
      */
-    private Map<String, Suspiciousness> flacocoResults;
+    private FlacocoResult flacocoResult;
 
     /**
      * Diagnostic about repair tool on the form of a JsonElement
@@ -327,11 +329,11 @@ public class JobStatus {
         return failureNames;
     }
 
-    public Map<String, Suspiciousness> getFlacocoResults() {
-        return flacocoResults;
+    public FlacocoResult getFlacocoResult() {
+        return flacocoResult;
     }
 
-    public void setFlacocoResults(Map<String, Suspiciousness> flacocoResults) {
-        this.flacocoResults = flacocoResults;
+    public void setFlacocoResult(FlacocoResult flacocoResult) {
+        this.flacocoResult = flacocoResult;
     }
 }

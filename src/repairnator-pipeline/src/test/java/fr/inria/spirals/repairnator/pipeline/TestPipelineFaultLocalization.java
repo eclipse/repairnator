@@ -37,7 +37,8 @@ public class TestPipelineFaultLocalization {
     @Test
     public void testPipelineFaultLocalization() throws Exception {
         Launcher launcher = new Launcher(new String[]{
-                "--build", "235987498",
+                "--build", "236072272",
+                "--flacocoThreshold", "1.0", // This threshold results in 0 lines, and so the result is not pushed
                 "--faultLocalization",
                 "--launcherMode", "FAULT_LOCALIZATION",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),

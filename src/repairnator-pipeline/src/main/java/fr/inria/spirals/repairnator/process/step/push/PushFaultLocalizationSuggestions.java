@@ -4,7 +4,10 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
-import fr.spoonlabs.flacoco.api.Suspiciousness;
+import fr.spoonlabs.flacoco.api.result.FlacocoResult;
+import fr.spoonlabs.flacoco.api.result.Location;
+import fr.spoonlabs.flacoco.api.result.Suspiciousness;
+import org.hamcrest.Condition;
 import org.kohsuke.github.*;
 
 import java.io.IOException;
@@ -33,7 +36,7 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
         }
 
         try {
-            pushReviewComments(this.getInspector().getJobStatus().getFlacocoResults());
+            pushReviewComments(this.getInspector().getJobStatus().getFlacocoResult());
         } catch (IOException e) {
             this.getLogger().error(e.getLocalizedMessage());
             return StepStatus.buildSkipped(this, "There was an error while publishing fault localization results: " + e);
@@ -42,7 +45,7 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
         return StepStatus.buildSuccess(this);
     }
 
-    private void pushReviewComments(Map<String, Suspiciousness> results) throws IOException {
+    private void pushReviewComments(FlacocoResult result) throws IOException {
         GitHub gitHub = RepairnatorConfig.getInstance().getGithub();
         GHRepository originalRepository = gitHub.getRepository(this.getInspector().getRepoSlug());
         GHPullRequest pullRequest = originalRepository.getPullRequest(this.getInspector().getBuggyBuild().getPullRequestNumber());
@@ -50,9 +53,9 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
         GHPullRequestReviewBuilder reviewBuilder = pullRequest.createReview();
 
         int lines = 0;
-        for (Map.Entry<String, Suspiciousness> entry : results.entrySet()) {
-            String partialFileName = entry.getKey().split("@-@")[0];
-            Integer line = Integer.parseInt(entry.getKey().split("@-@")[1]);
+        for (Map.Entry<Location, Suspiciousness> entry : result.getDefaultSuspiciousnessMap().entrySet()) {
+            String partialFileName = entry.getKey().getClassName().replace(".", "/");
+            Integer line = entry.getKey().getLineNumber();
 
             for (String fileName : diffMapping.keySet()) {
 
@@ -85,7 +88,7 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
             reviewBuilder.event(GHPullRequestReviewEvent.COMMENT);
             reviewBuilder.create();
         } else {
-            this.getLogger().warn("Flacoco has found " + results.size() + " suspicious lines, but none were matched to the diff");
+            this.getLogger().warn("Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff");
         }
     }
 
