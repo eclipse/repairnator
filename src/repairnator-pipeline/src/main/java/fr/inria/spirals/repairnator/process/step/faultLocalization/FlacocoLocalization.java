@@ -24,9 +24,8 @@ public class FlacocoLocalization extends AbstractStep {
 
     @Override
     protected StepStatus businessExecute() {
-        setupFlacocoConfig();
-
-        Flacoco flacoco = new Flacoco();
+        FlacocoConfig config = setupFlacocoConfig();
+        Flacoco flacoco = new Flacoco(config);
         FlacocoResult result = flacoco.run();
 
         this.getLogger().debug("Results from flacoco: " + result.getDefaultSuspiciousnessMap().toString());
@@ -35,14 +34,16 @@ public class FlacocoLocalization extends AbstractStep {
         return StepStatus.buildSuccess(this);
     }
 
-    private void setupFlacocoConfig() {
-        FlacocoConfig flacocoConfig = FlacocoConfig.getInstance();
+    private FlacocoConfig setupFlacocoConfig() {
+        FlacocoConfig flacocoConfig = new FlacocoConfig();
         JobStatus jobStatus = this.getInspector().getJobStatus();
 
         flacocoConfig.setProjectPath(jobStatus.getFailingModulePath());
         flacocoConfig.setClasspath(jobStatus.getRepairClassPath().stream()
                 .map(URL::getPath).reduce((x, y) -> x + File.pathSeparator + y).orElse(""));
         flacocoConfig.setThreshold(RepairnatorConfig.getInstance().getFlacocoThreshold());
+
+        return flacocoConfig;
     }
 
 }
