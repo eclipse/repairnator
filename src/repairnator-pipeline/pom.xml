@@ -47,7 +47,7 @@
         <dependency>
             <groupId>com.github.spoonlabs</groupId>
             <artifactId>flacoco</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -111,7 +111,7 @@
         <dependency>
             <groupId>eu.stamp-project</groupId>
             <artifactId>assert-fixer</artifactId>
-            <version>1.0.9-SNAPSHOT</version>
+            <version>1.0.9</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
