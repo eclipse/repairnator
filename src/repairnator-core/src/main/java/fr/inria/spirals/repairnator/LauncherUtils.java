@@ -119,12 +119,17 @@ public class LauncherUtils {
         // --npeRepairStrategy
         jsap.registerParameter(LauncherUtils.defineArgNPERepairStrategy());
 
+        // --flacocoTreshold
+        jsap.registerParameter(LauncherUtils.defineArgFlacocoThreshold());
+
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // --checkstyle
         jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
         // --sequencerRepair
         jsap.registerParameter(LauncherUtils.defineArgSequencerRepairMode());
+        // --faultLocalization
+        jsap.registerParameter(LauncherUtils.defineArgFaultLocalizationMode());
 
         // --patchClassification
         jsap.registerParameter(LauncherUtils.defineArgPatchClassification());
@@ -148,6 +153,8 @@ public class LauncherUtils {
             config.setLauncherMode(LauncherMode.CHECKSTYLE);
         } else if (LauncherUtils.getArgSequencerRepairMode(arguments)) {
             config.setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+        } else if (LauncherUtils.getArgFaultLocalizationMode(arguments)) {
+            config.setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
         } else {
             config.setLauncherMode(LauncherMode.REPAIR);
         }
@@ -231,6 +238,8 @@ public class LauncherUtils {
         config.setNPEScope(LauncherUtils.getArgNPEScope(arguments));
         config.setNPERepairStrategy(LauncherUtils.getArgNPERepairStrategy(arguments));
 
+        config.setFlacocoThreshold(LauncherUtils.getArgFlacocoThreshold(arguments));
+
         config.setPatchClassificationMode(LauncherUtils.getArgPatchClassificationMode(arguments));
         config.setPatchClassification(LauncherUtils.getArgPatchClassification(arguments));
         config.setPatchFiltering(LauncherUtils.getArgPatchFiltering(arguments));
@@ -309,6 +318,18 @@ public class LauncherUtils {
 
     public static boolean getArgSequencerRepairMode(JSAPResult arguments) {
         return arguments.getBoolean("sequencerRepair");
+    }
+
+    public static Switch defineArgFaultLocalizationMode() {
+        Switch sw = new Switch("faultLocalization");
+        sw.setLongFlag("faultLocalization");
+        sw.setDefault("false");
+        sw.setHelp("This mode allows to use repairnator's fault localization mode.");
+        return sw;
+    }
+
+    public static boolean getArgFaultLocalizationMode(JSAPResult arguments) {
+        return arguments.getBoolean("faultLocalization");
     }
 
     public static Switch defineArgBearsMode() {
@@ -913,6 +934,19 @@ public class LauncherUtils {
 
     public static String getArgNPERepairStrategy(JSAPResult arguments) {
         return arguments.getString("npeRepairStrategy");
+    }
+
+    public static FlaggedOption defineArgFlacocoThreshold() {
+        FlaggedOption opt = new FlaggedOption("flacocoThreshold");
+        opt.setLongFlag("flacocoThreshold");
+        opt.setStringParser(JSAP.DOUBLE_PARSER);
+        opt.setDefault("0.5");
+        opt.setHelp("Threshold for flacoco fault localization");
+        return opt;
+    }
+
+    public static Double getArgFlacocoThreshold(JSAPResult arguments) {
+        return arguments.getDouble("flacocoThreshold");
     }
 
     public static FlaggedOption defineArgODSPath() {

@@ -72,7 +72,7 @@
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
-            <version>1.130</version>
+            <version>1.132</version>
         </dependency>
     </dependencies>
 
