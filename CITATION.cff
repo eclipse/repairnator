@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+preferred-citation:
+  title: "Repairnator patches programs automatically"
+  doi: "10.1145/3349589"
+  year: "2019"
+  type: article
+  journal: "Ubiquity"
+  authors:
+    - family-names: Monperrus
+      given-names: Martin
+    - family-names: Urli
+      given-names: Simon
+    - family-names: Durieux
+      given-names: Thomas
+    - family-names: Martinez
+      given-names: Martin
+    - family-names: Baudry
+      given-names: Benoit
+    - family-names: Seinturier
+      given-names: Lionel
