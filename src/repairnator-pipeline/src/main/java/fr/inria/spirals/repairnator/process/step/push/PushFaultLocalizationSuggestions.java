@@ -1,6 +1,7 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
@@ -12,9 +13,7 @@ import org.kohsuke.github.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,11 +29,6 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
 
     @Override
     protected StepStatus businessExecute() {
-        if (!this.getInspector().getBuggyBuild().isPullRequest()) {
-            this.getLogger().warn("Fault localization suggestions are not available outside pull requests");
-            return StepStatus.buildSkipped(this, "Fault localization suggestions are not available outside pull requests.");
-        }
-
         try {
             pushReviewComments(this.getInspector().getJobStatus().getFlacocoResult());
         } catch (IOException e) {
@@ -48,47 +42,65 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
     private void pushReviewComments(FlacocoResult result) throws IOException {
         GitHub gitHub = RepairnatorConfig.getInstance().getGithub();
         GHRepository originalRepository = gitHub.getRepository(this.getInspector().getRepoSlug());
-        GHPullRequest pullRequest = originalRepository.getPullRequest(this.getInspector().getBuggyBuild().getPullRequestNumber());
-        Map<String, Map<Integer, Integer>> diffMapping = computeDiffMapping(pullRequest.getDiffUrl());
-        GHPullRequestReviewBuilder reviewBuilder = pullRequest.createReview();
+        List<GHPullRequest> pullRequests = originalRepository.getPullRequests(GHIssueState.OPEN);
+        List<GHPullRequest> filteredPullRequests = new ArrayList<>();
+        GitRepositoryProjectInspector inspector = (GitRepositoryProjectInspector) this.getInspector();
 
-        int lines = 0;
-        for (Map.Entry<Location, Suspiciousness> entry : result.getDefaultSuspiciousnessMap().entrySet()) {
-            String partialFileName = entry.getKey().getClassName().replace(".", "/");
-            Integer line = entry.getKey().getLineNumber();
-
-            for (String fileName : diffMapping.keySet()) {
-
-                // Since we don't have an exact mapping, we need to partially match them
-                if (fileName.contains(partialFileName)) {
-
-                    // We only consider the lines that are in the diff (i.e. that are mapped to a position in the diffMapping)
-                    if (diffMapping.get(fileName).containsKey(line)) {
-                        lines++;
-                        reviewBuilder.comment(
-                                String.format(
-                                        "This line (%d) has been identified with a suspiciousness value of %,.2f%%.\n" +
-                                                "The following failing tests covered this line: " +
-                                                entry.getValue().getFailingTestCases().stream()
-                                                        .map(x -> "`" + x.getFullyQualifiedMethodName() + "`")
-                                                        .reduce((x, y) -> x + "," + y).orElse("{}"),
-                                        line, entry.getValue().getScore() * 100),
-                                fileName,
-                                diffMapping.get(fileName).get(line)
-                        );
-                    }
-
-                    break;
+        for (GHPullRequest pullRequest : pullRequests) {
+            Iterable<GHPullRequestCommitDetail> commits = pullRequest.listCommits();
+            for (GHPullRequestCommitDetail commit : commits) {
+                if (commit.getSha().equals(inspector.getGitRepositoryIdCommit())) {
+                    filteredPullRequests.add(pullRequest);
                 }
             }
         }
 
-        if (lines > 0) {
-            reviewBuilder.body("[flacoco](https://github.com/SpoonLabs/flacoco) has found " + lines + " suspicious lines in the diff:");
-            reviewBuilder.event(GHPullRequestReviewEvent.COMMENT);
-            reviewBuilder.create();
-        } else {
-            this.getLogger().warn("Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff");
+        if (filteredPullRequests.size() == 0) {
+            this.getLogger().warn("No OPEN Pull Requests for commit " + inspector.getGitRepositoryIdCommit() + " were found");
+        }
+
+        for (GHPullRequest pullRequest : filteredPullRequests) {
+            Map<String, Map<Integer, Integer>> diffMapping = computeDiffMapping(pullRequest.getDiffUrl());
+            GHPullRequestReviewBuilder reviewBuilder = pullRequest.createReview();
+
+            int lines = 0;
+            for (Map.Entry<Location, Suspiciousness> entry : result.getDefaultSuspiciousnessMap().entrySet()) {
+                String partialFileName = entry.getKey().getClassName().replace(".", "/");
+                Integer line = entry.getKey().getLineNumber();
+
+                for (String fileName : diffMapping.keySet()) {
+
+                    // Since we don't have an exact mapping, we need to partially match them
+                    if (fileName.contains(partialFileName)) {
+
+                        // We only consider the lines that are in the diff (i.e. that are mapped to a position in the diffMapping)
+                        if (diffMapping.get(fileName).containsKey(line)) {
+                            lines++;
+                            reviewBuilder.comment(
+                                    String.format(
+                                            "This line (%d) has been identified with a suspiciousness value of %,.2f%%.\n" +
+                                                    "The following failing tests covered this line: " +
+                                                    entry.getValue().getFailingTestCases().stream()
+                                                            .map(x -> "`" + x.getFullyQualifiedMethodName() + "`")
+                                                            .reduce((x, y) -> x + "," + y).orElse("{}"),
+                                            line, entry.getValue().getScore() * 100),
+                                    fileName,
+                                    diffMapping.get(fileName).get(line)
+                            );
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            if (lines > 0) {
+                reviewBuilder.body("[flacoco](https://github.com/SpoonLabs/flacoco) has found " + lines + " suspicious lines in the diff:");
+                reviewBuilder.event(GHPullRequestReviewEvent.COMMENT);
+                reviewBuilder.create();
+            } else {
+                this.getLogger().warn("Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff");
+            }
         }
     }
 
