@@ -193,7 +193,7 @@ java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependenci
 ### Fault localization mode
 
 Repairnator also features a fault localization mode. 
-In this mode, Travis CI builds are analyzed, and the identified suspicious lines are pushed as a PR review/suggestions to the original PR.
+In this mode, a git repository is analyzed, and the identified suspicious lines are pushed as a PR review/suggestions to the original PR.
 
 The example below shows the usage of this mode:
 
@@ -201,7 +201,7 @@ The example below shows the usage of this mode:
 export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # your token
 
-java -cp target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --launcherMode FAULT_LOCALIZATION --faultLocalization --build 236072272 --flacocoThreshold 0.12 --ghOauth $GITHUB_TOKEN
+java -cp target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependencies.jar fr.inria.spirals.repairnator.pipeline.Launcher --launcherMode FAULT_LOCALIZATION --faultLocalization --gitrepourl "https://github.com/andre15silva/failingProject" --gitrepoidcommit 54f241129e09d71955b7d2f4fc7f496118b3e1c6 --flacocoThreshold 0.12 --ghOauth $GITHUB_TOKEN
 ```
 
 The result of running this example can be found [here](https://github.com/repairnator/failingProject/pull/7).
