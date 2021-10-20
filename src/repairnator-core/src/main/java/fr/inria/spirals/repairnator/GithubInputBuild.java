@@ -8,12 +8,18 @@ public class GithubInputBuild implements InputBuild {
     private String url;
     private String branch;
     private String sha;
+    private String pr;
 
     public GithubInputBuild(String url, String branch, String sha)
     {
         this.url = url;
         this.sha = sha;
         this.branch = branch;
+    }
+
+    public GithubInputBuild(String url, String branch, String sha, String pr) {
+        this(url, branch, sha);
+        this.pr = pr;
     }
 
     public String getSha() {
@@ -32,6 +38,10 @@ public class GithubInputBuild implements InputBuild {
         return url.split("https://github.com/",2)[1];
     }
 
+    public String getPr() {
+        return pr;
+    }
+
     @Override
     public List<String> getEnvVariables() {
         List<String> r = new ArrayList<>();
@@ -39,11 +49,12 @@ public class GithubInputBuild implements InputBuild {
         r.add("GITHUB_URL=" + url);
         r.add("GITHUB_BRANCH=" + sha);
         r.add("GITHUB_SHA=" + sha);
+        r.add("GITHUB_PR=" + pr);
         return r;
     }
 
     @Override
     public String toString() {
-        return url + "-" + branch + "-" + sha;
+        return url + "-" + branch + "-" + sha + "-" + pr;
     }
 }
