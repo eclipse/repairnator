@@ -2,28 +2,45 @@ package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.spirals.repairnator.GithubInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
+import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedPullRequest;
 import fr.inria.spirals.repairnator.states.LauncherMode;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * Scanner that collects open pull requests associated with
+ * a list of given GitHub repositories.
+ */
 public class FlacocoScanner implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlacocoScanner.class);
-    private final GithubPullRequestScanner scanner;
-    private final DockerPipelineRunner runner;
-
-    private final Set<String> attempted = new HashSet<>();
+    private static final Long SCAN_INTERVAL = 1L; // 15 minutes
+    private static final int EXECUTION_TIME = 14; // 14 days
+    private GithubPullRequestScanner scanner;
+    private DockerPipelineRunner runner;
+    private static ScheduledExecutorService executor;
+    private static Date scannerEndsAt;
+    private boolean firstIteration = true;
 
     public static void main(String[] args) {
         setup();
         FlacocoScanner scanner = new FlacocoScanner();
-        scanner.run();
+        Date scannerStartedAt = new Date();
+        scannerEndsAt = DateUtils.addDays(scannerStartedAt, EXECUTION_TIME);
+
+        LOGGER.info("Starting Flacoco scanner...");
+        executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate (scanner, 0L, SCAN_INTERVAL, TimeUnit.MINUTES);
     }
 
     static void setup(){
@@ -43,54 +60,67 @@ public class FlacocoScanner implements Runnable {
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
 
         RepairnatorConfig.getInstance().setOutputPath("/tmp");
-
     }
 
     public FlacocoScanner() {
-        this.scanner = new GithubPullRequestScanner(GithubScanner.FetchMode.FAILED);
-        this.runner = new DockerPipelineRunner(UUID.randomUUID().toString());
-        runner.initRunner();
+        ClassLoader classLoader = FlacocoScanner.class.getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource("flacocobot_projects_to_scan.txt")).getFile());
+
+        try {
+            Set<String> repos = getFileContent(file);
+            this.scanner = new GithubPullRequestScanner(GithubPullRequestScanner.FetchMode.FAILED, repos);
+            this.runner = new DockerPipelineRunner(UUID.randomUUID().toString());
+            runner.initRunner();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
-        LOGGER.info("Starting alpha scanner...");
+        Date currentDate = new Date();
 
-        while (true) {
+        if (currentDate.before(scannerEndsAt)) {
             LOGGER.info("New scanning iteration");
             try {
-                List<SelectedPullRequest> latestJobList = scanner.fetch();
+                List<SelectedPullRequest> latestJobList;
+                if (firstIteration) {
+                    latestJobList = scanner.fetch(0);
+                    firstIteration = false;
+                } else {
+                    latestJobList = scanner.fetch(DateUtils.addMinutes(currentDate, -15).getTime());
+                }
 
                 for (SelectedPullRequest job : latestJobList) {
-                    LOGGER.debug("Scanning job: " + job.getRepoName() + " commit: " + job.getCommitId());
-
-                    //switch (job.getGithubActionsFailed()) {
-                    if (job.getGithubActionsFailed()) { // build failed
-                        if (isListedJob(job, attempted)) {
-                            LOGGER.debug("Job fix already attempted, skipping");
-                            continue;
-                        }
-                        attemptJob(job);
-                    }
+                    LOGGER.debug("Scanning job: " + job.getRepoName() + " commit: " + job.getHeadCommitSHA1());
+                    System.out.println(job);
+                    attemptJob(job);
                 }
-            } catch (OutOfMemoryError oom){
-                LOGGER.error("Out of memory error: "  + oom.toString());
-                runner.switchOff();
+            } catch (OutOfMemoryError oom) {
+                LOGGER.error("Out of memory error: " + oom);
+                //runner.switchOff();
                 System.exit(-1);
             } catch (Exception e) {
-                LOGGER.error("failed to get commit: "  + e.toString());
+                LOGGER.error("Failed to get commit: " + e);
             }
-        } // end while loop
+        } else {
+            executor.shutdown();
+            System.exit(0);
+        }
     }
 
     protected void attemptJob(SelectedPullRequest job){
-        LOGGER.info("===== ATTEMPT REPAIR: " + job.getRepoName() + "-" + job.getCommitId());
-        //runner.submitBuild(new GithubInputBuild(job.getRepoName(), null, job.getCommitId()));
-        attempted.add(job.getRepoName() + "-" +job.getCommitId());
+        LOGGER.info("===== ATTEMPT LOCALIZATION: " + job.getRepoName() + "-" + job.getHeadCommitSHA1());
+        runner.submitBuild(new GithubInputBuild(job.getRepoName(), null, job.getHeadCommitSHA1(), job.getUrl()));
     }
 
-    private boolean isListedJob(SelectedCommit job, Set<String> set){
-        return set.contains(job.getRepoName() + "-" + job.getCommitId());
-    }
+    private Set<String> getFileContent(File file) throws IOException {
+        HashSet<String> result = new HashSet<>();
 
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        while (reader.ready()) {
+            result.add(reader.readLine().trim());
+        }
+        return result;
+    }
 }

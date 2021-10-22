@@ -1,24 +1,26 @@
 package fr.inria.spirals.repairnator.realtime;
 
+import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedPullRequest;
 import fr.inria.spirals.repairnator.realtime.githubapi.pullrequests.GithubAPIPullRequestAdapter;
 
 import java.util.List;
+import java.util.Set;
 
 public class GithubPullRequestScanner {
 
-    static long scanIntervalDelay = 60 * 15; // 15 min
-    static long lastScanInterval = 0L;
+    FetchMode fetchMode;
+    Set<String> repos;
 
-    public List<SelectedPullRequest> fetch() throws Exception {
-        long endTime = System.currentTimeMillis() - scanIntervalDelay;
-        long startTime = lastScanInterval;
-        lastScanInterval = endTime;
-
-        return fetch(startTime, endTime);
+    public GithubPullRequestScanner(GithubPullRequestScanner.FetchMode fetchMode, Set<String> repos) {
+        this.fetchMode = fetchMode;
+        this.repos = repos;
     }
 
-    public List<SelectedPullRequest> fetch(long startTime, long endTime) throws Exception {
-        return GithubAPIPullRequestAdapter.getInstance().getSelectedPullRequests(startTime, endTime, fetchMode, repos);
+    public List<SelectedPullRequest> fetch(long startTime) throws Exception {
+        return GithubAPIPullRequestAdapter.getInstance().getSelectedPullRequests(startTime, fetchMode, repos);
     }
 
+    public enum FetchMode {
+        FAILED, ALL, PASSING
+    }
 }
