@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class FlacocoScanner implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlacocoScanner.class);
-    private static final Long SCAN_INTERVAL = 1L; // 15 minutes
+    private static final Long SCAN_INTERVAL = 15L; // 15 minutes
     private static final int EXECUTION_TIME = 14; // 14 days
     private GithubPullRequestScanner scanner;
     private DockerPipelineRunner runner;
