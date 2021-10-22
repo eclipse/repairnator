@@ -4,13 +4,21 @@ import fr.inria.spirals.repairnator.realtime.GithubPullRequestScanner;
 import fr.inria.spirals.repairnator.realtime.githubapi.GAA;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedPullRequest;
 import org.kohsuke.github.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GithubAPIPullRequestAdapter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GithubAPIPullRequestAdapter.class);
+
     private static GithubAPIPullRequestAdapter _instance;
 
     public static GithubAPIPullRequestAdapter getInstance() {
@@ -65,28 +73,32 @@ public class GithubAPIPullRequestAdapter {
         for (GHPullRequest pullRequest : pullRequests) {
             boolean isGithubPullRequestFailed = false;
             // It checks for pull requests whose head commit has a failure
-            PagedIterable<GHCheckRun> checkRuns = pullRequest.getHead().getCommit().getCheckRuns();
-            for (GHCheckRun check : checkRuns) {
-                GHCheckRun.Conclusion conclusion = check.getConclusion();
-                if (conclusion != null && conclusion.equals(GHCheckRun.Conclusion.FAILURE)) {
-                    isGithubPullRequestFailed = true;
-                    break;
+            try {
+                PagedIterable<GHCheckRun> checkRuns = pullRequest.getHead().getCommit().getCheckRuns();
+                for (GHCheckRun check : checkRuns) {
+                    GHCheckRun.Conclusion conclusion = check.getConclusion();
+                    if (conclusion != null && conclusion.equals(GHCheckRun.Conclusion.FAILURE)) {
+                        isGithubPullRequestFailed = true;
+                        break;
+                    }
                 }
-            }
 
-            switch (fetchMode) {
-                case ALL:
-                    res.add(new SelectedPullRequest(pullRequest.getId(),
-                            pullRequest.getNumber(), pullRequest.getUrl().toString(),
-                            pullRequest.getHead().getCommit().getSHA1(), pullRequest.getRepository().getFullName()));
-                    break;
-                case FAILED:
-                    if (isGithubPullRequestFailed) {
+                switch (fetchMode) {
+                    case ALL:
                         res.add(new SelectedPullRequest(pullRequest.getId(),
                                 pullRequest.getNumber(), pullRequest.getUrl().toString(),
                                 pullRequest.getHead().getCommit().getSHA1(), pullRequest.getRepository().getFullName()));
-                    }
-                    break;
+                        break;
+                    case FAILED:
+                        if (isGithubPullRequestFailed) {
+                            res.add(new SelectedPullRequest(pullRequest.getId(),
+                                    pullRequest.getNumber(), pullRequest.getUrl().toString(),
+                                    pullRequest.getHead().getCommit().getSHA1(), pullRequest.getRepository().getFullName()));
+                        }
+                        break;
+                }
+            } catch (NullPointerException npe) {
+                LOGGER.error("ERROR | Kohsuke GitHub Library got an error while retrieving the head commit of pull request " + pullRequest.getUrl().toString());
             }
         }
         return res;
