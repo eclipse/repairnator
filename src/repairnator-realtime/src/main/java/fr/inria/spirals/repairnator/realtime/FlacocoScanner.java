@@ -88,7 +88,7 @@ public class FlacocoScanner implements Runnable {
                     latestJobList = scanner.fetch(0);
                     firstIteration = false;
                 } else {
-                    latestJobList = scanner.fetch(DateUtils.addMinutes(currentDate, -15).getTime());
+                    latestJobList = scanner.fetch(DateUtils.addMinutes(currentDate, -SCAN_INTERVAL.intValue()).getTime());
                 }
 
                 for (SelectedPullRequest job : latestJobList) {
