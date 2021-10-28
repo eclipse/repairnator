@@ -8,7 +8,7 @@ public class GithubInputBuild implements InputBuild {
     private String url;
     private String branch;
     private String sha;
-    private String pr;
+    private Integer pr;
 
     public GithubInputBuild(String url, String branch, String sha)
     {
@@ -17,7 +17,7 @@ public class GithubInputBuild implements InputBuild {
         this.branch = branch;
     }
 
-    public GithubInputBuild(String url, String branch, String sha, String pr) {
+    public GithubInputBuild(String url, String branch, String sha, Integer pr) {
         this(url, branch, sha);
         this.pr = pr;
     }
@@ -38,7 +38,7 @@ public class GithubInputBuild implements InputBuild {
         return url.split("https://github.com/",2)[1];
     }
 
-    public String getPr() {
+    public Integer getPr() {
         return pr;
     }
 

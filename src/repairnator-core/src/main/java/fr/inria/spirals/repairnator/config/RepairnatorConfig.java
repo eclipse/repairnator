@@ -113,6 +113,7 @@ public class RepairnatorConfig {
     private String gitRepositoryBranch;
     private String gitRepositoryIdCommit;
     private boolean gitRepositoryFirstCommit;
+    private Integer gitRepositoryPullRequest;
 
     private String[] sonarRules;
     private boolean isStaticAnalysis;
@@ -931,7 +932,15 @@ public class RepairnatorConfig {
 		this.gitRepositoryFirstCommit = gitRepositoryFirstCommit;
 	}
 
-	public String getGitRepositoryId() {
+    public Integer getGitRepositoryPullRequest() {
+        return gitRepositoryPullRequest;
+    }
+
+    public void setGitRepositoryPullRequest(Integer gitRepositoryPullRequest) {
+        this.gitRepositoryPullRequest = gitRepositoryPullRequest;
+    }
+
+    public String getGitRepositoryId() {
 		return getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
 				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
 				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");

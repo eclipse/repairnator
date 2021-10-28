@@ -24,6 +24,8 @@ public class GitRepositoryLauncherUtils {
         jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryIdCommit());
         // --gitRepoFirstCommit
         jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryFirstCommit());
+        // --gitRepoPullRequest
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryPullRequest());
     }
 
     public static void initGitConfig(RepairnatorConfig config, JSAPResult arguments, JSAP jsap) {
@@ -44,6 +46,7 @@ public class GitRepositoryLauncherUtils {
         config.setGitRepositoryUrl(GitRepositoryLauncherUtils.getArgGitRepositoryUrl(arguments));
         config.setGitRepositoryBranch(GitRepositoryLauncherUtils.getArgGitRepositoryBranch(arguments));
         config.setGitRepositoryIdCommit(GitRepositoryLauncherUtils.getArgGitRepositoryIdCommit(arguments));
+        config.setGitRepositoryPullRequest(GitRepositoryLauncherUtils.getArgGitRepositoryPullRequest(arguments));
     }
 
     public static FlaggedOption defineArgGitRepositoryUrl() {
@@ -92,6 +95,18 @@ public class GitRepositoryLauncherUtils {
 
     public static boolean getArgGitRepositoryFirstCommit(JSAPResult arguments) {
         return arguments.getBoolean("gitRepositoryFirstCommit");
+    }
+
+    public static FlaggedOption defineArgGitRepositoryPullRequest() {
+        FlaggedOption opt = new FlaggedOption("gitRepositoryPullRequest");
+        opt.setLongFlag("gitrepopullrequest");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setHelp("Specify the pull request to analyze  (only in FAULT_LOCALIZATION mode).");
+        return opt;
+    }
+
+    public static Integer getArgGitRepositoryPullRequest(JSAPResult arguments) {
+        return arguments.getInt("gitRepositoryPullRequest");
     }
 
     public static List<SerializerEngine> initFileSerializerEngines(Logger logger) {

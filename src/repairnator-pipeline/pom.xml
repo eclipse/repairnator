@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
-            <version>1.132</version>
+            <version>1.135</version>
         </dependency>
         <dependency>
             <groupId>fr.inria.repairnator</groupId>
@@ -102,7 +102,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>4.8.0.201706111038-r</version>
+            <version>5.13.0.202109080827-r</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.shared</groupId>

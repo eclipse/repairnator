@@ -87,6 +87,10 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
     public boolean isGitRepositoryFirstCommit() {
     	return this.gitRepositoryFirstCommit;
     }
+
+    public Integer getGitRepositoryPullRequest() {
+        return this.inputBuild.getPr();
+    }
     
     @Override
     public String getProjectIdToBeInspected() {

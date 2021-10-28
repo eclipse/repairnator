@@ -5,8 +5,8 @@ import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspe
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.BuildProject;
-import fr.inria.spirals.repairnator.process.step.CloneCheckoutBranchRepository;
 import fr.inria.spirals.repairnator.process.step.TestProject;
+import fr.inria.spirals.repairnator.process.step.CloneCheckoutGitPullRequest;
 import fr.inria.spirals.repairnator.process.step.faultLocalization.FlacocoLocalization;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
@@ -22,7 +22,7 @@ public class RunInspector4FaultLocalization extends IRunInspector {
     public void run(ProjectInspector inspector_in) {
         GitRepositoryProjectInspector inspector = (GitRepositoryProjectInspector) inspector_in;
         if (inspector.getGitRepositoryUrl() != null) {
-            AbstractStep cloneRepo = new CloneCheckoutBranchRepository(inspector);
+            AbstractStep cloneRepo = new CloneCheckoutGitPullRequest(inspector);
 
             cloneRepo
                     .addNextStep(new BuildProject(inspector))

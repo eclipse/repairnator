@@ -116,7 +116,8 @@ public class MainProcessFactory {
 		GithubInputBuild githubInputBuild = new GithubInputBuild(
 				getConfig().getGitRepositoryUrl(),
 				getConfig().getGitRepositoryBranch(),
-				getConfig().getGitRepositoryIdCommit()
+				getConfig().getGitRepositoryIdCommit(),
+				getConfig().getGitRepositoryPullRequest()
 		);
 
 
