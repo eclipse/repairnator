@@ -78,20 +78,20 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
                     break;
                 }
             }
+        }
 
-            if (lines > 0) {
-                reviewBuilder.body("[flacoco](https://github.com/SpoonLabs/flacoco) has found " + lines + " suspicious lines in the diff:");
-                reviewBuilder.event(GHPullRequestReviewEvent.COMMENT);
+        if (lines > 0) {
+            reviewBuilder.body("[flacoco](https://github.com/SpoonLabs/flacoco) has found " + lines + " suspicious lines in the diff:");
+            reviewBuilder.event(GHPullRequestReviewEvent.COMMENT);
 
-                if (pullRequest.getState().equals(GHIssueState.OPEN)) {
-                    reviewBuilder.create();
-                } else {
-                    // Check again to avoid replying to pull requests which have been closed during the fault localization process.
-                    this.getLogger().warn("The Pull Request #" + githubInspector.getGitRepositoryPullRequest() + " is not open anymore.");
-                }
+            if (pullRequest.getState().equals(GHIssueState.OPEN)) {
+                reviewBuilder.create();
             } else {
-                this.getLogger().warn("Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff");
+                // Check again to avoid replying to pull requests which have been closed during the fault localization process.
+                this.getLogger().warn("The Pull Request #" + githubInspector.getGitRepositoryPullRequest() + " is not open anymore.");
             }
+        } else {
+            this.getLogger().warn("Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff");
         }
     }
 

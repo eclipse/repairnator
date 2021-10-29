@@ -57,7 +57,7 @@ public class CloneCheckoutGitPullRequest extends AbstractStep {
             fetchCommand.call();
 
             // Checkout the pull request branch
-            CheckoutCommand checkoutCommand = git.checkout().setName("FETCH_HEAD");
+            CheckoutCommand checkoutCommand = git.checkout().setName(branch);
             checkoutCommand.call();
 
             return StepStatus.buildSuccess(this);

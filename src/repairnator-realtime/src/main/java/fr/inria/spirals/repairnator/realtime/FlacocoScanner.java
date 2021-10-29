@@ -111,7 +111,7 @@ public class FlacocoScanner implements Runnable {
 
     protected void attemptJob(SelectedPullRequest job){
         LOGGER.info("===== ATTEMPT LOCALIZATION: " + job.getRepoName() + "-" + job.getHeadCommitSHA1());
-        runner.submitBuild(new GithubInputBuild(job.getRepoName(), null, job.getHeadCommitSHA1(), job.getUrl()));
+        runner.submitBuild(new GithubInputBuild(job.getRepoName(), null, job.getHeadCommitSHA1()));
     }
 
     private Set<String> getFileContent(File file) throws IOException {
