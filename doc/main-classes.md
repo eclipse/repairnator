@@ -195,6 +195,8 @@ java -cp $TOOLS_JAR:target/repairnator-pipeline-3.3-SNAPSHOT-jar-with-dependenci
 Repairnator also features a fault localization mode. 
 In this mode, a git repository is analyzed, and the identified suspicious lines are pushed as a PR review/suggestions to the original PR.
 
+Note: the personal access token **MUST** have the scope **public_repo** to be able to create pull request reviews.
+
 The example below shows the usage of this mode:
 
 ```bash
