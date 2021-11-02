@@ -114,7 +114,7 @@ public class RunnablePipelineContainer implements Runnable {
 
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.FAULT_LOCALIZATION) {
             this.envValues.add("FLACOCO_THRESHOLD=" + RepairnatorConfig.getInstance().getFlacocoThreshold());
-            // this.envValues.add("FLACOCO_K=" + RepairnatorConfig.getInstance().getFlacocoK());
+            this.envValues.add("FLACOCO_TOP_K=" + RepairnatorConfig.getInstance().getFlacocoTopK());
         }
 
         if (this.repairnatorConfig.getRepairTools().contains("SequencerRepair")) {
@@ -168,8 +168,6 @@ public class RunnablePipelineContainer implements Runnable {
                             .to("/var/log/")
                             .build())
                     .build();
-
-            LOGGER.info("HERE");
 
             // we specify the complete configuration of the container
             ContainerConfig containerConfig = ContainerConfig.builder()

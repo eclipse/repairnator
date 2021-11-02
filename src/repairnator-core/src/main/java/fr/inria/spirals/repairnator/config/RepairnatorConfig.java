@@ -125,6 +125,7 @@ public class RepairnatorConfig {
     private String npeRepairStrategy;
 
     private Double flacocoThreshold;
+    private Integer flacocoTopK;
 
     private PATCH_CLASSIFICATION_MODE patchClassificationMode;
     private PATCH_FILTERING_MODE patchFilteringMode;
@@ -784,6 +785,14 @@ public class RepairnatorConfig {
         this.flacocoThreshold = flacocoThreshold;
     }
 
+    public Integer getFlacocoTopK() {
+        return flacocoTopK;
+    }
+
+    public void setFlacocoTopK(Integer flacocoTopK) {
+        this.flacocoTopK = flacocoTopK;
+    }
+
     @Override
     public String toString() {
         String ghToken = this.getGithubToken();
@@ -857,6 +866,7 @@ public class RepairnatorConfig {
                 ", jTravisEndpoint=" + jTravisEndpoint +
                 ", travisToken=" + travisToken +
                 ", flacocoThreshold=" + flacocoThreshold +
+                ", flacocoTopK=" + flacocoTopK +
                 '}';
     }
 

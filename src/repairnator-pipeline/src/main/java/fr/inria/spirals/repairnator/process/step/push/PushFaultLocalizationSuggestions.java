@@ -5,6 +5,7 @@ import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspe
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
+import fr.inria.spirals.repairnator.states.PushState;
 import fr.spoonlabs.flacoco.api.result.FlacocoResult;
 import fr.spoonlabs.flacoco.api.result.Location;
 import fr.spoonlabs.flacoco.api.result.Suspiciousness;
@@ -64,12 +65,17 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
                         lines++;
                         reviewBuilder.comment(
                                 String.format(
-                                        "This line (%d) has been identified with a suspiciousness value of %,.2f%%.\n" +
-                                                "The following failing tests covered this line: " +
+                                        "This line (%d) has been identified with a suspiciousness value of %,.2f%%.\n\n" +
+                                                "<details>\n" +
+                                                "     <summary>Failing tests that cover this line</summary>\n\n" +
                                                 entry.getValue().getFailingTestCases().stream()
-                                                        .map(x -> "`" + x.getFullyQualifiedMethodName() + "`")
-                                                        .reduce((x, y) -> x + "," + y).orElse("{}"),
-                                        line, entry.getValue().getScore() * 100),
+                                                        .map(x -> "- `" + x.getFullyQualifiedMethodName() + "`\n")
+                                                        .reduce((x, y) -> x + y).orElse("{}") +
+                                                "</details>"
+                                        ,
+                                        line,
+                                        entry.getValue().getScore() * 100
+                                ),
                                 fileName,
                                 diffMapping.get(fileName).get(line)
                         );
@@ -78,20 +84,28 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
                     break;
                 }
             }
+
+            // Break if we have reached the number of requested lines
+            if (lines >= RepairnatorConfig.getInstance().getFlacocoTopK()) {
+                break;
+            }
         }
 
         if (lines > 0) {
-            reviewBuilder.body("[flacoco](https://github.com/SpoonLabs/flacoco) has found " + lines + " suspicious lines in the diff:");
+            reviewBuilder.body("[flacoco](https://github.com/SpoonLabs/flacoco) flags " + lines + " suspicious lines as the potential root cause of the test failure.");
             reviewBuilder.event(GHPullRequestReviewEvent.COMMENT);
 
             if (pullRequest.getState().equals(GHIssueState.OPEN)) {
                 reviewBuilder.create();
+                this.setPushState(PushState.REPO_PUSHED);
             } else {
                 // Check again to avoid replying to pull requests which have been closed during the fault localization process.
                 this.getLogger().warn("The Pull Request #" + githubInspector.getGitRepositoryPullRequest() + " is not open anymore.");
+                this.setPushState(PushState.REPO_NOT_PUSHED);
             }
         } else {
             this.getLogger().warn("Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff");
+            this.setPushState(PushState.REPO_NOT_PUSHED);
         }
     }
 
