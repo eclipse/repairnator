@@ -112,6 +112,11 @@ public class RunnablePipelineContainer implements Runnable {
             this.envValues.add("REPAIR_TOOLS=" + StringUtils.join(this.repairnatorConfig.getRepairTools(), ","));
         }
 
+        if (this.repairnatorConfig.getLauncherMode() == LauncherMode.FAULT_LOCALIZATION) {
+            this.envValues.add("FLACOCO_THRESHOLD=" + RepairnatorConfig.getInstance().getFlacocoThreshold());
+            // this.envValues.add("FLACOCO_K=" + RepairnatorConfig.getInstance().getFlacocoK());
+        }
+
         if (this.repairnatorConfig.getRepairTools().contains("SequencerRepair")) {
             SequencerConfig sequencerConfig = SequencerConfig.getInstance();
             this.envValues.add("SEQUENCER_DOCKER_TAG=" + sequencerConfig.dockerTag);
@@ -145,7 +150,6 @@ public class RunnablePipelineContainer implements Runnable {
             //to avoid creating new unnamed volumes
             Volume workspaceVolume = docker.inspectVolume("repairnator_workspace");
             Volume logsVolume = docker.inspectVolume("repairnator_logs");
-            Volume ODSVolume = docker.inspectVolume("repairnator_ods_data");
 
             HostConfig hostConfig = HostConfig.builder()
                     .appendBinds(HostConfig.Bind
@@ -163,12 +167,9 @@ public class RunnablePipelineContainer implements Runnable {
                             .from(logsVolume)
                             .to("/var/log/")
                             .build())
-                    .appendBinds(HostConfig.Bind
-                            .builder()
-                            .from(ODSVolume)
-                            .to(RepairnatorConfig.getInstance().getODSPath())
-                            .build())
                     .build();
+
+            LOGGER.info("HERE");
 
             // we specify the complete configuration of the container
             ContainerConfig containerConfig = ContainerConfig.builder()

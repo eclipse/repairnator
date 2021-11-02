@@ -54,7 +54,7 @@ public class FlacocoScanner implements Runnable {
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
 
         //pipeline image tag
-        RepairnatorConfig.getInstance().setDockerImageName("repairnator/pipeline:latest");
+        RepairnatorConfig.getInstance().setDockerImageName("repairnator/pipeline:3.4");
 
         //launcher mode
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
@@ -64,7 +64,8 @@ public class FlacocoScanner implements Runnable {
 
     public FlacocoScanner() {
         ClassLoader classLoader = FlacocoScanner.class.getClassLoader();
-        File file = new File(Objects.requireNonNull(classLoader.getResource("flacocobot_projects_to_scan.txt")).getFile());
+        // TODO: parametrize this path?
+        File file = new File("flacocobot_projects_to_scan.txt");
 
         try {
             Set<String> repos = getFileContent(file);
@@ -110,8 +111,8 @@ public class FlacocoScanner implements Runnable {
     }
 
     protected void attemptJob(SelectedPullRequest job){
-        LOGGER.info("===== ATTEMPT LOCALIZATION: " + job.getRepoName() + "-" + job.getHeadCommitSHA1());
-        runner.submitBuild(new GithubInputBuild(job.getRepoName(), null, job.getHeadCommitSHA1()));
+        LOGGER.info("===== ATTEMPT LOCALIZATION: " + job.getRepoName() + " - #" + job.getNumber());
+        runner.submitBuild(new GithubInputBuild("https://github.com/" + job.getRepoName(), null, job.getHeadCommitSHA1(), job.getNumber()));
     }
 
     private Set<String> getFileContent(File file) throws IOException {
