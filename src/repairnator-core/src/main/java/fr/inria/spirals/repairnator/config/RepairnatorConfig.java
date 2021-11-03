@@ -143,6 +143,7 @@ public class RepairnatorConfig {
     // Realtime
     private File whiteList;
     private File blackList;
+    private File projectsToScan;
     private int jobSleepTime;
     private int buildSleepTime;
     private int maxInspectedBuilds;
@@ -551,6 +552,14 @@ public class RepairnatorConfig {
 
     public void setBlackList(File blackList) {
         this.blackList = blackList;
+    }
+
+    public File getProjectsToScan() {
+        return projectsToScan;
+    }
+
+    public void setProjectsToScan(File projectsToScan) {
+        this.projectsToScan = projectsToScan;
     }
 
     public int getJobSleepTime() {

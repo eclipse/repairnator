@@ -53,6 +53,8 @@ public class FlacocoScanner implements Runnable {
         //github oauth
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
 
+        RepairnatorConfig.getInstance().setProjectsToScan(new File(System.getenv("PROJECTS_TO_SCAN_FILE")));
+
         //pipeline image tag
         RepairnatorConfig.getInstance().setDockerImageName("repairnator/pipeline:3.4");
 
@@ -64,8 +66,7 @@ public class FlacocoScanner implements Runnable {
 
     public FlacocoScanner() {
         ClassLoader classLoader = FlacocoScanner.class.getClassLoader();
-        // TODO: parametrize this path?
-        File file = new File("flacocobot_projects_to_scan.txt");
+        File file = RepairnatorConfig.getInstance().getProjectsToScan();
 
         try {
             Set<String> repos = getFileContent(file);
