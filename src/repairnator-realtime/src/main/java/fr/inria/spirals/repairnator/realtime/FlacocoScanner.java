@@ -26,24 +26,25 @@ public class FlacocoScanner implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(FlacocoScanner.class);
     private static final Long SCAN_INTERVAL = 15L; // 15 minutes
     private static final int EXECUTION_TIME = 14; // 14 days
+
     private GithubPullRequestScanner scanner;
     private DockerPipelineRunner runner;
     private static ScheduledExecutorService executor;
-    private static Date scannerEndsAt;
-    private boolean firstIteration = true;
+
+    private HashMap<String, RepositoryScanInformation> reposToScanHashMap;
+    private List<String> reposScanEndedList;
+    private Date lastScanEnded;
 
     public static void main(String[] args) {
         setup();
         FlacocoScanner scanner = new FlacocoScanner();
-        Date scannerStartedAt = new Date();
-        scannerEndsAt = DateUtils.addDays(scannerStartedAt, EXECUTION_TIME);
 
         LOGGER.info("Starting Flacoco scanner...");
         executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate (scanner, 0L, SCAN_INTERVAL, TimeUnit.MINUTES);
+        executor.scheduleWithFixedDelay(scanner, 0L, SCAN_INTERVAL, TimeUnit.MINUTES);
     }
 
-    static void setup(){
+    static void setup() {
         //concurrent repair job
         RepairnatorConfig.getInstance().setNbThreads(16);
 
@@ -53,6 +54,7 @@ public class FlacocoScanner implements Runnable {
         //github oauth
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
 
+        //file with the list of projects to scan
         RepairnatorConfig.getInstance().setProjectsToScan(new File(System.getenv("PROJECTS_TO_SCAN_FILE")));
 
         //pipeline image tag
@@ -66,48 +68,94 @@ public class FlacocoScanner implements Runnable {
 
     public FlacocoScanner() {
         ClassLoader classLoader = FlacocoScanner.class.getClassLoader();
+    }
+
+    @Override
+    public void run() {
+
+        Date currentDate = new Date();
+        LOGGER.info("Current date: " + currentDate);
         File file = RepairnatorConfig.getInstance().getProjectsToScan();
 
         try {
-            Set<String> repos = getFileContent(file);
-            this.scanner = new GithubPullRequestScanner(GithubPullRequestScanner.FetchMode.FAILED, repos);
+            List<String> reposFromFile = getFileContent(file);
+
+            // Fist iteration
+            if (reposToScanHashMap == null) {
+                reposToScanHashMap = new HashMap<>();
+                reposScanEndedList = new ArrayList<>();
+                reposFromFile.forEach(repo -> {
+                    reposToScanHashMap.put(repo,
+                            new RepositoryScanInformation(DateUtils.addDays(currentDate, EXECUTION_TIME), true));
+                });
+            } else {
+                // Detect new projects added to the file PROJECTS_TO_SCAN_FILE
+                // after starting the scanner and scan them
+                reposFromFile.forEach(repo -> {
+                    if (!reposToScanHashMap.containsKey(repo) && !reposScanEndedList.contains(repo)) {
+                        reposToScanHashMap.put(repo,
+                                new RepositoryScanInformation(DateUtils.addDays(currentDate, EXECUTION_TIME), true));
+                    }
+                });
+                // Stop scanning projects removed from the file PROJECTS_TO_SCAN_FILE
+                reposToScanHashMap.entrySet().removeIf(repo -> !(reposFromFile.contains(repo.getKey())));
+            }
+
+            // Stop scanning projects for which the scan end time has been reached
+            reposToScanHashMap.forEach((repo, projectInfo) -> {
+                LOGGER.info("Project to scan: " + repo + " " + projectInfo);
+            });
+
+            this.scanner = new GithubPullRequestScanner(GithubPullRequestScanner.FetchMode.FAILED, reposToScanHashMap.keySet());
             this.runner = new DockerPipelineRunner(UUID.randomUUID().toString());
             runner.initRunner();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    @Override
-    public void run() {
-        Date currentDate = new Date();
+        for (String repoName : reposToScanHashMap.keySet()) {
+            if (currentDate.before(reposToScanHashMap.get(repoName).getScanEndsAt())) {
+                try {
+                    List<SelectedPullRequest> latestJobList;
+                    if (reposToScanHashMap.get(repoName).isFirstScan()) {
+                        reposToScanHashMap.get(repoName).setFirstScan(false);
+                        latestJobList = scanner.fetch(0, repoName);
+                    } else {
+                        Date newDate = DateUtils.addMinutes(currentDate, -(SCAN_INTERVAL.intValue() + 2));
+                        latestJobList = scanner.fetch(newDate.getTime(), repoName);
+                    }
 
-        if (currentDate.before(scannerEndsAt)) {
-            LOGGER.info("New scanning iteration");
-            try {
-                List<SelectedPullRequest> latestJobList;
-                if (firstIteration) {
-                    latestJobList = scanner.fetch(0);
-                    firstIteration = false;
-                } else {
-                    latestJobList = scanner.fetch(DateUtils.addMinutes(currentDate, -SCAN_INTERVAL.intValue()).getTime());
+                    for (SelectedPullRequest job : latestJobList) {
+                        LOGGER.debug("Scanning job: " + job.getRepoName() + " commit: " + job.getHeadCommitSHA1());
+                        System.out.println(job);
+                        attemptJob(job);
+                    }
+                } catch (OutOfMemoryError oom) {
+                    LOGGER.error("Out of memory error: " + oom);
+                    //runner.switchOff();
+                    System.exit(-1);
+                } catch (Exception e) {
+                    LOGGER.error("Failed to get commit: " + e);
                 }
-
-                for (SelectedPullRequest job : latestJobList) {
-                    LOGGER.debug("Scanning job: " + job.getRepoName() + " commit: " + job.getHeadCommitSHA1());
-                    System.out.println(job);
-                    attemptJob(job);
-                }
-            } catch (OutOfMemoryError oom) {
-                LOGGER.error("Out of memory error: " + oom);
-                //runner.switchOff();
-                System.exit(-1);
-            } catch (Exception e) {
-                LOGGER.error("Failed to get commit: " + e);
+            } else {
+                LOGGER.info("Scan time for the project " + repoName + " has been ended");
+                reposToScanHashMap.remove(repoName);
+                reposScanEndedList.add(repoName);
             }
-        } else {
-            executor.shutdown();
-            System.exit(0);
+        }
+
+        if (reposToScanHashMap.isEmpty()) {
+            if (lastScanEnded == null) {
+                lastScanEnded = currentDate;
+            }
+        }
+
+        if (lastScanEnded != null) {
+            Date extraTimeDate = DateUtils.addMinutes(lastScanEnded, Math.toIntExact(SCAN_INTERVAL));
+            if (currentDate.after(extraTimeDate)) {
+                executor.shutdown();
+                System.exit(0);
+            }
         }
     }
 
@@ -116,12 +164,15 @@ public class FlacocoScanner implements Runnable {
         runner.submitBuild(new GithubInputBuild("https://github.com/" + job.getRepoName(), null, job.getHeadCommitSHA1(), job.getNumber()));
     }
 
-    private Set<String> getFileContent(File file) throws IOException {
-        HashSet<String> result = new HashSet<>();
+    private List<String> getFileContent(File file) throws IOException {
+        List<String> result = new ArrayList<>();
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
         while (reader.ready()) {
-            result.add(reader.readLine().trim());
+            String line = reader.readLine();
+            if (!line.isEmpty()) {
+                result.add(line);
+            }
         }
         return result;
     }

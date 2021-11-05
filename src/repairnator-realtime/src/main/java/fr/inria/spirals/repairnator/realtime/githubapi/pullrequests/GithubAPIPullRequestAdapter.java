@@ -1,24 +1,17 @@
 package fr.inria.spirals.repairnator.realtime.githubapi.pullrequests;
 
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.realtime.GithubPullRequestScanner;
 import fr.inria.spirals.repairnator.realtime.githubapi.GAA;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedPullRequest;
 import org.kohsuke.github.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class GithubAPIPullRequestAdapter {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(GithubAPIPullRequestAdapter.class);
 
     private static GithubAPIPullRequestAdapter _instance;
 
@@ -41,39 +34,47 @@ public class GithubAPIPullRequestAdapter {
         // Search for all Pull Requests that are open
         GHPullRequestQueryBuilder query = repo.queryPullRequests().state(GHIssueState.OPEN);
 
-        List<GHPullRequest> pullRequests;
+        List<GHPullRequest> pullRequestsToAnalyze;
 
         if (since == 0) { // Only at the first execution
-            pullRequests = query.list().toList();
+            pullRequestsToAnalyze = query.list().toList();
         } else {
-            pullRequests = query.list().toList().stream().filter(pr -> {
-                try {
-                    List<GHIssueComment> comments = pr.getComments();
+            List<GHPullRequest> allPullRequests = query.list().toList();
+            pullRequestsToAnalyze = new ArrayList<>();
 
-                    /*
-                     * It checks if the last update of a pull request is happened after "since" parameter value.
-                     * To avoid considering updates that are related to the addition of comments to the
-                     * pull request, it checks if the date of the last comment is different from the
-                     * date of the last update. This is a sign that the last update of the pull request is
-                     * not related to the addition of a comment to the pull request.
-                     */
-                    if (comments != null && comments.size() > 0) {
-                        return pr.getUpdatedAt().getTime() >= since &&
-                                comments.get(comments.size() - 1).getUpdatedAt().compareTo(pr.getUpdatedAt()) != 0;
-                    } else {
-                        return pr.getUpdatedAt().getTime() >= since;
+            allPullRequests.forEach(pullRequest -> {
+                try {
+                    List<GHIssueComment> comments = pullRequest.getComments();
+                    List<GHPullRequestReviewComment> pullRequestReviewComments = pullRequest.listReviewComments().toList();
+
+                    boolean isUpdateToConsider = true;
+
+                    if (pullRequest.getUpdatedAt().getTime() >= since) {
+
+                        // Avoid considering updates that are related to the addition of a new comment
+                        if (!comments.isEmpty()) {
+                            if (comments.get(comments.size() - 1).getUpdatedAt().compareTo(pullRequest.getUpdatedAt()) == 0) {
+                                isUpdateToConsider = false;
+                            }
+                        }
+                        // Avoid considering updates that are related to the addition of a new review comment
+                        if (isUpdateToConsider && !pullRequestReviewComments.isEmpty()) {
+                            if (pullRequestReviewComments.get(pullRequestReviewComments.size() - 1).getUpdatedAt().compareTo(pullRequest.getUpdatedAt()) == 0) {
+                                isUpdateToConsider = false;
+                            }
+                        }
+
+                        if (isUpdateToConsider) {
+                            pullRequestsToAnalyze.add(pullRequest);
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                return false;
-            }).collect(Collectors.toList());
+            });
         }
 
-        for (GHPullRequest pullRequest : pullRequests) {
-
-            LOGGER.info("Pull Request #" + pullRequest.getNumber());
+        for (GHPullRequest pullRequest : pullRequestsToAnalyze) {
 
             boolean isGithubPullRequestFailed = false;
 
@@ -84,8 +85,9 @@ public class GithubAPIPullRequestAdapter {
 
             List<GHCheckRun> checkRuns = repo.getCommit(headCommitSHA).getCheckRuns().toList();
 
+            // Check if a pull request has some failed checks
             for (int i = 0; i < checkRuns.size(); i++) {
-                if (checkRuns.get(i).getConclusion().name().equalsIgnoreCase("FAILURE")) {
+                if (checkRuns.get(i) != null && checkRuns.get(i).getConclusion() != null && checkRuns.get(i).getConclusion().name().equalsIgnoreCase("FAILURE")) {
                     isGithubPullRequestFailed = true;
                     break;
                 }
@@ -94,7 +96,7 @@ public class GithubAPIPullRequestAdapter {
             // Another check using the status of a commit instead of the check runs
             if (!isGithubPullRequestFailed) {
                 for (int i = 0; i < statuses.size(); i++) {
-                    if (statuses.get(i).getState().name().equalsIgnoreCase("failure")) {
+                    if (statuses.get(i) != null && statuses.get(i).getState() != null && statuses.get(i).getState().name().equalsIgnoreCase("failure")) {
                         isGithubPullRequestFailed = true;
                         break;
                     }
@@ -115,7 +117,6 @@ public class GithubAPIPullRequestAdapter {
                     }
                     break;
             }
-
         }
         return res;
     }
@@ -124,13 +125,13 @@ public class GithubAPIPullRequestAdapter {
             (
                     long intervalStart,
                     GithubPullRequestScanner.FetchMode fetchMode,
-                    Set<String> fixedRepos
+                    String fixedRepos
             ) {
 
         List<SelectedPullRequest> selectedPullRequests = Collections.synchronizedList(new ArrayList<>());
-        fixedRepos.parallelStream().forEach(repoName -> {
+
             try {
-                GHRepository repo = GAA.g().getRepository(repoName);
+                GHRepository repo = GAA.g().getRepository(fixedRepos);
 
                 boolean isMaven = false;
                 for (GHTreeEntry treeEntry : repo.getTree("HEAD").getTree()) {
@@ -141,17 +142,17 @@ public class GithubAPIPullRequestAdapter {
                 }
 
                 if (!isMaven) {
-                    return;
+                    return null;
                 }
 
                 selectedPullRequests.addAll(GithubAPIPullRequestAdapter.getInstance()
                         .getSelectedPullRequests(repo, intervalStart, fetchMode));
 
             } catch (Exception e) {
-                System.err.println("error occurred for: " + repoName);
+                System.err.println("error occurred for: " + fixedRepos);
                 e.printStackTrace();
             }
-        });
+
         return selectedPullRequests;
     }
 }
