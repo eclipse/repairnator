@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.dockerpool;
 
+import com.google.common.collect.ImmutableList;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
@@ -138,6 +139,10 @@ public class RunnablePipelineContainer implements Runnable {
     public void run() {
         this.limitDateBeforeKilling = new Date(new Date().toInstant().plus(DELAY_BEFORE_KILLING_DOCKER_IMAGE, ChronoUnit.MINUTES).toEpochMilli());
         DockerClient docker = this.poolManager.getDockerClient();
+
+        final String REPAIRNATOR_WORKSPACE = "repairnator_workspace";
+        final String REPAIRNATOR_LOGS = "repairnator_logs";
+
         try {
             LOGGER.info("Start to build and run container for build id " + this.inputBuildId.toString());
             LOGGER.info("At most this docker run will be killed at: "+ this.limitDateBeforeKilling);
@@ -146,10 +151,47 @@ public class RunnablePipelineContainer implements Runnable {
             Map<String,String> labels = new HashMap<>();
             labels.put("name",this.containerName);
 
+            Volume workspaceVolume = null;
+            Volume logsVolume = null;
 
-            //to avoid creating new unnamed volumes
-            Volume workspaceVolume = docker.inspectVolume("repairnator_workspace");
-            Volume logsVolume = docker.inspectVolume("repairnator_logs");
+            boolean workspaceVolumeExists = false;
+            boolean logsVolumeExists = false;
+
+            ImmutableList<Volume> volumeList = docker.listVolumes().volumes();
+
+            if (volumeList != null) {
+                for (int i = 0; i < volumeList.size(); i++) {
+                    if (Objects.equals(volumeList.get(i).name(), REPAIRNATOR_WORKSPACE)) {
+                        workspaceVolumeExists = true;
+                    }
+                    if (volumeList.get(i).name() != null && Objects.equals(volumeList.get(i).name(), REPAIRNATOR_LOGS)) {
+                        logsVolumeExists = true;
+                    }
+                    if (workspaceVolumeExists && logsVolumeExists) {
+                        break;
+                    }
+                }
+            }
+
+            if (!workspaceVolumeExists) {
+                final Volume repairnatorWorkspace = Volume.builder()
+                        .name(REPAIRNATOR_WORKSPACE)
+                        .driver("local")
+                        .build();
+                workspaceVolume = docker.createVolume(repairnatorWorkspace);
+            } else {
+                workspaceVolume = docker.inspectVolume(REPAIRNATOR_WORKSPACE);
+            }
+
+            if (!logsVolumeExists) {
+                final Volume repairnatorLogs = Volume.builder()
+                        .name(REPAIRNATOR_LOGS)
+                        .driver("local")
+                        .build();
+                logsVolume = docker.createVolume(repairnatorLogs);
+            } else {
+                logsVolume = docker.inspectVolume(REPAIRNATOR_LOGS);
+            }
 
             HostConfig hostConfig = HostConfig.builder()
                     .appendBinds(HostConfig.Bind
