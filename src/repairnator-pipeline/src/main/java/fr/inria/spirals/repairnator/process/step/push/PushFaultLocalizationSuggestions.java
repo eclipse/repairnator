@@ -21,6 +21,9 @@ import java.util.regex.Pattern;
 
 public class PushFaultLocalizationSuggestions extends AbstractStep {
 
+    private PushState pushState = null;
+    private String pushSkippedReason = null;
+
     public PushFaultLocalizationSuggestions(ProjectInspector inspector, boolean blockingStep) {
         super(inspector, blockingStep);
     }
@@ -38,7 +41,11 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
             return StepStatus.buildSkipped(this, "There was an error while publishing fault localization results: " + e);
         }
 
-        return StepStatus.buildSuccess(this);
+        if (pushState == PushState.REPO_PUSHED) {
+            return StepStatus.buildSuccess(this);
+        } else {
+            return StepStatus.buildSkipped(this, pushSkippedReason);
+        }
     }
 
     private void pushReviewComments(FlacocoResult result) throws IOException {
@@ -97,15 +104,20 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
 
             if (pullRequest.getState().equals(GHIssueState.OPEN)) {
                 reviewBuilder.create();
-                this.setPushState(PushState.REPO_PUSHED);
+                pushState = PushState.REPO_PUSHED;
+                this.setPushState(pushState);
             } else {
                 // Check again to avoid replying to pull requests which have been closed during the fault localization process.
                 this.getLogger().warn("The Pull Request #" + githubInspector.getGitRepositoryPullRequest() + " is not open anymore.");
-                this.setPushState(PushState.REPO_NOT_PUSHED);
+                pushSkippedReason = "The Pull Request #" + githubInspector.getGitRepositoryPullRequest() + " is not open anymore.";
+                pushState = PushState.REPO_NOT_PUSHED;
+                this.setPushState(pushState);
             }
         } else {
             this.getLogger().warn("Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff");
-            this.setPushState(PushState.REPO_NOT_PUSHED);
+            pushSkippedReason = "Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff";
+            pushState = PushState.REPO_NOT_PUSHED;
+            this.setPushState(pushState);
         }
     }
 
@@ -117,6 +129,7 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
      * @throws IOException
      */
     private Map<String, Map<Integer, Integer>> computeDiffMapping(URL diffUrl) throws IOException {
+
         Scanner scanner = new Scanner(diffUrl.openStream(), "UTF-8");
         scanner.useDelimiter("\\n");
 
@@ -144,21 +157,21 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
             else if (line.startsWith("@@")) {
                 Pattern p = Pattern.compile("@@ .*?\\-(\\d+),?(\\d+)?.*?\\+(\\d+),?(\\d+)? @@.*$?");
                 Matcher matcher = p.matcher(line);
-                currentPosition = currentPosition != 0 ? currentPosition + 1 : currentPosition;
+                currentPosition = currentPosition != null && currentPosition != 0 ? currentPosition + 1 : currentPosition;
                 if (matcher.matches())
                     currentLine = Integer.parseInt(matcher.group(3)) - 1;
             }
 
             // In this case we increment the position but don't store any mapping as we only care about the new file
             else if (line.startsWith("-") || line.startsWith("\\")) {
-                currentPosition += 1;
+                currentPosition = currentPosition != null ? currentPosition + 1 : 1;
                 continue;
             }
 
             // In this case we increment both the position and line, since we have advanced one line in the hunk
             else {
-                currentPosition += 1;
-                currentLine += 1;
+                currentPosition = currentPosition != null ? currentPosition + 1 : 1;
+                currentLine = currentLine != null ? currentLine + 1 : 1;
             }
 
             // We record the mapping for the current file, between the line and position
