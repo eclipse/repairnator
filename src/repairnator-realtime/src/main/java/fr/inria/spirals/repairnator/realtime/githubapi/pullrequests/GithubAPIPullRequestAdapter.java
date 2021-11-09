@@ -25,7 +25,9 @@ public class GithubAPIPullRequestAdapter {
     public List<SelectedPullRequest> getSelectedPullRequests
             (
                     GHRepository repo,
+                    long startDateForScanning,
                     long since,
+                    boolean isFirstScan,
                     GithubPullRequestScanner.FetchMode fetchMode
             ) throws IOException {
 
@@ -36,12 +38,20 @@ public class GithubAPIPullRequestAdapter {
 
         List<GHPullRequest> pullRequestsToAnalyze;
 
-        if (since == 0) { // Only at the first execution
-            pullRequestsToAnalyze = query.list().toList();
-        } else {
-            List<GHPullRequest> allPullRequests = query.list().toList();
-            pullRequestsToAnalyze = new ArrayList<>();
+        List<GHPullRequest> allPullRequests = query.list().toList();
+        pullRequestsToAnalyze = new ArrayList<>();
 
+        if (isFirstScan) { // It means that all open pull requests created after startDateForScanning are considered
+            allPullRequests.forEach(pullRequest -> {
+                try {
+                    if (pullRequest.getCreatedAt().getTime() >= startDateForScanning) {
+                        pullRequestsToAnalyze.add(pullRequest);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
             allPullRequests.forEach(pullRequest -> {
                 try {
                     List<GHIssueComment> comments = pullRequest.getComments();
@@ -49,8 +59,7 @@ public class GithubAPIPullRequestAdapter {
 
                     boolean isUpdateToConsider = true;
 
-                    if (pullRequest.getUpdatedAt().getTime() >= since) {
-
+                    if (pullRequest.getCreatedAt().getTime() >= startDateForScanning && pullRequest.getUpdatedAt().getTime() >= since) {
                         // Avoid considering updates that are related to the addition of a new comment
                         if (!comments.isEmpty()) {
                             if (comments.get(comments.size() - 1).getUpdatedAt().compareTo(pullRequest.getUpdatedAt()) == 0) {
@@ -123,7 +132,9 @@ public class GithubAPIPullRequestAdapter {
 
     public List<SelectedPullRequest> getSelectedPullRequests
             (
+                    long startDateForScanning,
                     long intervalStart,
+                    boolean isFirstScan,
                     GithubPullRequestScanner.FetchMode fetchMode,
                     String fixedRepos
             ) {
@@ -146,7 +157,7 @@ public class GithubAPIPullRequestAdapter {
                 }
 
                 selectedPullRequests.addAll(GithubAPIPullRequestAdapter.getInstance()
-                        .getSelectedPullRequests(repo, intervalStart, fetchMode));
+                        .getSelectedPullRequests(repo, startDateForScanning, intervalStart, isFirstScan, fetchMode));
 
             } catch (Exception e) {
                 System.err.println("error occurred for: " + fixedRepos);

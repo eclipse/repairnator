@@ -16,8 +16,8 @@ public class GithubPullRequestScanner {
         this.repos = repos;
     }
 
-    public List<SelectedPullRequest> fetch(long startTime, String repo) throws Exception {
-        return GithubAPIPullRequestAdapter.getInstance().getSelectedPullRequests(startTime, fetchMode, repo);
+    public List<SelectedPullRequest> fetch(long startDateForScanning, long startTime, String repo, boolean isFirstScan) throws Exception {
+        return GithubAPIPullRequestAdapter.getInstance().getSelectedPullRequests(startDateForScanning, startTime, isFirstScan, fetchMode, repo);
     }
 
     public enum FetchMode {

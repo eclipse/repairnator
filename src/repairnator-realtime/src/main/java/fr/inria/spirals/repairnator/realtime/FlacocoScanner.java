@@ -24,8 +24,12 @@ import java.util.concurrent.TimeUnit;
 public class FlacocoScanner implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlacocoScanner.class);
+
     private static final Long SCAN_INTERVAL = 15L; // 15 minutes
     private static final int EXECUTION_TIME = 14; // 14 days
+
+    // It is used at the beginning for scanning pull requests between current date and 7 days before
+    private static final int DAYS_BEFORE_CURRENT_DATE = 7;
 
     private GithubPullRequestScanner scanner;
     private DockerPipelineRunner runner;
@@ -86,7 +90,7 @@ public class FlacocoScanner implements Runnable {
                 reposScanEndedList = new ArrayList<>();
                 reposFromFile.forEach(repo -> {
                     reposToScanHashMap.put(repo,
-                            new RepositoryScanInformation(DateUtils.addDays(currentDate, EXECUTION_TIME), true));
+                            new RepositoryScanInformation(DateUtils.addDays(currentDate, -DAYS_BEFORE_CURRENT_DATE), DateUtils.addDays(currentDate, EXECUTION_TIME), true));
                 });
             } else {
                 // Detect new projects added to the file PROJECTS_TO_SCAN_FILE
@@ -94,7 +98,7 @@ public class FlacocoScanner implements Runnable {
                 reposFromFile.forEach(repo -> {
                     if (!reposToScanHashMap.containsKey(repo) && !reposScanEndedList.contains(repo)) {
                         reposToScanHashMap.put(repo,
-                                new RepositoryScanInformation(DateUtils.addDays(currentDate, EXECUTION_TIME), true));
+                                new RepositoryScanInformation(DateUtils.addDays(currentDate, -DAYS_BEFORE_CURRENT_DATE), DateUtils.addDays(currentDate, EXECUTION_TIME), true));
                     }
                 });
                 // Stop scanning projects removed from the file PROJECTS_TO_SCAN_FILE
@@ -119,10 +123,12 @@ public class FlacocoScanner implements Runnable {
                     List<SelectedPullRequest> latestJobList;
                     if (reposToScanHashMap.get(repoName).isFirstScan()) {
                         reposToScanHashMap.get(repoName).setFirstScan(false);
-                        latestJobList = scanner.fetch(0, repoName);
+                        latestJobList = scanner.fetch(reposToScanHashMap.get(repoName).getStartDateForScanning().getTime(),
+                                currentDate.getTime(), repoName, true);
                     } else {
-                        Date newDate = DateUtils.addMinutes(currentDate, -(SCAN_INTERVAL.intValue() + 2));
-                        latestJobList = scanner.fetch(newDate.getTime(), repoName);
+                        Date newDate = DateUtils.addMinutes(currentDate, -SCAN_INTERVAL.intValue());
+                        latestJobList = scanner.fetch(reposToScanHashMap.get(repoName).getStartDateForScanning().getTime(),
+                                newDate.getTime(), repoName, false);
                     }
 
                     for (SelectedPullRequest job : latestJobList) {
