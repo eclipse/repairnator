@@ -1,12 +1,12 @@
 package fr.inria.spirals.repairnator.process.step.repair.soraldbot;
 
+import com.google.common.collect.Lists;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
 import fr.inria.spirals.repairnator.process.inspectors.RepairPatch;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.models.SoraldTargetCommit;
-import fr.inria.spirals.repairnator.utils.DateUtils;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.Git;
@@ -14,14 +14,12 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.kohsuke.github.GHBranch;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,11 +49,18 @@ public class SoraldBot extends AbstractRepairStep {
 
         try {
             originalBranchName = getOriginalBranch();
-        } catch (IOException e) {
+        } catch (IOException | GitAPIException e) {
             getLogger().error("IOException while looking for the original branch: " + e.getLocalizedMessage());
         }
 
         return commit != null && workingRepoPath != null && originalBranchName != null;
+    }
+
+    private void checkoutToMainCommit() throws IOException, GitAPIException {
+        SoraldAdapter.cloneRepo(commit.getRepoUrl(), commit.getCommitId(), getInspector().getRepoLocalPath());
+        Git git = getInspector().openAndGetGitObject();
+        git.checkout().setName(commit.getCommitId()).call();
+        git.close();
     }
 
     @Override
@@ -66,18 +71,20 @@ public class SoraldBot extends AbstractRepairStep {
     @Override
     protected StepStatus businessExecute() {
         boolean successfulInit = init();
-        if(!successfulInit){
+        if (!successfulInit) {
             return StepStatus.buildSkipped(this, "Error while repairing with Sorald");
         }
 
         List<String> rules = Arrays.asList(RepairnatorConfig.getInstance().getSonarRules());
         try {
             for (String rule : rules) {
+                checkoutToMainCommit();
                 Set<String> patchedFiles =
-                        SoraldAdapter.getInstance(getInspector().getWorkspace(), SoraldConstants.SPOON_SNIPER_MODE)
-                                .repairRepoAndReturnViolationIntroducingFiles(commit, rule, REPO_PATH);
+                        SoraldAdapter.getInstance(getInspector().getWorkspace())
+                                .repairRepoAndReturnViolationIntroducingFiles(commit, rule, REPO_PATH,
+                                        SoraldConstants.SPOON_SNIPER_MODE);
 
-                if(patchedFiles != null && !patchedFiles.isEmpty()){
+                if (patchedFiles != null && !patchedFiles.isEmpty()) {
                     this.getInspector().getJobStatus().setHasBeenPatched(true);
                     createPRWithSpecificPatchedFiles(patchedFiles, rule);
                 }
@@ -91,6 +98,11 @@ public class SoraldBot extends AbstractRepairStep {
 
     private void createPRWithSpecificPatchedFiles(Set<String> violationIntroducingFiles, String rule)
             throws GitAPIException, IOException, URISyntaxException {
+        String forkedRepo = this.getForkedRepoName();
+        if (forkedRepo == null) {
+            return;
+        }
+
 
         String diffStr = applyPatches4SonarAndGetDiffStr(violationIntroducingFiles, rule);
         List<RepairPatch> repairPatches = new ArrayList<RepairPatch>();
@@ -99,20 +111,6 @@ public class SoraldBot extends AbstractRepairStep {
 
         notify(repairPatches);
 
-
-        String newBranchName = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
-        String forkedRepo = null;
-        Git forkedGit = null;
-        if (forkedGit == null) {
-            forkedRepo = this.getForkedRepoName();
-            if (forkedRepo == null) {
-                return;
-            }
-        }
-
-
-        forkedGit = this.createGitBranch4Push(newBranchName);
-
         StringBuilder prTextBuilder = new StringBuilder()
                 .append("This PR fixes the violations for the following Sorald rule: \n");
         prTextBuilder.append(RULE_LINK_TEMPLATE).append(rule + "\n");
@@ -120,32 +118,31 @@ public class SoraldBot extends AbstractRepairStep {
         setPrText(prTextBuilder.toString());
         setPRTitle("Fix Sorald violations");
 
+        String newBranchName = "repairnator-patch-" + commit.getCommitId().substring(0, 10) + "_" + rule;
+        Git forkedGit = this.createGitBranch4Push(newBranchName);
 
         pushPatches(forkedGit, forkedRepo, newBranchName);
-        createPullRequest(originalBranchName, newBranchName);
+        if (RepairnatorConfig.getInstance().isCreatePR())
+            createPullRequest(originalBranchName, newBranchName);
     }
 
-    private String getOriginalBranch() throws IOException {
-        GitHub github = RepairnatorConfig.getInstance().getGithub();
-        GHRepository repo = github.getRepository(getInspector().getRepoSlug());
-        Map<String, GHBranch> branches = repo.getBranches();
-        Optional<String> branch = branches
-                .keySet().stream()
-                .filter(key -> branches.get(key).getSHA1().equals(commit.getCommitId()))
-                .findFirst();
+    private String getOriginalBranch() throws IOException, GitAPIException {
+        String branchName = getBranchOfCommit(getInspector().getRepoLocalPath(), commit.getCommitId());
 
-        if(!branch.isPresent()){
+        if (branchName == null) {
             getLogger().error("The branch of the commit was not found");
             return null;
         }
-        return branch.get();
+        return branchName;
     }
 
     private String applyPatches4SonarAndGetDiffStr(Set<String> violationIntroducingFiles, String ruleNumber)
             throws IOException, GitAPIException, URISyntaxException {
-        FileUtils.copyDirectory(new File(workingRepoPath), new File(getInspector().getRepoLocalPath()));
+        Git git = getInspector().openAndGetGitObject();
 
-        Git git = Git.open(new File(this.getInspector().getRepoLocalPath()));
+        SoraldAdapter.getInstance(getInspector().getWorkspace())
+                .repair(ruleNumber, git.getRepository().getDirectory().getParentFile(), SoraldConstants.SPOON_SNIPER_MODE);
+
         AddCommand addCommand = git.add();
         violationIntroducingFiles.forEach(f -> addCommand.addFilepattern(f));
         addCommand.setUpdate(true);
@@ -178,7 +175,7 @@ public class SoraldBot extends AbstractRepairStep {
 
         //Get commit that is previous to the current one.
         RevCommit oldCommit = getPrevHash(newCommit, repo);
-        if(oldCommit == null){
+        if (oldCommit == null) {
             return "Start of repo";
         }
         //Use treeIterator to diff.
@@ -194,7 +191,7 @@ public class SoraldBot extends AbstractRepairStep {
     }
 
     //Helper function to get the previous commit.
-    public RevCommit getPrevHash(RevCommit commit, Repository repo)  throws  IOException {
+    public RevCommit getPrevHash(RevCommit commit, Repository repo) throws IOException {
 
         try (RevWalk walk = new RevWalk(repo)) {
             // Starting point
@@ -222,5 +219,31 @@ public class SoraldBot extends AbstractRepairStep {
                 return new CanonicalTreeParser(null, reader, treeId);
             }
         }
+    }
+
+    public String getBranchOfCommit(String gitDir, String commitName) throws IOException, GitAPIException {
+        Git git = getInspector().openAndGetGitObject();
+
+        List<Ref> branches = git.branchList().call();
+
+        Set<String> containingBranches = new HashSet<>();
+        for (Ref branch : branches) {
+            String branchName = branch.getName();
+            Iterable<RevCommit> commits = git.log().add(git.getRepository().resolve(branchName)).call();
+            List<RevCommit> commitsList = Lists.newArrayList(commits.iterator());
+            if (commitsList.stream().anyMatch(rev -> rev.getName().equals(commitName))) {
+                containingBranches.add(branchName);
+            }
+        }
+
+        git.close();
+
+        if(containingBranches.size() == 0)
+            return null;
+
+        Optional<String> selectedBranch = containingBranches.stream()
+                .filter(b -> b.equals("master") || b.equals("main") || b.contains("/master") || b.contains("/main")).findAny();
+
+        return selectedBranch.isPresent() ? selectedBranch.get() : containingBranches.iterator().next();
     }
 }

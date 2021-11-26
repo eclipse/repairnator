@@ -30,26 +30,25 @@ public class SoraldAdapter {
     private static final String PREVIOUS_COMMIT_REF = "HEAD^";
     private static SoraldAdapter _instance;
 
-    private String patchPrintingMode;
     private String tmpdir;
 
-    public SoraldAdapter(String tmpdir, String patchPrintingMode) {
+    public SoraldAdapter(String tmpdir) {
         this.tmpdir = tmpdir;
-        this.patchPrintingMode = patchPrintingMode;
     }
 
-    public static SoraldAdapter getInstance(String tmpdir, String patchPrintingMode) {
+    public static SoraldAdapter getInstance(String tmpdir) {
         if (_instance == null)
-            _instance = new SoraldAdapter(tmpdir, patchPrintingMode);
+            _instance = new SoraldAdapter(tmpdir);
         return _instance;
     }
 
     // Clones the repo in @repoPath, fixes all violations, returns violation introducing file paths.
-    public Set<String> repairRepoAndReturnViolationIntroducingFiles (SoraldTargetCommit commit, String rule, String repoPath)
+    public Set<String> repairRepoAndReturnViolationIntroducingFiles (SoraldTargetCommit commit, String rule,
+                                                                     String repoPath, String printingMode)
             throws ParseException, GitAPIException, IOException, InterruptedException {
         logger.info("repairing: " + commit.getCommitUrl());
 
-        File repoDir = cloneRepo(commit.getRepoUrl(), commit.getCommitId(), repoPath);
+        File repoDir = cloneRepo(commit.getRepoUrl(), commit.getCommitId(), tmpdir + File.separator + repoPath);
         logger.info("repo cloned: " + commit.getRepoName());
 
         Map<String, Set<String>> ruleToIntroducingFiles = getIntroducedViolations(repoDir);
@@ -58,7 +57,7 @@ public class SoraldAdapter {
         if(!ruleToIntroducingFiles.containsKey(rule))
             return null;
 
-        repair(rule, repoDir, patchPrintingMode);
+        repair(rule, repoDir, SoraldConstants.SPOON_SNIPER_MODE);
 
         return ruleToIntroducingFiles.get(rule);
     }
@@ -209,9 +208,9 @@ public class SoraldAdapter {
 
 
 
-    public File cloneRepo(String repoUrl, String commitId, String dirname)
+    public static File cloneRepo(String repoUrl, String commitId, String dirname)
             throws IOException, GitAPIException {
-        File repoDir = new File(tmpdir + File.separator + dirname);
+        File repoDir = new File(dirname);
 
         if (repoDir.exists())
             FileUtils.deleteDirectory(repoDir);

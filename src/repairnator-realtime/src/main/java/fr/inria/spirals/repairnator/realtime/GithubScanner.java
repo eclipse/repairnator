@@ -9,19 +9,25 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static fr.inria.spirals.repairnator.realtime.Constants.SEQUENCER_NAME;
+import static fr.inria.spirals.repairnator.realtime.Constants.SORALD_NAME;
+
 public class GithubScanner {
-    private final static String SORALD_NAME = "Sorald_Bot",
-            SEQUENCER_NAME = "SequencerRepair";
     static long scanIntervalDelay = 60 * 60 * 1000; // 1 hour
     static long scanIntervalLength = 60 * 60 * 1000; // 1 hour
     static long frequency = 60 * 60 * 1000; // 1 hour
 
-    DockerPipelineRunner runner;
+    long lastFetchedTime = -1L;
+    long scanStartTime = 0;
+
+    PipelineRunner runner;
 
     FetchMode fetchMode;
     Set<String> repos;
@@ -53,9 +59,6 @@ public class GithubScanner {
     public GithubScanner(FetchMode fetchMode, Set<String> repos) {
         this.fetchMode = fetchMode;
         this.repos = repos;
-
-        runner = new DockerPipelineRunner();
-        runner.initRunner();
     }
 
     public GithubScanner(FetchMode fetchMode) {
@@ -65,9 +68,11 @@ public class GithubScanner {
     public List<SelectedCommit> fetch() throws Exception {
         long endTime = System.currentTimeMillis() - scanIntervalDelay;
 //        long startTime = endTime - scanIntervalLength;
-        long startTime = 0L;
+        long startTime = lastFetchedTime < 0 ? scanStartTime : lastFetchedTime;
 
-        return fetch(startTime, endTime);
+        List<SelectedCommit> commits =  fetch(startTime, endTime);
+        lastFetchedTime = endTime;
+        return commits;
     }
 
     public void setup(){
@@ -75,13 +80,29 @@ public class GithubScanner {
         String repairTool = getEnvOrDefault("REPAIR_TOOL", SEQUENCER_NAME);
         repairTools.add(repairTool);
         RepairnatorConfig.getInstance().setRepairTools(repairTools);
-        RepairnatorConfig.getInstance().setNbThreads(16);
-        RepairnatorConfig.getInstance().setPipelineMode(RepairnatorConfig.PIPELINE_MODE.DOCKER.name());
+
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
+
         if(repairTool.equals(SORALD_NAME)) {
-            RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.GIT_REPOSITORY);
+            runner = new SimplePipelineRunner();
         } else if(repairTool.equals(SEQUENCER_NAME)) {
             RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+
+            RepairnatorConfig.getInstance().setNbThreads(16);
+
+            RepairnatorConfig.getInstance().setPipelineMode(RepairnatorConfig.PIPELINE_MODE.DOCKER.name());
+            RepairnatorConfig.getInstance().setDockerImageName(System.getenv("DOCKER_IMAGE_NAME"));
+            runner = new DockerPipelineRunner();
+        }
+
+        runner.initRunner();
+
+        try {
+            if(System.getenv().containsKey("SCAN_START_TIME"))
+                scanStartTime = new SimpleDateFormat("MM/dd/yyyy")
+                        .parse(System.getenv("SCAN_START_TIME")).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -92,10 +113,6 @@ public class GithubScanner {
     public void process(SelectedCommit commit) {
         String url = "https://github.com/" + commit.getRepoName();
         String sha = commit.getCommitId();
-
-        System.out.println(url);
-        System.out.println(sha);
-
         runner.submitBuild(new GithubInputBuild(url, null, sha));
     }
 

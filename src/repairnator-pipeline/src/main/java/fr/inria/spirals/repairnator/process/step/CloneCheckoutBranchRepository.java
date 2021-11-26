@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -47,6 +48,8 @@ public class CloneCheckoutBranchRepository extends AbstractStep {
 
             List<String> branchList = new ArrayList<String>();
             branchList.add(branch);
+
+			FileUtils.deleteDirectory(new File(repoLocalPath));
             
             CloneCommand cloneRepositoryCommand = Git.cloneRepository()
             		.setCloneSubmodules(true)

@@ -21,6 +21,11 @@
             <version>${revision}</version>
         </dependency>
         <dependency>
+            <artifactId>repairnator-pipeline</artifactId>
+            <groupId>fr.inria.repairnator</groupId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>4.1</version>
@@ -37,6 +42,16 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-all</artifactId>
             <version>5.15.8</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
           <groupId>javax.management</groupId>
@@ -94,7 +109,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.inria.spirals.repairnator.realtime.RTLauncher</mainClass>
+                            <mainClass>fr.inria.spirals.repairnator.realtime.GithubScanner</mainClass>
                         </manifest>
                     </archive>
                     <outputDirectory>
