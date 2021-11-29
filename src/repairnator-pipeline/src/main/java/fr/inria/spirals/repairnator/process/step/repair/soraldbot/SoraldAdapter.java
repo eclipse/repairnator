@@ -57,6 +57,8 @@ public class SoraldAdapter {
         if(!ruleToIntroducingFiles.containsKey(rule))
             return null;
 
+        logger.info("new violations introduced for rule: " + rule);
+
         repair(rule, repoDir, SoraldConstants.SPOON_SNIPER_MODE);
 
         return ruleToIntroducingFiles.get(rule);

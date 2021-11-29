@@ -71,13 +71,16 @@ public class SoraldBot extends AbstractRepairStep {
     @Override
     protected StepStatus businessExecute() {
         boolean successfulInit = init();
+        getLogger().info("Working on: " + commit.getCommitUrl() + " " + commit.getCommitId());
         if (!successfulInit) {
             return StepStatus.buildSkipped(this, "Error while repairing with Sorald");
         }
 
         List<String> rules = Arrays.asList(RepairnatorConfig.getInstance().getSonarRules());
-        try {
-            for (String rule : rules) {
+
+        for (String rule : rules) {
+            getLogger().info("Working on: " + commit.getCommitUrl() + " " + commit.getCommitId() + " " + rule);
+            try {
                 checkoutToMainCommit();
                 Set<String> patchedFiles =
                         SoraldAdapter.getInstance(getInspector().getWorkspace())
@@ -88,9 +91,9 @@ public class SoraldBot extends AbstractRepairStep {
                     this.getInspector().getJobStatus().setHasBeenPatched(true);
                     createPRWithSpecificPatchedFiles(patchedFiles, rule);
                 }
+            } catch (Exception e) {
+                return StepStatus.buildSkipped(this, "Error while repairing with Sorald");
             }
-        } catch (Exception e) {
-            return StepStatus.buildSkipped(this, "Error while repairing with Sorald");
         }
 
         return StepStatus.buildSuccess(this);
@@ -238,7 +241,7 @@ public class SoraldBot extends AbstractRepairStep {
 
         git.close();
 
-        if(containingBranches.size() == 0)
+        if (containingBranches.size() == 0)
             return null;
 
         Optional<String> selectedBranch = containingBranches.stream()

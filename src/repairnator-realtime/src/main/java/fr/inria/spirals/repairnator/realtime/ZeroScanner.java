@@ -62,7 +62,7 @@ public class ZeroScanner implements Runnable {
     }
 
     public ZeroScanner() {
-        this.scanner = new GithubScanner(GithubScanner.FetchMode.ALL);
+        this.scanner = new GithubScanner();
         this.collector = new SequencerCollector(SequencerConfig.getInstance().contextSize);
         this.runner = new DockerPipelineRunner(UUID.randomUUID().toString());
         runner.initRunner();
@@ -81,7 +81,7 @@ public class ZeroScanner implements Runnable {
         while (true) {
             LOGGER.info("New scanning iteration");
             try {
-                List<SelectedCommit> latestJobList = scanner.fetch();
+                List<SelectedCommit> latestJobList = scanner.fetch(GithubScanner.FetchMode.ALL, null);
                 
                 for (SelectedCommit job : latestJobList) {
                     LOGGER.debug("Scanning job: " + job.getRepoName() + " commit: " + job.getCommitId());
