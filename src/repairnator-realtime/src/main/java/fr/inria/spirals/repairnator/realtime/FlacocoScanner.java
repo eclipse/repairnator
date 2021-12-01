@@ -61,6 +61,8 @@ public class FlacocoScanner implements Runnable {
         //file with the list of projects to scan
         RepairnatorConfig.getInstance().setProjectsToScan(new File(System.getenv("PROJECTS_TO_SCAN_FILE")));
 
+        RepairnatorConfig.getInstance().setFlacocoThreshold(Double.valueOf(System.getenv("FLACOCO_THRESHOLD")));
+
         //pipeline image tag
         RepairnatorConfig.getInstance().setDockerImageName("repairnator/pipeline:3.4");
 
