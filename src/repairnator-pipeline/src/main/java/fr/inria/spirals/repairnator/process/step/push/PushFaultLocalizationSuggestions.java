@@ -128,7 +128,7 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
      * @return A mapping from file path to a mapping from source code lines to diff positions
      * @throws IOException
      */
-    private Map<String, Map<Integer, Integer>> computeDiffMapping(URL diffUrl) throws IOException {
+    protected Map<String, Map<Integer, Integer>> computeDiffMapping(URL diffUrl) throws IOException {
 
         Scanner scanner = new Scanner(diffUrl.openStream(), "UTF-8");
         scanner.useDelimiter("\\n");

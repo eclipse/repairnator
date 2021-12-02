@@ -13,26 +13,22 @@ import org.kohsuke.github.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class PushFaultLocalizationSuggestionOnExternalRepository extends PushFaultLocalizationSuggestions {
+/**
+ * It allows to push the flacocobot results on a GitHub repository.
+ */
+public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFaultLocalizationSuggestions {
 
     private PushState pushState = null;
     private String pushSkippedReason = null;
 
-    public PushFaultLocalizationSuggestionOnExternalRepository(ProjectInspector inspector, boolean blockingStep) {
+    public PushFaultLocalizationSuggestionsOnExternalRepository(ProjectInspector inspector, boolean blockingStep) {
         super(inspector, blockingStep);
-    }
-
-    public PushFaultLocalizationSuggestionOnExternalRepository(ProjectInspector inspector, boolean blockingStep, String name) {
-        super(inspector, blockingStep, name);
     }
 
     @Override
@@ -102,10 +98,10 @@ public class PushFaultLocalizationSuggestionOnExternalRepository extends PushFau
 
             String message = "Add suspicious lines for " + originalRepository.getName() + " PR #" + pullRequest.getNumber();
 
-            String repoName = originalRepository.getFullName();
+            String repositoryName = originalRepository.getFullName();
             int prNumber = pullRequest.getNumber();
             Date updatedAt = pullRequest.getUpdatedAt();
-            String path = repoName + File.separator + prNumber + File.separator + Instant.now() + ".md";
+            String path = repositoryName + File.separator + prNumber + File.separator + Instant.now() + ".md";
 
             StrBuilder content = new StrBuilder();
 
@@ -114,10 +110,11 @@ public class PushFaultLocalizationSuggestionOnExternalRepository extends PushFau
                 content.appendNewLine().appendNewLine().append("**********************************").appendNewLine().appendNewLine();
             }
 
-            content.append("Pull Request #").append(pullRequest.getNumber()).append(" updated at: ").append(updatedAt);
+            content.append("Project: ").append("[").append(repositoryName).append("]").append("(").append(originalRepository.getHtmlUrl()).append(")").appendNewLine();
+            content.appendNewLine().append("Pull Request [#").append(pullRequest.getNumber()).append("](").append(pullRequest.getHtmlUrl()).append(")").append(" updated at: ").append(updatedAt);
 
             try {
-                gitHub.getRepository("sal-unimib/test").createContent().path(path).message(message).content(content.toString()).commit();
+                gitHub.getRepository(RepairnatorConfig.getInstance().getFlacocoResultsRepository()).createContent().path(path).message(message).content(content.toString()).commit();
             } catch (IOException e) {
                 e.printStackTrace();
             }

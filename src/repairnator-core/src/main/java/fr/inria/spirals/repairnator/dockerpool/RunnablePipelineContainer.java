@@ -116,6 +116,7 @@ public class RunnablePipelineContainer implements Runnable {
         if (this.repairnatorConfig.getLauncherMode() == LauncherMode.FAULT_LOCALIZATION) {
             this.envValues.add("FLACOCO_THRESHOLD=" + RepairnatorConfig.getInstance().getFlacocoThreshold());
             this.envValues.add("FLACOCO_TOP_K=" + RepairnatorConfig.getInstance().getFlacocoTopK());
+            this.envValues.add("FLACOCO_RESULTS_REPOSITORY=" + RepairnatorConfig.getInstance().getFlacocoResultsRepository());
         }
 
         if (this.repairnatorConfig.getRepairTools().contains("SequencerRepair")) {

@@ -1,5 +1,6 @@
 package fr.inria.spirals.repairnator.process.inspectors.components;
 
+import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
@@ -14,6 +15,7 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.PushFaultLocalizationSuggestions;
+import fr.inria.spirals.repairnator.process.step.push.PushFaultLocalizationSuggestionsOnExternalRepository;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 
 public class RunInspector4FaultLocalization extends IRunInspector {
@@ -33,8 +35,16 @@ public class RunInspector4FaultLocalization extends IRunInspector {
                     .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldFail(), false))
                     .addNextStep(new FlacocoLocalization(inspector, true));
 
-            PushFaultLocalizationSuggestions finalStep = new PushFaultLocalizationSuggestions(inspector, true);
-            inspector.setFinalStep(finalStep);
+            // If a repository has been specified, flacocobot results are pushed on that repository,
+            // otherwise the results are pushed as review comments to the analyzed pull requests.
+            if (RepairnatorConfig.getInstance().getFlacocoResultsRepository().equals("null")) {
+                PushFaultLocalizationSuggestions finalStep = new PushFaultLocalizationSuggestions(inspector, true);
+                inspector.setFinalStep(finalStep);
+            } else {
+                PushFaultLocalizationSuggestionsOnExternalRepository finalStep =
+                        new PushFaultLocalizationSuggestionsOnExternalRepository(inspector, true);
+                inspector.setFinalStep(finalStep);
+            }
 
             inspector.printPipeline();
 

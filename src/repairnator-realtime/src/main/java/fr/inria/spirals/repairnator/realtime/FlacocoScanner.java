@@ -63,6 +63,9 @@ public class FlacocoScanner implements Runnable {
 
         RepairnatorConfig.getInstance().setFlacocoThreshold(Double.valueOf(System.getenv("FLACOCO_THRESHOLD")));
 
+        //GitHub repository where to save the flacocobot results
+        RepairnatorConfig.getInstance().setFlacocoResultsRepository(System.getenv("FLACOCO_RESULTS_REPOSITORY"));
+
         //pipeline image tag
         RepairnatorConfig.getInstance().setDockerImageName("repairnator/pipeline:3.4");
 

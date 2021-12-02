@@ -115,9 +115,9 @@ export GITHUB_USEREMAIL=
 echo "Execute pipeline with following supplementary args: $args"
 
 if [ "$REPAIR_MODE" == "FAULT_LOCALIZATION" ]; then
-    echo "java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --faultLocalization --flacocoThreshold $FLACOCO_THRESHOLD --flacocoTopK $FLACOCO_TOP_K --ghOauth $GITHUB_TOKEN $args
+    echo "java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --faultLocalization --flacocoThreshold $FLACOCO_THRESHOLD --flacocoTopK $FLACOCO_TOP_K --flacocoResultsRepository $FLACOCO_RESULTS_REPOSITORY --ghOauth $GITHUB_TOKEN $args
 "
-    java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --faultLocalization --flacocoThreshold $FLACOCO_THRESHOLD --ghOauth $GITHUB_TOKEN $args
+    java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --faultLocalization --flacocoThreshold $FLACOCO_THRESHOLD --flacocoResultsRepository $FLACOCO_RESULTS_REPOSITORY --ghOauth $GITHUB_TOKEN $args
 else
     java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args
 fi
