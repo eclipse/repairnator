@@ -59,7 +59,7 @@ public class SoraldAdapter {
 
         logger.info("new violations introduced for rule: " + rule);
 
-        repair(rule, repoDir, SoraldConstants.SPOON_SNIPER_MODE);
+//        repair(rule, repoDir, printingMode);
 
         return ruleToIntroducingFiles.get(rule);
     }

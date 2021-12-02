@@ -103,8 +103,6 @@ public class GithubScanner {
 
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
 
-        logger.info("GHToken: " + System.getenv("GITHUB_OAUTH"));
-
         if (repairTool.equals(SORALD_NAME)) {
             runner = new SimplePipelineRunner();
         } else if (repairTool.equals(SEQUENCER_NAME)) {
