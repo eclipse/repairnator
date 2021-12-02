@@ -34,7 +34,7 @@ public class BranchLauncher implements LauncherAPI{
 	}
 
 
-	/* This should be only those args neccessary to construct the correct launcher */
+	/* This should be only those args necessary to construct the correct launcher */
 	public static JSAP defineBasicArgs() throws JSAPException {
 		JSAP jsap = new JSAP();
 
