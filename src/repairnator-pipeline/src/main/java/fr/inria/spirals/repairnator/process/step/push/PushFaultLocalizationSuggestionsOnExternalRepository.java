@@ -94,14 +94,16 @@ public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFa
             }
         }
 
+        String now = Instant.now().toString();
+
         if (lines > 0) {
 
-            String message = "Add suspicious lines for " + originalRepository.getName() + " PR #" + pullRequest.getNumber();
+            String message = "Add the suspicious lines contained in the diff for " + originalRepository.getName() + " PR #" + pullRequest.getNumber();
 
             String repositoryName = originalRepository.getFullName();
             int prNumber = pullRequest.getNumber();
             Date updatedAt = pullRequest.getUpdatedAt();
-            String path = repositoryName + File.separator + prNumber + File.separator + Instant.now() + ".md";
+            String path = repositoryName + File.separator + prNumber + File.separator + "diff_"  + now + ".md";
 
             StrBuilder content = new StrBuilder();
 
@@ -125,6 +127,59 @@ public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFa
             pushSkippedReason = "Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff";
             pushState = PushState.REPO_NOT_PUSHED;
         }
+
+        if (result.getDefaultSuspiciousnessMap().size() > 0) {
+
+            List<String> suspiciousLinesCommentNotConsideringDiffList = new ArrayList<>();
+
+            String message = "Add the suspicious lines for " + originalRepository.getName() + " PR #" + pullRequest.getNumber();
+
+            String repositoryName = originalRepository.getFullName();
+            int prNumber = pullRequest.getNumber();
+            Date updatedAt = pullRequest.getUpdatedAt();
+            String path = repositoryName + File.separator + prNumber + File.separator + now + ".md";
+
+            int addedLines = 0;
+
+            for (Map.Entry<Location, Suspiciousness> entry : result.getDefaultSuspiciousnessMap().entrySet()) {
+                if (addedLines < RepairnatorConfig.getInstance().getFlacocoTopK()) {
+                    suspiciousLinesCommentNotConsideringDiffList.add(
+                            String.format(
+                                    "The line (%d) of the file " + entry.getKey().getClassName().replace(".", "/") + " has been identified with a suspiciousness value of %,.2f%%.\n\n" +
+                                            "<details>\n" +
+                                            "     <summary>Failing tests that cover this line</summary>\n\n" +
+                                            entry.getValue().getFailingTestCases().stream()
+                                                    .map(x -> "- `" + x.getFullyQualifiedMethodName() + "`\n")
+                                                    .reduce((x, y) -> x + y).orElse("{}") +
+                                            "</details>"
+                                    ,
+                                    entry.getKey().getLineNumber(),
+                                    entry.getValue().getScore() * 100
+                            ) + "\n" + entry.getKey().getClassName().replace(".", "/")
+                    );
+                    addedLines++;
+                } else {
+                    break;
+                }
+            }
+
+            StrBuilder content = new StrBuilder();
+
+            for (String suspiciousLineComment : suspiciousLinesCommentNotConsideringDiffList) {
+                content.append(suspiciousLineComment);
+                content.appendNewLine().appendNewLine().append("**********************************").appendNewLine().appendNewLine();
+            }
+
+            content.append("Project: ").append("[").append(repositoryName).append("]").append("(").append(originalRepository.getHtmlUrl()).append(")").appendNewLine();
+            content.appendNewLine().append("Pull Request [#").append(pullRequest.getNumber()).append("](").append(pullRequest.getHtmlUrl()).append(")").append(" updated at: ").append(updatedAt);
+
+            try {
+                gitHub.getRepository(RepairnatorConfig.getInstance().getFlacocoResultsRepository()).createContent().path(path).message(message).content(content.toString()).commit();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         this.setPushState(pushState);
     }
 }
