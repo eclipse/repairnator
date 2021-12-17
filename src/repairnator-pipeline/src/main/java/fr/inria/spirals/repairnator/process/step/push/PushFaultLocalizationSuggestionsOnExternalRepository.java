@@ -81,7 +81,7 @@ public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFa
                                         ,
                                         line,
                                         entry.getValue().getScore() * 100
-                                ) + "\n" + fileName
+                                )
                         );
                     }
                     break;
@@ -155,7 +155,7 @@ public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFa
                                     ,
                                     entry.getKey().getLineNumber(),
                                     entry.getValue().getScore() * 100
-                            ) + "\n" + entry.getKey().getClassName().replace(".", "/")
+                            )
                     );
                     addedLines++;
                 } else {
