@@ -354,6 +354,8 @@ Options:
 
 ```
 
+### [Pull Requests (Flacoco) Scanner](#flacoco-scanner)
+
 ## fr.inria.spirals.repairnator.dockerpool.BuildAnalyzerLauncher
 
 (internal usage only)
