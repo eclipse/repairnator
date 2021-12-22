@@ -354,7 +354,47 @@ Options:
 
 ```
 
-### Flacoco Scanner
+## Flacoco Scanner
+
+Flacoco Scanner is the scanner used by Flacocobot (a bot for fault localization that uses [Flacoco](https://github.com/SpoonLabs/flacoco)) to analyze the pull requests associated with the projects under analysis by the bot. This scanner is designed to work in two ways:
+
+1. Add a review comment to the failing pull requests if Flacoco finds suspicious lines contained in the diff introduced by the pull request compared to the main code base (it suggests the top 5 most suspicious lines by default);
+2. Save the fault localization result (the top 5 most suspicious lines in the diff or the top 5 most suspicious lines in general) in a GitHub repository.
+
+To specify the list of projects to be scanned, it is necessary to create a file, add the slug associated with the projects (e.g., eclipse/repairnator, 
+and not https://github.com/eclipse/repairnator), and associate the file path to a system variable called `PROJECTS_TO_SCAN_FILE`. You have to put one project per line. This means that the content of the file with the list of projects to be scanned must have this structure:
+
+```
+<user>/<repo-name>
+<user>/<repo-name>
+<user>/<repo-name>
+...
+```
+
+Flacoco Scanner scans each project every 15 minutes for a total of 14 days. At the first iteration, the scanner searches for the failing open pull requests that have been opened in the last 7 days. In the following iterations, the scanner listens for every new failing pull request and updates (only in relation with the source code) related to the pull requests previously analyzed.
+
+The **default threshold** used by Flacoco is 0.0.
+
+To save the results in a repository instead of adding a review comment to a pull request, it is necessary to create a system variable called `FLACOCO_RESULTS_REPOSITORY` and associate the slug of the repository where results will be saved.
+
+### Example of use
+
+```
+export M2_HOME=/usr/share/maven
+export GITHUB_TOKEN=foobar # Your Token
+export PROJECTS_TO_SCAN_FILE=/path/to/file.txt
+export FLACOCO_RESULTS_REPOSITORY=<user>/<repo-name> # Only to save the results in a repository
+
+cd repairnator/src/repairnator-realtime
+java -cp target/repairnator-realtime-<version>-jar-with-dependencies.jar fr.inria.spirals.repairnator.realtime.FlacocoScanner --ghOauth $GITHUB_TOKEN
+```
+
+If the variable `FLACOCO_RESULTS_REPOSITORY` has been set with a GitHub repository slug and Flacoco finds suspicious lines, Flacocobot will add the results to that repository.
+If the variable `FLACOCO_RESULTS_REPOSITORY` has not been set with a GitHub repository slug and Flacoco finds suspicious lines, it will add a review comment to the failing pull request.
+
+In the first execution mode, the review comment will be created only if Flacoco finds suspicious lines that are contained in the diff introduced by the failing pull request compared to the main code base.
+
+In the second execution mode, the fault localization results will be saved in specific .MD files in the repository indicated by the variable `LACOCO_RESULTS_REPOSITORY`. If the file name starts with diff_, it means that the file contains the suspicious lines found by Flacocobot that are contained in the diff introduced by the pull request compared to the main code base. Otherwise, the file contains the top 5 most suspicious lines found by Flacoco.
 
 ## fr.inria.spirals.repairnator.dockerpool.BuildAnalyzerLauncher
 

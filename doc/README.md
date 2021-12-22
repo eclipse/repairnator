@@ -13,7 +13,7 @@ Repairnator can be used:
 * [as a Github app](https://github.com/eclipse/repairnator/blob/master/doc/repairnator-github-app.md)
 * as a command line tool, see "Command line" below
 * as a Travis CI scanner, see "Travis Scanner" below
-* as Pull Requests scanner with Flacocobot, see "Pull Requests (Flacoco) Scanner" below
+* as Pull Requests scanner with Flacocobot, see "Flacoco Scanner" below
 
 ## Contributing
 
@@ -47,7 +47,7 @@ cd repairnator/src/scripts/
 bash launch_rtscanner.sh
 ```
 
-### Pull Requests (Flacoco) Scanner
+### Flacoco Scanner
 
 Prerequisites: Java, Docker
 
@@ -56,8 +56,9 @@ git clone https://github.com/eclipse/repairnator/
 cd repairnator/src/repairnator-realtime
 mvn clean package -DskipTests
 java -cp target/repairnator-realtime-<version>-jar-with-dependencies.jar fr.inria.spirals.repairnator.realtime.FlacocoScanner
-# doc at https://github.com/eclipse/repairnator/blob/master/doc/main-classes.md#flacoco-scanner
 ```
+
+The documentation is available [here](https://github.com/eclipse/repairnator/blob/master/doc/main-classes.md#flacoco-scanner).
 
 ## Program repair tools used in Repairnator
  
