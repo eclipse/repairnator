@@ -373,7 +373,7 @@ and not https://github.com/eclipse/repairnator), and associate the file path to 
 
 Flacoco Scanner scans each project every 15 minutes for a total of 14 days. At the first iteration, the scanner searches for the failing open pull requests that have been opened in the last 7 days. In the following iterations, the scanner listens for every new failing pull request and updates (only in relation with the source code) related to the pull requests previously analyzed.
 
-The **default threshold** used by Flacoco is 0.0.
+To set the threshold used by Flacoco, it is necessary to set its value in a system variable called `FLACOCO_THRESHOLD`.
 
 To save the results in a repository instead of adding a review comment to a pull request, it is necessary to create a system variable called `FLACOCO_RESULTS_REPOSITORY` and associate the slug of the repository where results will be saved.
 
