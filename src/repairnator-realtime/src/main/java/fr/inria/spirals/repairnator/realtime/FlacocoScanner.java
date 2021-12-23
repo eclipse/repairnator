@@ -25,11 +25,15 @@ public class FlacocoScanner implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlacocoScanner.class);
 
-    private static final Long SCAN_INTERVAL = 15L; // 15 minutes
-    private static final int EXECUTION_TIME = 14; // 14 days
+    private static final Long DEFAULT_FLACOCOBOT_SCAN_INTERVAL = 15L; // minutes
+    private static final int DEFAULT_FLACOCOBOT_EXECUTION_TIME = 14; // days
+    private static final int DEFAULT_FLACOCOBOT_CHECK_PR_DAYS_BEFORE_CURRENT_DATE = 7; // days
 
-    // It is used at the beginning for scanning pull requests between current date and 7 days before
-    private static final int DAYS_BEFORE_CURRENT_DATE = 7;
+    private static Long flacocobotScanInterval;
+    private static int flacocobotExecutionTime;
+
+    // It is used at the beginning for scanning pull requests between current date and X days before
+    private static int flacocobotCheckPrDaysBeforeCurrentDate;
 
     private GithubPullRequestScanner scanner;
     private DockerPipelineRunner runner;
@@ -45,7 +49,7 @@ public class FlacocoScanner implements Runnable {
 
         LOGGER.info("Starting Flacoco scanner...");
         executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleWithFixedDelay(scanner, 0L, SCAN_INTERVAL, TimeUnit.MINUTES);
+        executor.scheduleWithFixedDelay(scanner, 0L, flacocobotScanInterval, TimeUnit.MINUTES);
     }
 
     static void setup() {
@@ -73,6 +77,28 @@ public class FlacocoScanner implements Runnable {
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
 
         RepairnatorConfig.getInstance().setOutputPath("/tmp");
+
+        if (System.getenv("FLACOCOBOT_SCAN_INTERVAL") != null &&
+                !System.getenv("FLACOCOBOT_SCAN_INTERVAL").isEmpty()) {
+            flacocobotScanInterval = Long.parseLong(System.getenv("FLACOCOBOT_SCAN_INTERVAL"));
+        } else {
+            flacocobotScanInterval = DEFAULT_FLACOCOBOT_SCAN_INTERVAL;
+        }
+
+        if (System.getenv("FLACOCOBOT_EXECUTION_TIME") != null &&
+                !System.getenv("FLACOCOBOT_EXECUTION_TIME").isEmpty()) {
+            flacocobotExecutionTime = Integer.parseInt(System.getenv("FLACOCOBOT_EXECUTION_TIME"));
+        } else {
+            flacocobotExecutionTime = DEFAULT_FLACOCOBOT_EXECUTION_TIME;
+        }
+
+        if (System.getenv("FLACOCOBOT_CHECK_PR_DAYS_BEFORE_CURRENT_DATE") != null &&
+                !System.getenv("FLACOCOBOT_CHECK_PR_DAYS_BEFORE_CURRENT_DATE").isEmpty()) {
+            flacocobotCheckPrDaysBeforeCurrentDate =
+                    Integer.parseInt(System.getenv("FLACOCOBOT_CHECK_PR_DAYS_BEFORE_CURRENT_DATE"));
+        } else {
+            flacocobotCheckPrDaysBeforeCurrentDate = DEFAULT_FLACOCOBOT_CHECK_PR_DAYS_BEFORE_CURRENT_DATE;
+        }
     }
 
     public FlacocoScanner() {
@@ -95,7 +121,8 @@ public class FlacocoScanner implements Runnable {
                 reposScanEndedList = new ArrayList<>();
                 reposFromFile.forEach(repo -> {
                     reposToScanHashMap.put(repo,
-                            new RepositoryScanInformation(DateUtils.addDays(currentDate, -DAYS_BEFORE_CURRENT_DATE), DateUtils.addDays(currentDate, EXECUTION_TIME), true));
+                            new RepositoryScanInformation(DateUtils.addDays(currentDate, -flacocobotCheckPrDaysBeforeCurrentDate),
+                                    DateUtils.addDays(currentDate, flacocobotExecutionTime), true));
                 });
             } else {
                 // Detect new projects added to the file PROJECTS_TO_SCAN_FILE
@@ -103,7 +130,8 @@ public class FlacocoScanner implements Runnable {
                 reposFromFile.forEach(repo -> {
                     if (!reposToScanHashMap.containsKey(repo) && !reposScanEndedList.contains(repo)) {
                         reposToScanHashMap.put(repo,
-                                new RepositoryScanInformation(DateUtils.addDays(currentDate, -DAYS_BEFORE_CURRENT_DATE), DateUtils.addDays(currentDate, EXECUTION_TIME), true));
+                                new RepositoryScanInformation(DateUtils.addDays(currentDate, -flacocobotCheckPrDaysBeforeCurrentDate),
+                                        DateUtils.addDays(currentDate, flacocobotExecutionTime), true));
                     }
                 });
                 // Stop scanning projects removed from the file PROJECTS_TO_SCAN_FILE
@@ -131,7 +159,7 @@ public class FlacocoScanner implements Runnable {
                         latestJobList = scanner.fetch(reposToScanHashMap.get(repoName).getStartDateForScanning().getTime(),
                                 currentDate.getTime(), repoName, true);
                     } else {
-                        Date newDate = DateUtils.addMinutes(currentDate, -SCAN_INTERVAL.intValue());
+                        Date newDate = DateUtils.addMinutes(currentDate, -flacocobotScanInterval.intValue());
                         latestJobList = scanner.fetch(reposToScanHashMap.get(repoName).getStartDateForScanning().getTime(),
                                 newDate.getTime(), repoName, false);
                     }
@@ -162,7 +190,7 @@ public class FlacocoScanner implements Runnable {
         }
 
         if (lastScanEnded != null) {
-            Date extraTimeDate = DateUtils.addMinutes(lastScanEnded, Math.toIntExact(SCAN_INTERVAL));
+            Date extraTimeDate = DateUtils.addMinutes(lastScanEnded, Math.toIntExact(flacocobotScanInterval));
             if (currentDate.after(extraTimeDate)) {
                 executor.shutdown();
                 System.exit(0);

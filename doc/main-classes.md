@@ -371,7 +371,15 @@ and not https://github.com/eclipse/repairnator), and associate the file path to 
 ...
 ```
 
-Flacoco Scanner scans each project every 15 minutes for a total of 14 days. At the first iteration, the scanner searches for the failing open pull requests that have been opened in the last 7 days. In the following iterations, the scanner listens for every new failing pull request and updates (only in relation with the source code) related to the pull requests previously analyzed.
+Flacoco Scanner scans each project every 15 minutes for a total of 14 days by default. At the first iteration, the scanner searches for the failing open pull requests that have been opened in the last 7 days by defualt. In the following iterations, the scanner listens for every new failing pull request and updates (only in relation with the source code) related to the pull requests previously analyzed.
+
+To customize the scan period, the total time of execution and the number of days before the current date to select only the pull requests opened in that period, you can set these system variables:
+
+```
+FLACOCOBOT_SCAN_INTERVAL // Minutes
+FLACOCOBOT_EXECUTION_TIME // Days
+FLACOCOBOT_CHECK_PR_DAYS_BEFORE_CURRENT_DATE // Days
+```
 
 To set the threshold used by Flacoco, it is necessary to set its value in a system variable called `FLACOCO_THRESHOLD`.
 
@@ -384,8 +392,15 @@ export M2_HOME=/usr/share/maven
 export GITHUB_TOKEN=foobar # Your Token
 export PROJECTS_TO_SCAN_FILE=/path/to/file.txt
 export FLACOCO_RESULTS_REPOSITORY=<user>/<repo-name> # Only to save the results in a repository
+export FLACOCOBOT_SCAN_INTERVAL=60 # Minutes
+export FLACOCOBOT_EXECUTION_TIME=10 # Days
+export FLACOCOBOT_CHECK_PR_DAYS_BEFORE_CURRENT_DATE=30 # Days
 
-cd repairnator/src/repairnator-realtime
+git clone https://github.com/eclipse/repairnator/
+cd repairnator
+mvn clean install -DskipTests -f src/repairnator-core/ && mvn clean install -DskipTests -f src/repairnator-pipeline/
+cd src/repairnator-realtime
+mvn clean package -DskipTests
 java -cp target/repairnator-realtime-<version>-jar-with-dependencies.jar fr.inria.spirals.repairnator.realtime.FlacocoScanner --ghOauth $GITHUB_TOKEN
 ```
 
