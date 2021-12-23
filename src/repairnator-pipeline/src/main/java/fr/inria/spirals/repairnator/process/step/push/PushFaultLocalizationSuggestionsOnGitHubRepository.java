@@ -10,6 +10,8 @@ import fr.spoonlabs.flacoco.api.result.Location;
 import fr.spoonlabs.flacoco.api.result.Suspiciousness;
 import org.apache.commons.lang.text.StrBuilder;
 import org.kohsuke.github.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,14 +22,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * It allows to push the flacocobot results on a GitHub repository.
+ * It allows to push the Flacocobot results on a GitHub repository.
  */
-public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFaultLocalizationSuggestions {
+public class PushFaultLocalizationSuggestionsOnGitHubRepository extends PushFaultLocalizationSuggestions {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PushFaultLocalizationSuggestionsOnGitHubRepository.class);
 
     private PushState pushState = null;
     private String pushSkippedReason = null;
 
-    public PushFaultLocalizationSuggestionsOnExternalRepository(ProjectInspector inspector, boolean blockingStep) {
+    public PushFaultLocalizationSuggestionsOnGitHubRepository(ProjectInspector inspector, boolean blockingStep) {
         super(inspector, blockingStep);
     }
 
@@ -71,7 +75,7 @@ public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFa
                         lines++;
                         suspiciousLinesCommentList.add(
                                 String.format(
-                                        "The line (%d) of the file " + fileName + " has been identified with a suspiciousness value of %,.2f%%.\n\n" +
+                                        "The line %d of the file " + fileName + " has been identified with a suspiciousness value of %,.2f%%.\n\n" +
                                                 "<details>\n" +
                                                 "     <summary>Failing tests that cover this line</summary>\n\n" +
                                                 entry.getValue().getFailingTestCases().stream()
@@ -109,16 +113,23 @@ public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFa
 
             for (String suspiciousLineComment : suspiciousLinesCommentList) {
                 content.append(suspiciousLineComment);
-                content.appendNewLine().appendNewLine().append("**********************************").appendNewLine().appendNewLine();
+                content.appendNewLine().appendNewLine().append("***").appendNewLine().appendNewLine();
             }
 
-            content.append("Project: ").append("[").append(repositoryName).append("]").append("(").append(originalRepository.getHtmlUrl()).append(")").appendNewLine();
-            content.appendNewLine().append("Pull Request [#").append(pullRequest.getNumber()).append("](").append(pullRequest.getHtmlUrl()).append(")").append(" updated at: ").append(updatedAt);
+            content.append("Project: ").append("[").append(repositoryName).append("]").append("(").
+                    append(originalRepository.getHtmlUrl()).
+                    append(")").appendNewLine();
+            content.appendNewLine().append("Pull Request [#").append(pullRequest.getNumber()).append("](").
+                    append(pullRequest.getHtmlUrl()).append(")").
+                    append(" updated at: ").append(updatedAt);
 
             try {
-                gitHub.getRepository(RepairnatorConfig.getInstance().getFlacocoResultsRepository()).createContent().path(path).message(message).content(content.toString()).commit();
+                gitHub.getRepository(RepairnatorConfig.getInstance().getFlacocoResultsRepository()).
+                        createContent().path(path).message(message).content(content.toString()).commit();
             } catch (IOException e) {
                 e.printStackTrace();
+                LOGGER.error("Localization information not saved on the specified GitHub repository");
+                LOGGER.error(message + System.getProperty("line.separator") + content);
             }
 
             pushState = PushState.REPO_PUSHED;
@@ -145,7 +156,8 @@ public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFa
                 if (addedLines < RepairnatorConfig.getInstance().getFlacocoTopK()) {
                     suspiciousLinesCommentNotConsideringDiffList.add(
                             String.format(
-                                    "The line (%d) of the file " + entry.getKey().getClassName().replace(".", "/") + " has been identified with a suspiciousness value of %,.2f%%.\n\n" +
+                                    "The line %d of the file " + entry.getKey().getClassName().replace(".", "/") +
+                                            " has been identified with a suspiciousness value of %,.2f%%.\n\n" +
                                             "<details>\n" +
                                             "     <summary>Failing tests that cover this line</summary>\n\n" +
                                             entry.getValue().getFailingTestCases().stream()
@@ -167,16 +179,21 @@ public class PushFaultLocalizationSuggestionsOnExternalRepository extends PushFa
 
             for (String suspiciousLineComment : suspiciousLinesCommentNotConsideringDiffList) {
                 content.append(suspiciousLineComment);
-                content.appendNewLine().appendNewLine().append("**********************************").appendNewLine().appendNewLine();
+                content.appendNewLine().appendNewLine().append("***").appendNewLine().appendNewLine();
             }
 
-            content.append("Project: ").append("[").append(repositoryName).append("]").append("(").append(originalRepository.getHtmlUrl()).append(")").appendNewLine();
-            content.appendNewLine().append("Pull Request [#").append(pullRequest.getNumber()).append("](").append(pullRequest.getHtmlUrl()).append(")").append(" updated at: ").append(updatedAt);
+            content.append("Project: ").append("[").append(repositoryName).append("]").append("(").
+                    append(originalRepository.getHtmlUrl()).append(")").appendNewLine();
+            content.appendNewLine().append("Pull Request [#").append(pullRequest.getNumber()).append("](").
+                    append(pullRequest.getHtmlUrl()).append(")").append(" updated at: ").append(updatedAt);
 
             try {
-                gitHub.getRepository(RepairnatorConfig.getInstance().getFlacocoResultsRepository()).createContent().path(path).message(message).content(content.toString()).commit();
+                gitHub.getRepository(RepairnatorConfig.getInstance().getFlacocoResultsRepository()).
+                        createContent().path(path).message(message).content(content.toString()).commit();
             } catch (IOException e) {
                 e.printStackTrace();
+                LOGGER.error("Localization information not saved on the specified GitHub repository");
+                LOGGER.error(message + System.getProperty("line.separator") + content);
             }
         }
 

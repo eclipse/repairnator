@@ -15,7 +15,7 @@ import fr.inria.spirals.repairnator.process.step.paths.ComputeClasspath;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeSourceDir;
 import fr.inria.spirals.repairnator.process.step.paths.ComputeTestDir;
 import fr.inria.spirals.repairnator.process.step.push.PushFaultLocalizationSuggestions;
-import fr.inria.spirals.repairnator.process.step.push.PushFaultLocalizationSuggestionsOnExternalRepository;
+import fr.inria.spirals.repairnator.process.step.push.PushFaultLocalizationSuggestionsOnGitHubRepository;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 
 public class RunInspector4FaultLocalization extends IRunInspector {
@@ -41,8 +41,8 @@ public class RunInspector4FaultLocalization extends IRunInspector {
                 PushFaultLocalizationSuggestions finalStep = new PushFaultLocalizationSuggestions(inspector, true);
                 inspector.setFinalStep(finalStep);
             } else {
-                PushFaultLocalizationSuggestionsOnExternalRepository finalStep =
-                        new PushFaultLocalizationSuggestionsOnExternalRepository(inspector, true);
+                PushFaultLocalizationSuggestionsOnGitHubRepository finalStep =
+                        new PushFaultLocalizationSuggestionsOnGitHubRepository(inspector, true);
                 inspector.setFinalStep(finalStep);
             }
 
