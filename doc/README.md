@@ -58,7 +58,7 @@ mvn clean package -DskipTests
 java -cp target/repairnator-realtime-<version>-jar-with-dependencies.jar fr.inria.spirals.repairnator.realtime.FlacocoScanner
 ```
 
-The documentation is available [here](https://github.com/eclipse/repairnator/blob/master/doc/main-classes.md#flacoco-scanner).
+The documentation is available [here](main-classes.md#flacoco-scanner).
 
 ## Program repair tools used in Repairnator
  

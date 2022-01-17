@@ -371,7 +371,7 @@ and not https://github.com/eclipse/repairnator), and associate the file path to 
 ...
 ```
 
-Flacoco Scanner scans each project every 15 minutes for a total of 14 days by default. At the first iteration, the scanner searches for the failing open pull requests that have been opened in the last 7 days by defualt. In the following iterations, the scanner listens for every new failing pull request and updates (only in relation with the source code) related to the pull requests previously analyzed.
+Flacoco Scanner scans each project every 15 minutes for a total of 14 days by default. At the first iteration, the scanner searches for the failing open pull requests that have been opened in the last 7 days by default. In the following iterations, the scanner listens for every new failing pull request and updates (only in relation with the source code) related to the pull requests previously analyzed.
 
 To customize the scan period, the total time of execution and the number of days before the current date to select only the pull requests opened in that period, you can set these system variables:
 
