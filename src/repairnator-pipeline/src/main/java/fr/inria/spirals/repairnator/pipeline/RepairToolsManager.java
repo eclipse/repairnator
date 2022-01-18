@@ -24,8 +24,8 @@ import java.util.Set;
  */
 public class RepairToolsManager {
     private static RepairToolsManager instance;
-    private Map<String, AbstractRepairStep> repairTools;
-    private ServiceLoader<AbstractRepairStep> repairToolLoader = ServiceLoader.load(AbstractRepairStep.class);
+    private final Map<String, AbstractRepairStep> repairTools;
+    private final ServiceLoader<AbstractRepairStep> repairToolLoader = ServiceLoader.load(AbstractRepairStep.class);
     private RepairToolsManager() {
         this.repairTools = new HashMap<>();
         this.discoverRepairTools();

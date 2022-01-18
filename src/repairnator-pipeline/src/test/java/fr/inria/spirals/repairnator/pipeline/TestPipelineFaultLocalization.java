@@ -37,7 +37,8 @@ public class TestPipelineFaultLocalization {
     @Test
     public void testPipelineFaultLocalization() throws Exception {
         Launcher launcher = new Launcher(new String[]{
-                "--build", "236072272",
+                "--gitrepourl", "https://github.com/repairnator/failingProject",
+                "--gitrepopullrequest", "7",
                 "--flacocoThreshold", "1.0", // This threshold results in 0 lines, and so the result is not pushed
                 "--faultLocalization",
                 "--launcherMode", "FAULT_LOCALIZATION",
@@ -50,9 +51,9 @@ public class TestPipelineFaultLocalization {
         // we check that the pipeline has been built for fault localization
         List<AbstractStep> steps = launcher.getInspector().getSteps();
 
-        assertThat(steps.size(), is(10));
-        assertThat(steps.get(8), instanceOf(FlacocoLocalization.class));
-        assertThat(steps.get(9), instanceOf(PushFaultLocalizationSuggestions.class));
+        assertThat(steps.size(), is(9));
+        assertThat(steps.get(7), instanceOf(FlacocoLocalization.class));
+        assertThat(steps.get(8), instanceOf(PushFaultLocalizationSuggestions.class));
     }
 
 }
