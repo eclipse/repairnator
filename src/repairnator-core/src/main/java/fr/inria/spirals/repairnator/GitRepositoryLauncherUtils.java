@@ -101,6 +101,7 @@ public class GitRepositoryLauncherUtils {
         FlaggedOption opt = new FlaggedOption("gitRepositoryPullRequest");
         opt.setLongFlag("gitrepopullrequest");
         opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("-1");
         opt.setHelp("Specify the pull request to analyze  (only in FAULT_LOCALIZATION mode).");
         return opt;
     }
