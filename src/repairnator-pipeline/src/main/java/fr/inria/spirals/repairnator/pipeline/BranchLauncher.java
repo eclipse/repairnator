@@ -34,7 +34,7 @@ public class BranchLauncher implements LauncherAPI{
 	}
 
 
-	/* This should be only those args neccessary to construct the correct launcher */
+	/* This should be only those args necessary to construct the correct launcher */
 	public static JSAP defineBasicArgs() throws JSAPException {
 		JSAP jsap = new JSAP();
 
@@ -48,7 +48,8 @@ public class BranchLauncher implements LauncherAPI{
         	+ "CHECKSTYLE: analyze build failing because of checkstyle. "
         	+ "GIT_REPOSITORY: repairnator repair with Git instead of standard Travis. "
 			+ "KUBERNETES_LISTENER: run repairnator as a Activemq server listening for Travis build ids."
-			+ "SEQUENCER_REPAIR: run the custom SequencerRepair pipeline.");
+			+ "SEQUENCER_REPAIR: run the custom SequencerRepair pipeline."
+			+ "FAULT_LOCALIZATION: run the custom Flacoco-Bot pipeline.");
         jsap.registerParameter(opt2);
         return jsap;
 	}
@@ -79,7 +80,7 @@ public class BranchLauncher implements LauncherAPI{
 			return MainProcessFactory.getPipelineListenerMainProcess(args);
 		} else if (launcherMode.equals(LauncherMode.FAULT_LOCALIZATION.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
-			return MainProcessFactory.getTravisMainProcess(args);
+			return MainProcessFactory.getGithubMainProcess(args);
 		} else {
 			LOGGER.warn("Unknown launcher mode. Please choose the following: REPAIR, BEARS, CHECKSTYLE, GIT_REPOSITORY, KUBERNETES_LISTENER, JENKINS_PLUGIN, FAULT_LOCALIZATION");
 			return null;

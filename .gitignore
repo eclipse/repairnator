@@ -36,3 +36,5 @@ repairnator/repairnator-pipeline/spooned*
 repairnator/repairnator-pipeline/output_astor
 /bin/
 *.java-version
+
+.DS_Store

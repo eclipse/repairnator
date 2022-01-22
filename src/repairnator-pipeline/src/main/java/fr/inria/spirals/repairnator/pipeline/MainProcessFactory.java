@@ -1,54 +1,24 @@
 package fr.inria.spirals.repairnator.pipeline;
 
+import com.martiansoftware.jsap.JSAP;
+import com.martiansoftware.jsap.JSAPException;
+import fr.inria.spirals.repairnator.BuildToBeInspected;
 import fr.inria.spirals.repairnator.GithubInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
+import fr.inria.spirals.repairnator.pipeline.github.*;
+import fr.inria.spirals.repairnator.pipeline.listener.PipelineBuildListenerMainProcess;
+import fr.inria.spirals.repairnator.pipeline.travis.*;
+import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
+import fr.inria.spirals.repairnator.process.inspectors.components.RunInspector4FaultLocalization;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldConstants;
+import fr.inria.spirals.repairnator.serializer.*;
+import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 
 import java.util.List;
-
-import com.martiansoftware.jsap.JSAP;
-import com.martiansoftware.jsap.JSAPException;
-
-import fr.inria.spirals.repairnator.process.inspectors.InspectorFactory;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
-import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
-import fr.inria.spirals.repairnator.serializer.HardwareInfoSerializer;
-
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer;
-import fr.inria.spirals.repairnator.serializer.PullRequestSerializer;
-import fr.inria.spirals.repairnator.serializer.PropertiesSerializer;
-import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer;
-import fr.inria.spirals.repairnator.serializer.PatchesSerializer;
-import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer;
-import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
-
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer4GitRepository;
-import fr.inria.spirals.repairnator.serializer.InspectorTimeSerializer4GitRepository;
-import fr.inria.spirals.repairnator.serializer.PatchesSerializer4GitRepository;
-import fr.inria.spirals.repairnator.serializer.PipelineErrorSerializer4GitRepository;
-import fr.inria.spirals.repairnator.serializer.PropertiesSerializer4GitRepository;
-import fr.inria.spirals.repairnator.serializer.ToolDiagnosticSerializer4GitRepository;
-import fr.inria.spirals.repairnator.serializer.PullRequestSerializer4GitRepository;
-
-import fr.inria.spirals.repairnator.BuildToBeInspected;
-import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
-
-import fr.inria.spirals.repairnator.pipeline.travis.TravisMainProcess;
-import fr.inria.spirals.repairnator.pipeline.travis.TravisDefineJSAPArgs;
-import fr.inria.spirals.repairnator.pipeline.travis.TravisInitNotifiers;
-import fr.inria.spirals.repairnator.pipeline.travis.TravisInitSerializerEngines;
-import fr.inria.spirals.repairnator.pipeline.travis.TravisInitConfig;
-
-import fr.inria.spirals.repairnator.pipeline.github.GithubMainProcess;
-import fr.inria.spirals.repairnator.pipeline.github.GithubDefineJSAPArgs;
-import fr.inria.spirals.repairnator.pipeline.github.GithubInitNotifiers;
-import fr.inria.spirals.repairnator.pipeline.github.GithubInitSerializerEngines;
-import fr.inria.spirals.repairnator.pipeline.github.GithubInitConfig;
-
-import fr.inria.spirals.repairnator.pipeline.listener.PipelineBuildListenerMainProcess;
 
 /* This will manufacture different kind of repairnator type */
 public class MainProcessFactory {
@@ -141,27 +111,42 @@ public class MainProcessFactory {
 		boolean shouldStaticAnalysis =
 				getConfig().getRepairTools().contains(SoraldConstants.SORALD_TOOL_NAME) && getConfig().getRepairTools().size() == 1;
 
-		GitRepositoryProjectInspector inspector = InspectorFactory.getGithubInspector(
-                new GithubInputBuild(
-					getConfig().getGitRepositoryUrl(),
-                	getConfig().getGitRepositoryBranch(),
-                	getConfig().getGitRepositoryIdCommit()
-				),
-                getConfig().isGitRepositoryFirstCommit(),
-                getConfig().getWorkspacePath(),
-                notifiers
-            );
+		LauncherMode launcherMode = getConfig().getLauncherMode();
 
-		inspector.setSkipPreSteps(shouldStaticAnalysis);
-        inspector.getSerializers().add(new InspectorSerializer4GitRepository(engines, inspector));
-        inspector.getSerializers().add(new PropertiesSerializer4GitRepository(engines, inspector));
-        inspector.getSerializers().add(new InspectorTimeSerializer4GitRepository(engines, inspector));
-        inspector.getSerializers().add(new PipelineErrorSerializer4GitRepository(engines, inspector));
-        inspector.getSerializers().add(new PatchesSerializer4GitRepository(engines, inspector));
-        inspector.getSerializers().add(new ToolDiagnosticSerializer4GitRepository(engines, inspector));
-        inspector.getSerializers().add(new PullRequestSerializer4GitRepository(engines, inspector));
+		GithubInputBuild githubInputBuild = new GithubInputBuild(
+				getConfig().getGitRepositoryUrl(),
+				getConfig().getGitRepositoryBranch(),
+				getConfig().getGitRepositoryIdCommit(),
+				getConfig().getGitRepositoryPullRequest()
+		);
 
-        return inspector;
+
+		switch (launcherMode) {
+			case FAULT_LOCALIZATION:
+				return (GitRepositoryProjectInspector) InspectorFactory.getGithubInspector(
+						githubInputBuild,
+						getConfig().isGitRepositoryFirstCommit(),
+						getConfig().getWorkspacePath(),
+						notifiers
+				).setIRunInspector(new RunInspector4FaultLocalization());
+			default:
+				GitRepositoryProjectInspector inspector = InspectorFactory.getGithubInspector(
+						githubInputBuild,
+						getConfig().isGitRepositoryFirstCommit(),
+						getConfig().getWorkspacePath(),
+						notifiers
+				);
+
+				inspector.setSkipPreSteps(shouldStaticAnalysis);
+				inspector.getSerializers().add(new InspectorSerializer4GitRepository(engines, inspector));
+				inspector.getSerializers().add(new PropertiesSerializer4GitRepository(engines, inspector));
+				inspector.getSerializers().add(new InspectorTimeSerializer4GitRepository(engines, inspector));
+				inspector.getSerializers().add(new PipelineErrorSerializer4GitRepository(engines, inspector));
+				inspector.getSerializers().add(new PatchesSerializer4GitRepository(engines, inspector));
+				inspector.getSerializers().add(new ToolDiagnosticSerializer4GitRepository(engines, inspector));
+				inspector.getSerializers().add(new PullRequestSerializer4GitRepository(engines, inspector));
+				return inspector;
+		}
 	}
 
 	private static ProjectInspector constructInspector4Default(BuildToBeInspected buildToBeInspected, List<SerializerEngine> engines, List<AbstractNotifier> notifiers) {

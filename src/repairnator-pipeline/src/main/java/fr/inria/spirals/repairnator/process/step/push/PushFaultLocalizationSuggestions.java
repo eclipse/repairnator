@@ -1,13 +1,14 @@
 package fr.inria.spirals.repairnator.process.step.push;
 
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
+import fr.inria.spirals.repairnator.states.PushState;
 import fr.spoonlabs.flacoco.api.result.FlacocoResult;
 import fr.spoonlabs.flacoco.api.result.Location;
 import fr.spoonlabs.flacoco.api.result.Suspiciousness;
-import org.hamcrest.Condition;
 import org.kohsuke.github.*;
 
 import java.io.IOException;
@@ -20,6 +21,9 @@ import java.util.regex.Pattern;
 
 public class PushFaultLocalizationSuggestions extends AbstractStep {
 
+    private PushState pushState = null;
+    private String pushSkippedReason = null;
+
     public PushFaultLocalizationSuggestions(ProjectInspector inspector, boolean blockingStep) {
         super(inspector, blockingStep);
     }
@@ -30,11 +34,6 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
 
     @Override
     protected StepStatus businessExecute() {
-        if (!this.getInspector().getBuggyBuild().isPullRequest()) {
-            this.getLogger().warn("Fault localization suggestions are not available outside pull requests");
-            return StepStatus.buildSkipped(this, "Fault localization suggestions are not available outside pull requests.");
-        }
-
         try {
             pushReviewComments(this.getInspector().getJobStatus().getFlacocoResult());
         } catch (IOException e) {
@@ -42,13 +41,19 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
             return StepStatus.buildSkipped(this, "There was an error while publishing fault localization results: " + e);
         }
 
-        return StepStatus.buildSuccess(this);
+        if (pushState == PushState.REPO_PUSHED) {
+            return StepStatus.buildSuccess(this);
+        } else {
+            return StepStatus.buildSkipped(this, pushSkippedReason);
+        }
     }
 
     private void pushReviewComments(FlacocoResult result) throws IOException {
+        GitRepositoryProjectInspector githubInspector = (GitRepositoryProjectInspector) getInspector();
         GitHub gitHub = RepairnatorConfig.getInstance().getGithub();
-        GHRepository originalRepository = gitHub.getRepository(this.getInspector().getRepoSlug());
-        GHPullRequest pullRequest = originalRepository.getPullRequest(this.getInspector().getBuggyBuild().getPullRequestNumber());
+        GHRepository originalRepository = gitHub.getRepository(githubInspector.getRepoSlug());
+        GHPullRequest pullRequest = originalRepository.getPullRequest(githubInspector.getGitRepositoryPullRequest());
+
         Map<String, Map<Integer, Integer>> diffMapping = computeDiffMapping(pullRequest.getDiffUrl());
         GHPullRequestReviewBuilder reviewBuilder = pullRequest.createReview();
 
@@ -67,12 +72,17 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
                         lines++;
                         reviewBuilder.comment(
                                 String.format(
-                                        "This line (%d) has been identified with a suspiciousness value of %,.2f%%.\n" +
-                                                "The following failing tests covered this line: " +
+                                        "This line (%d) has been identified with a suspiciousness value of %,.2f%%.\n\n" +
+                                                "<details>\n" +
+                                                "     <summary>Failing tests that cover this line</summary>\n\n" +
                                                 entry.getValue().getFailingTestCases().stream()
-                                                        .map(x -> "`" + x.getFullyQualifiedMethodName() + "`")
-                                                        .reduce((x, y) -> x + "," + y).orElse("{}"),
-                                        line, entry.getValue().getScore() * 100),
+                                                        .map(x -> "- `" + x.getFullyQualifiedMethodName() + "`\n")
+                                                        .reduce((x, y) -> x + y).orElse("{}") +
+                                                "</details>"
+                                        ,
+                                        line,
+                                        entry.getValue().getScore() * 100
+                                ),
                                 fileName,
                                 diffMapping.get(fileName).get(line)
                         );
@@ -81,14 +91,33 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
                     break;
                 }
             }
+
+            // Break if we have reached the number of requested lines
+            if (lines >= RepairnatorConfig.getInstance().getFlacocoTopK()) {
+                break;
+            }
         }
 
         if (lines > 0) {
-            reviewBuilder.body("[flacoco](https://github.com/SpoonLabs/flacoco) has found " + lines + " suspicious lines in the diff:");
+            reviewBuilder.body("[flacoco](https://github.com/SpoonLabs/flacoco) flags " + lines + " suspicious lines as the potential root cause of the test failure.");
             reviewBuilder.event(GHPullRequestReviewEvent.COMMENT);
-            reviewBuilder.create();
+
+            if (pullRequest.getState().equals(GHIssueState.OPEN)) {
+                reviewBuilder.create();
+                pushState = PushState.REPO_PUSHED;
+                this.setPushState(pushState);
+            } else {
+                // Check again to avoid replying to pull requests which have been closed during the fault localization process.
+                this.getLogger().warn("The Pull Request #" + githubInspector.getGitRepositoryPullRequest() + " is not open anymore.");
+                pushSkippedReason = "The Pull Request #" + githubInspector.getGitRepositoryPullRequest() + " is not open anymore.";
+                pushState = PushState.REPO_NOT_PUSHED;
+                this.setPushState(pushState);
+            }
         } else {
             this.getLogger().warn("Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff");
+            pushSkippedReason = "Flacoco has found " + result.getDefaultSuspiciousnessMap().size() + " suspicious lines, but none were matched to the diff";
+            pushState = PushState.REPO_NOT_PUSHED;
+            this.setPushState(pushState);
         }
     }
 
@@ -99,7 +128,8 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
      * @return A mapping from file path to a mapping from source code lines to diff positions
      * @throws IOException
      */
-    private Map<String, Map<Integer, Integer>> computeDiffMapping(URL diffUrl) throws IOException {
+    protected Map<String, Map<Integer, Integer>> computeDiffMapping(URL diffUrl) throws IOException {
+
         Scanner scanner = new Scanner(diffUrl.openStream(), "UTF-8");
         scanner.useDelimiter("\\n");
 
@@ -127,21 +157,21 @@ public class PushFaultLocalizationSuggestions extends AbstractStep {
             else if (line.startsWith("@@")) {
                 Pattern p = Pattern.compile("@@ .*?\\-(\\d+),?(\\d+)?.*?\\+(\\d+),?(\\d+)? @@.*$?");
                 Matcher matcher = p.matcher(line);
-                currentPosition = currentPosition != 0 ? currentPosition + 1 : currentPosition;
+                currentPosition = currentPosition != null && currentPosition != 0 ? currentPosition + 1 : currentPosition;
                 if (matcher.matches())
                     currentLine = Integer.parseInt(matcher.group(3)) - 1;
             }
 
             // In this case we increment the position but don't store any mapping as we only care about the new file
             else if (line.startsWith("-") || line.startsWith("\\")) {
-                currentPosition += 1;
+                currentPosition = currentPosition != null ? currentPosition + 1 : 1;
                 continue;
             }
 
             // In this case we increment both the position and line, since we have advanced one line in the hunk
             else {
-                currentPosition += 1;
-                currentLine += 1;
+                currentPosition = currentPosition != null ? currentPosition + 1 : 1;
+                currentLine = currentLine != null ? currentLine + 1 : 1;
             }
 
             // We record the mapping for the current file, between the line and position

@@ -121,6 +121,10 @@ public class LauncherUtils {
 
         // --flacocoTreshold
         jsap.registerParameter(LauncherUtils.defineArgFlacocoThreshold());
+        // --flacocoTopK
+        jsap.registerParameter(LauncherUtils.defineArgFlacocoTopK());
+        // --flacocoResultsRepository
+        jsap.registerParameter(LauncherUtils.defineArgFlacocoResultsRepository());
 
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
@@ -239,6 +243,8 @@ public class LauncherUtils {
         config.setNPERepairStrategy(LauncherUtils.getArgNPERepairStrategy(arguments));
 
         config.setFlacocoThreshold(LauncherUtils.getArgFlacocoThreshold(arguments));
+        config.setFlacocoTopK(LauncherUtils.getArgFlacocoTopK(arguments));
+        config.setFlacocoResultsRepository(LauncherUtils.getArgFlacocoResultsRepository(arguments));
 
         config.setPatchClassificationMode(LauncherUtils.getArgPatchClassificationMode(arguments));
         config.setPatchClassification(LauncherUtils.getArgPatchClassification(arguments));
@@ -940,13 +946,39 @@ public class LauncherUtils {
         FlaggedOption opt = new FlaggedOption("flacocoThreshold");
         opt.setLongFlag("flacocoThreshold");
         opt.setStringParser(JSAP.DOUBLE_PARSER);
-        opt.setDefault("0.5");
+        opt.setDefault("0.1");
         opt.setHelp("Threshold for flacoco fault localization");
         return opt;
     }
 
     public static Double getArgFlacocoThreshold(JSAPResult arguments) {
         return arguments.getDouble("flacocoThreshold");
+    }
+
+    public static FlaggedOption defineArgFlacocoTopK() {
+        FlaggedOption opt = new FlaggedOption("flacocoTopK");
+        opt.setLongFlag("flacocoTopK");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("5");
+        opt.setHelp("Number of results to be pushed by flacocobot");
+        return opt;
+    }
+
+    public static Integer getArgFlacocoTopK(JSAPResult arguments) {
+        return arguments.getInt("flacocoTopK");
+    }
+
+    private static Parameter defineArgFlacocoResultsRepository() {
+        FlaggedOption opt = new FlaggedOption("flacocoResultsRepository");
+        opt.setLongFlag("flacocoResultsRepository");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("");
+        opt.setHelp("Repository where to save the results of flacocobot");
+        return opt;
+    }
+
+    private static String getArgFlacocoResultsRepository(JSAPResult arguments) {
+        return arguments.getString("flacocoResultsRepository");
     }
 
     public static FlaggedOption defineArgODSPath() {

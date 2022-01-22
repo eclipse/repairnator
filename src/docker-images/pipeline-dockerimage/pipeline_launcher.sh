@@ -56,7 +56,10 @@ LOCAL_REPAIR_MODE=repair
 
 
 # Github XOR Travis
-if [[ -n "$GITHUB_URL" ]] && [[ -n "$GITHUB_SHA" ]]; then
+if [[ -n "$GITHUB_URL" ]] && [[ -n "$GITHUB_PR" ]]; then
+    echo "adding GitHub PR mode variables"
+    args="$args --gitrepourl $GITHUB_URL --gitrepopullrequest $GITHUB_PR"
+elif [[ -n "$GITHUB_URL" ]] && [[ -n "$GITHUB_SHA" ]]; then
   echo "adding GitHub mode variables"
   args="$args --gitrepourl $GITHUB_URL --gitrepoidcommit $GITHUB_SHA"
 elif [[ -n "$BUILD_ID" ]]; then
@@ -111,4 +114,10 @@ export GITHUB_USEREMAIL=
 
 echo "Execute pipeline with following supplementary args: $args"
 
-java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args
+if [ "$REPAIR_MODE" == "FAULT_LOCALIZATION" ]; then
+    echo "java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --faultLocalization --flacocoThreshold $FLACOCO_THRESHOLD --flacocoTopK $FLACOCO_TOP_K --flacocoResultsRepository $FLACOCO_RESULTS_REPOSITORY --ghOauth $GITHUB_TOKEN $args
+"
+    java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --faultLocalization --flacocoThreshold $FLACOCO_THRESHOLD --flacocoResultsRepository $FLACOCO_RESULTS_REPOSITORY --ghOauth $GITHUB_TOKEN $args
+else
+    java -cp $JAVA_HOME/lib/tools.jar:repairnator-pipeline.jar -Dlogback.configurationFile=/root/logback.xml fr.inria.spirals.repairnator.pipeline.Launcher -d --runId $LOCAL_RUN_ID -o $LOCAL_OUTPUT --ghOauth $LOCAL_GITHUB_OAUTH --repairTools $REPAIR_TOOLS $args
+fi
