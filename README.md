@@ -1,5 +1,5 @@
 
-# Repairnator: an open-source platform for automatic program repair
+# Repairnator: an open-source platform for automatic program repair in continuous integration
 
 Repairnator is an open-source project for [automated program repair](https://en.wikipedia.org/wiki/Automatic_bug_fixing). All kinds of repair are considered: test failure repair, compilation error repair, static warning repair, crash repair, etc. Repairnator is integrated with continuous integration (Travis CI, Jenkins, etc.) and makes pull-requests with fixes. The project is hosted at the [Eclipse](https://www.eclipse.org/) open-source foundation.
 
