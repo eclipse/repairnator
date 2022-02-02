@@ -101,11 +101,6 @@ public class SoraldBot extends AbstractRepairStep {
 
     private void createPRWithSpecificPatchedFiles(Set<String> violationIntroducingFiles, String rule)
             throws GitAPIException, IOException, URISyntaxException {
-        String forkedRepo = this.getForkedRepoName();
-        if (forkedRepo == null) {
-            return;
-        }
-
 
         String diffStr = applyPatches4SonarAndGetDiffStr(violationIntroducingFiles, rule);
         List<RepairPatch> repairPatches = new ArrayList<RepairPatch>();
@@ -113,6 +108,11 @@ public class SoraldBot extends AbstractRepairStep {
         repairPatches.add(repairPatch);
 
         notify(repairPatches);
+
+        String forkedRepo = this.getForkedRepoName();
+        if (forkedRepo == null) {
+            return;
+        }
 
         StringBuilder prTextBuilder = new StringBuilder()
                 .append("This PR fixes the violations for the following Sorald rule: \n");
