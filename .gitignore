@@ -38,3 +38,4 @@ repairnator/repairnator-pipeline/output_astor
 *.java-version
 
 .DS_Store
+treatedbuild.json
