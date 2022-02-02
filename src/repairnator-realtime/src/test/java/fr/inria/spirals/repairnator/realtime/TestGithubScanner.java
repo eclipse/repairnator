@@ -25,7 +25,7 @@ public class TestGithubScanner {
     public void testBuildSubmission(){
         DockerPipelineRunner runner = mock(DockerPipelineRunner.class);
 
-        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.FAILED);
+        GithubScanner scanner = new GithubScanner();
         Whitebox.setInternalState(scanner, "runner", runner);
 
         boolean isGithubActionsFailed = false;
@@ -42,12 +42,13 @@ public class TestGithubScanner {
 
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
                         .getResource("/GithubScannerTest_repos.txt").getFile()), "UTF-8"));
-        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.ALL, repos);
+        GithubScanner scanner = new GithubScanner();
         scanner.setup();
 
         List<SelectedCommit> commits =
                 scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("01/12/2020").getTime(),
-                        new SimpleDateFormat("dd/MM/yyyy").parse("27/01/2021").getTime());
+                        new SimpleDateFormat("dd/MM/yyyy").parse("27/01/2021").getTime(),
+                        GithubScanner.FetchMode.ALL, repos);
         assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("290bdc01884f7c9bf2140a7c66d22ca72fe50fbb")));
         assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("e3456813fdcca1ed5075c0fb72b0bcbc9524e791")));
     }
@@ -57,12 +58,13 @@ public class TestGithubScanner {
 
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
                 .getResource("/GithubScannerTest_repos.txt").getFile()), "UTF-8"));
-        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.FAILED, repos);
+        GithubScanner scanner = new GithubScanner();
         scanner.setup();
 
         List<SelectedCommit> commits =
                 scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("01/12/2020").getTime(),
-                        new SimpleDateFormat("dd/MM/yyyy").parse("27/01/2021").getTime());
+                        new SimpleDateFormat("dd/MM/yyyy").parse("27/01/2021").getTime(),
+                        GithubScanner.FetchMode.FAILED, repos);
         assertFalse(commits.stream().anyMatch(x -> x.getCommitId().equals("290bdc01884f7c9bf2140a7c66d22ca72fe50fbb")));
         assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("e3456813fdcca1ed5075c0fb72b0bcbc9524e791")));
     }
@@ -72,12 +74,13 @@ public class TestGithubScanner {
 
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
                 .getResource("/GithubScannerTest_repos.txt").getFile()), "UTF-8"));
-        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.PASSING, repos);
+        GithubScanner scanner = new GithubScanner();
         scanner.setup();
 
         List<SelectedCommit> commits =
                 scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("01/12/2020").getTime(),
-                        new SimpleDateFormat("dd/MM/yyyy").parse("27/01/2021").getTime());
+                        new SimpleDateFormat("dd/MM/yyyy").parse("27/01/2021").getTime(),
+                        GithubScanner.FetchMode.PASSING, repos);
         assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("290bdc01884f7c9bf2140a7c66d22ca72fe50fbb")));
         assertFalse(commits.stream().anyMatch(x -> x.getCommitId().equals("e3456813fdcca1ed5075c0fb72b0bcbc9524e791")));
     }
