@@ -66,7 +66,7 @@ public class SimplePipelineRunner implements PipelineRunner {
 
 
         } else {
-            // TODO
+            throw new RuntimeException("Simple pipeline is not defined for repair tools other than Sorald");
         }
     }
 }

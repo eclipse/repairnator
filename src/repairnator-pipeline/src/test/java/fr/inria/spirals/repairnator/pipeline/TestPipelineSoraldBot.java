@@ -39,7 +39,8 @@ public class TestPipelineSoraldBot {
                 "--repairTools", "SoraldBot",
                 "--launcherMode", "GIT_REPOSITORY",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
-                "--output", outputFolder.getRoot().getAbsolutePath()
+                "--output", outputFolder.getRoot().getAbsolutePath(),
+                "--createFork"
         });
 
         // config is forced to use SoraldBot as the only repair tool.
