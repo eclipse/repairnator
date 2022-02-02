@@ -106,14 +106,11 @@
             </exclusions>
         </dependency>
         <dependency>
-<<<<<<< HEAD
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
             <version>5.13.0.202109080827-r</version>
         </dependency>
         <dependency>
-=======
->>>>>>> direct-pipeline-runner added
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-invoker</artifactId>
             <version>3.0.0</version>
