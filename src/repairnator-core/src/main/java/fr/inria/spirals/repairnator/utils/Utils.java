@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.utils;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
