@@ -152,7 +152,7 @@ public class SoraldBot extends AbstractRepairStep {
         addCommand.call();
 
         git.commit().setAuthor(GitHelper.getCommitterIdent()).setCommitter(GitHelper.getCommitterIdent())
-                .setMessage("Proposal for patching Sorald rule " + ruleNumber).call();
+                .setMessage("Proposal for patching the Sorald rule " + ruleNumber).call();
 
         String diffStr = getDiffStrForLatestCommit(git.getRepository());
 
