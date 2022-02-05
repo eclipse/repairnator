@@ -26,63 +26,67 @@ public class GithubScanner {
     private final static Logger logger = LoggerFactory.getLogger(GithubScanner.class);
 
     static long scanIntervalDelay = 60 * 60 * 1000; // 1 hour
-    static long scanIntervalLength = 60 * 60 * 1000; // 1 hour
     static long frequency = 60 * 60 * 1000; // 1 hour
-    static long failureDelay = 1 * 60 * 1000; // 1 minute
 
     long lastFetchedTime = -1L;
     long scanStartTime = 0;
 
     PipelineRunner runner;
 
+    public GithubScanner(){
+        setup();
+    }
+
     public static void main(String[] args) throws IOException {
+        GithubScanner scanner = new GithubScanner();
+
         String reposPath = System.getenv("REPOS_PATH");
+
         if (reposPath != null) {
+            // a list of repos to be monitored online is provided
             Set<String> repos = new HashSet<>(FileUtils.readLines(new File(reposPath), "UTF-8"));
             FetchMode fetchMode = parseFetchMode();
 
-            GithubScanner scanner = new GithubScanner();
-            scanner.setup();
-
-            while (true) {
-                try {
-                    List<SelectedCommit> selectedCommits = scanner.fetch(fetchMode, repos);
-
-                    logger.info("fetched commits: ");
-                    selectedCommits.forEach(c -> System.out.println(c.getRepoName() + " " + c.getCommitId()
-                            + " " + c.getGithubActionsFailed()));
-
-                    for (int i = 0; i < selectedCommits.size(); i++) {
-                        SelectedCommit commit = selectedCommits.get(i);
-                        logger.info("Commit being submitted to the repair pipeline: " + commit.getCommitUrl() + " "
-                                + commit.getCommitId() + "; " + (i + 1) + " out of " + selectedCommits.size());
-                        scanner.process(commit);
-                    }
-
-                    TimeUnit.MILLISECONDS.sleep(frequency);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            fetchAndProcessCommitsPeriodically(scanner, repos, fetchMode);
         } else {
-            String selectedCommitsPath = System.getenv("SELECTED_COMMITS_PATH");
-            List<SelectedCommit> selectedCommits =
-                    FileUtils.readLines(new File(selectedCommitsPath), "UTF-8").stream()
-                            .map(c -> new SelectedCommit(false, c.split(",")[1], c.split(",")[0]))
-                            .collect(Collectors.toList());
+            List<SelectedCommit> selectedCommits = readSelectedCommitsFromFile();
 
-            GithubScanner scanner = new GithubScanner();
-            scanner.setup();
+            processSelectedCommits(scanner, selectedCommits);
+        }
+    }
 
-            for (int i = 0; i < selectedCommits.size(); i++) {
-                SelectedCommit commit = selectedCommits.get(i);
-                logger.info("Commit being submitted to the repair pipeline: " + commit.getCommitUrl() + " "
-                        + commit.getCommitId() + "; " + (i + 1) + " out of " + selectedCommits.size());
-                scanner.process(commit);
+    private static void fetchAndProcessCommitsPeriodically(GithubScanner scanner, Set<String> repos, FetchMode fetchMode) {
+        while (true) {
+            try {
+                List<SelectedCommit> selectedCommits = scanner.fetch(fetchMode, repos);
+
+                logger.info("fetched commits: ");
+                selectedCommits.forEach(c -> System.out.println(c.getRepoName() + " " + c.getCommitId()
+                        + " " + c.getGithubActionsFailed()));
+
+                processSelectedCommits(scanner, selectedCommits);
+
+                TimeUnit.MILLISECONDS.sleep(frequency);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
+    }
 
+    private static void processSelectedCommits(GithubScanner scanner, List<SelectedCommit> selectedCommits) {
+        for (int i = 0; i < selectedCommits.size(); i++) {
+            SelectedCommit commit = selectedCommits.get(i);
+            logger.info("Commit being submitted to the repair pipeline: " + commit.getCommitUrl() + " "
+                    + commit.getCommitId() + "; " + (i + 1) + " out of " + selectedCommits.size());
+            scanner.process(commit);
+        }
+    }
 
+    private static List<SelectedCommit> readSelectedCommitsFromFile() throws IOException {
+        String selectedCommitsPath = System.getenv("SELECTED_COMMITS_PATH");
+        return FileUtils.readLines(new File(selectedCommitsPath), "UTF-8").stream()
+                .map(c -> new SelectedCommit(false, c.split(",")[1], c.split(",")[0]))
+                .collect(Collectors.toList());
     }
 
     public List<SelectedCommit> fetch(FetchMode fetchMode, Set<String> repos) throws Exception {
