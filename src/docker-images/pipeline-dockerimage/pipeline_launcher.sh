@@ -34,6 +34,10 @@ if [[ "$CREATE_PR" == 1 ]]; then
   args="$args --createPR"
 fi
 
+if [[ "$CREATE_FORK" == 1 ]]; then
+  args="$args --createFork"
+fi
+
 if [[ "$SMTP_TLS" == 1 ]]; then
     args="$args --smtpTLS"
 fi

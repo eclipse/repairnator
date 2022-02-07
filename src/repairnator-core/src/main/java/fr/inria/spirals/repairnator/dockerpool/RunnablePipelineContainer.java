@@ -94,6 +94,9 @@ public class RunnablePipelineContainer implements Runnable {
         this.envValues.add("OUTPUT="+output);
         this.envValues.add("TRAVIS_ENDPOINT="+this.repairnatorConfig.getJTravisEndpoint());
         this.envValues.add("TRAVIS_TOKEN="+this.repairnatorConfig.getTravisToken());
+        if (this.repairnatorConfig.isFork()) {
+            this.envValues.add("CREATE_FORK=1");
+        }
         if (this.repairnatorConfig.isCreatePR()) {
             this.envValues.add("CREATE_PR=1");
         }

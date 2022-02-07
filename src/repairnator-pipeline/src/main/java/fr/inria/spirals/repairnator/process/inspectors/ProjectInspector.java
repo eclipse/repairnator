@@ -13,6 +13,8 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.utils.Utils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
@@ -279,6 +281,10 @@ public class ProjectInspector {
 
     public String getRepoLocalPath() {
         return repoLocalPath;
+    }
+
+    public Git openAndGetGitObject() throws IOException {
+        return new Git(new FileRepository(repoLocalPath + File.separatorChar + ".git"));
     }
 
     public String getRepoToPushLocalPath() {

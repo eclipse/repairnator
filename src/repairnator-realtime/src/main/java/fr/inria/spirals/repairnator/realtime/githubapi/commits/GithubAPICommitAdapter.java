@@ -81,7 +81,7 @@ public class GithubAPICommitAdapter {
             try {
                 GHRepository repo = GAA.g().getRepository(repoName);
                 System.out.println("Checking commits for: " + repo.getName() + " " + cnt.incrementAndGet() + " from "
-                        + fixedRepos.size()
+                        + repositories.size()
                         + " " + new Date(intervalStart));
                 boolean isMaven = false;
                 for (GHTreeEntry treeEntry : repo.getTree("HEAD").getTree()) {

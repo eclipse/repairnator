@@ -67,6 +67,8 @@ public class LauncherUtils {
         jsap.registerParameter(LauncherUtils.defineArgGithubUserEmail());
         // --createPR
         jsap.registerParameter(LauncherUtils.defineArgCreatePR());
+        // --createFork
+        jsap.registerParameter(LauncherUtils.defineArgCreateFork());
 
         // --z3
         jsap.registerParameter(LauncherUtils.defineArgZ3());
@@ -194,6 +196,9 @@ public class LauncherUtils {
             config.setFork(true);
         }
 
+        if(LauncherUtils.getArgCreateFork(arguments))
+            config.setFork(true);
+
         config.setZ3solverPath(new File(LauncherUtils.getArgZ3(arguments)).getAbsolutePath());
         config.setWorkspacePath(LauncherUtils.getArgWorkspace(arguments));
         if (LauncherUtils.getArgTmpDirAsWorkSpace(arguments)) {
@@ -300,6 +305,18 @@ public class LauncherUtils {
 
     public static boolean getArgCreatePR(JSAPResult arguments) {
         return arguments.getBoolean("createPR");
+    }
+
+    public static Switch defineArgCreateFork() {
+        Switch sw = new Switch("createFork");
+        sw.setLongFlag("createFork");
+        sw.setDefault("false");
+        sw.setHelp("Activate the creation of a Pull Request in case of patch.");
+        return sw;
+    }
+
+    public static boolean getArgCreateFork(JSAPResult arguments) {
+        return arguments.getBoolean("createFork");
     }
 
     public static Switch defineArgCheckstyleMode() {
