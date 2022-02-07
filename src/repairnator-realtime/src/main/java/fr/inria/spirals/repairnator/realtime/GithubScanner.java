@@ -47,24 +47,24 @@ public class GithubScanner {
             Set<String> repos = new HashSet<>(FileUtils.readLines(new File(reposPath), "UTF-8"));
             FetchMode fetchMode = parseFetchMode();
 
-            fetchAndProcessCommitsPeriodically(scanner, repos, fetchMode);
+            scanner.fetchAndProcessCommitsPeriodically(repos, fetchMode);
         } else {
             List<SelectedCommit> selectedCommits = readSelectedCommitsFromFile();
 
-            processSelectedCommits(scanner, selectedCommits);
+            scanner.processSelectedCommits(selectedCommits);
         }
     }
 
-    private static void fetchAndProcessCommitsPeriodically(GithubScanner scanner, Set<String> repos, FetchMode fetchMode) {
+    private void fetchAndProcessCommitsPeriodically(Set<String> repos, FetchMode fetchMode) {
         while (true) {
             try {
-                List<SelectedCommit> selectedCommits = scanner.fetch(fetchMode, repos);
+                List<SelectedCommit> selectedCommits = fetch(fetchMode, repos);
 
                 logger.info("fetched commits: ");
                 selectedCommits.forEach(c -> System.out.println(c.getRepoName() + " " + c.getCommitId()
                         + " " + c.getGithubActionsFailed()));
 
-                processSelectedCommits(scanner, selectedCommits);
+                processSelectedCommits(selectedCommits);
 
                 TimeUnit.MILLISECONDS.sleep(frequency);
             } catch (Exception e) {
@@ -73,12 +73,12 @@ public class GithubScanner {
         }
     }
 
-    private static void processSelectedCommits(GithubScanner scanner, List<SelectedCommit> selectedCommits) {
+    private void processSelectedCommits(List<SelectedCommit> selectedCommits) {
         for (int i = 0; i < selectedCommits.size(); i++) {
             SelectedCommit commit = selectedCommits.get(i);
             logger.info("Commit being submitted to the repair pipeline: " + commit.getCommitUrl() + " "
                     + commit.getCommitId() + "; " + (i + 1) + " out of " + selectedCommits.size());
-            scanner.process(commit);
+            process(commit);
         }
     }
 
