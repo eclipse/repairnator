@@ -20,23 +20,23 @@ public class InspectorTimeSerializer4GitRepository extends AbstractDataSerialize
         super(engines, SerializerType.TIMES, inspector);
     }
 
-    private List<Object> serializeAsList(ProjectInspector inspector) {
-        Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
-        List<Object> dataCol = new ArrayList<Object>();
-        
-        dataCol.add(inspector.getProjectIdToBeInspected());
-        dataCol.add(inspector.getGitSlug());
-        dataCol.add(DateUtils.formatCompleteDate(new Date()));
-        dataCol.add(Utils.getHostname());
-
-        int totalDuration = 0;
-        for (Map.Entry<String, Integer> stringIntegerEntry : durations.entrySet()) {
-            dataCol.add(stringIntegerEntry.getValue());
-            totalDuration += stringIntegerEntry.getValue();
-        }
-        dataCol.add(totalDuration);
-        return dataCol;
-    }
+//    private List<Object> serializeAsList(ProjectInspector inspector) {
+//        Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
+//        List<Object> dataCol = new ArrayList<Object>();
+//
+//        dataCol.add(inspector.getProjectIdToBeInspected());
+//        dataCol.add(inspector.getGitSlug());
+//        dataCol.add(DateUtils.formatCompleteDate(new Date()));
+//        dataCol.add(Utils.getHostname());
+//
+//        int totalDuration = 0;
+//        for (Map.Entry<String, Integer> stringIntegerEntry : durations.entrySet()) {
+//            dataCol.add(stringIntegerEntry.getValue());
+//            totalDuration += stringIntegerEntry.getValue();
+//        }
+//        dataCol.add(totalDuration);
+//        return dataCol;
+//    }
 
     private JsonElement serializeAsJson(ProjectInspector inspector) {
         Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
@@ -63,7 +63,7 @@ public class InspectorTimeSerializer4GitRepository extends AbstractDataSerialize
 
     @Override
     public void serialize() {
-        SerializedData data = new SerializedData(this.serializeAsList(inspector), this.serializeAsJson(inspector));
+        SerializedData data = new SerializedData(ProjectInspector.serializeAsList(inspector), this.serializeAsJson(inspector));
 
         List<SerializedData> allData = new ArrayList<>();
         allData.add(data);

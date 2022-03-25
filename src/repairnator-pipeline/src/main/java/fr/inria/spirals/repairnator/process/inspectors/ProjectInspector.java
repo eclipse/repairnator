@@ -12,6 +12,7 @@ import fr.inria.spirals.repairnator.process.inspectors.properties.machineInfo.Ma
 import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
+import fr.inria.spirals.repairnator.utils.DateUtils;
 import fr.inria.spirals.repairnator.utils.Utils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
@@ -26,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -422,6 +424,24 @@ public class ProjectInspector {
 
     public void printToBuildLog(String s){
         buildLog.add(s);
+    }
+// Move Method
+    public static  List<Object> serializeAsList(ProjectInspector inspector) {
+        Map<String, Integer> durations = inspector.getJobStatus().getStepsDurationsInSeconds();
+        List<Object> dataCol = new ArrayList<Object>();
+
+        dataCol.add(inspector.getProjectIdToBeInspected());
+        dataCol.add(inspector.getGitSlug());
+        dataCol.add(DateUtils.formatCompleteDate(new Date()));
+        dataCol.add(Utils.getHostname());
+
+        int totalDuration = 0;
+        for (Map.Entry<String, Integer> stringIntegerEntry : durations.entrySet()) {
+            dataCol.add(stringIntegerEntry.getValue());
+            totalDuration += stringIntegerEntry.getValue();
+        }
+        dataCol.add(totalDuration);
+        return dataCol;
     }
 
 }
