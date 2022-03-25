@@ -35,7 +35,7 @@ public class TravisInputBuild implements InputBuild {
     }
 
     @Override
-    public List<String> getEnvVariables() {
+    public List<String> getEnvironmentVariables() {
         List<String> r = new ArrayList<String>();
 
         r.add("BUILD_ID=" + buggyBuildId);

@@ -42,8 +42,9 @@ public class GithubInputBuild implements InputBuild {
         return pr;
     }
 
+    // Rename method
     @Override
-    public List<String> getEnvVariables() {
+    public List<String> getEnvironmentVariables() {
         List<String> r = new ArrayList<>();
 
         r.add("GITHUB_URL=" + url);

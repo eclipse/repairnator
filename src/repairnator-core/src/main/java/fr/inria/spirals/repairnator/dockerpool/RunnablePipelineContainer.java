@@ -67,7 +67,7 @@ public class RunnablePipelineContainer implements Runnable {
                 StringUtils.join(this.repairnatorConfig.getRepairTools(),",");
 
         this.envValues = new ArrayList<>();
-        this.envValues.addAll(inputBuildId.getEnvVariables());
+        this.envValues.addAll(inputBuildId.getEnvironmentVariables());
 
         String output = (this.repairnatorConfig.isCreateOutputDir()) ? "/var/log/" + this.repairnatorConfig.getRunId() : "/var/log";
 

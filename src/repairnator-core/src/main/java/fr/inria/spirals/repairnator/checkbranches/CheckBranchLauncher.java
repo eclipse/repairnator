@@ -6,6 +6,7 @@ import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Switch;
 import com.spotify.docker.client.DockerClient;
+import com.sun.org.slf4j.internal.LoggerFactory;
 import fr.inria.spirals.repairnator.LauncherType;
 import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.docker.DockerHelper;
@@ -14,7 +15,6 @@ import fr.inria.spirals.repairnator.notifier.engines.NotifierEngine;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * Created by urli on 13/03/2017.
  */
 public class CheckBranchLauncher {
-    private static Logger LOGGER = LoggerFactory.getLogger(CheckBranchLauncher.class);
+    private static Logger LOGGER = (Logger) LoggerFactory.getLogger(CheckBranchLauncher.class);
     private RepairnatorConfig config;
     private EndProcessNotifier endProcessNotifier;
 
@@ -86,6 +86,13 @@ public class CheckBranchLauncher {
         // -g or --globalTimeout
         jsap.registerParameter(LauncherUtils.defineArgGlobalTimeout());
 
+        extracted(jsap);
+
+        return jsap;
+    }
+
+    // Extract method
+    private static void extracted(JSAP jsap) throws JSAPException {
         Switch sw1 = new Switch("humanPatch");
         sw1.setShortFlag('p');
         sw1.setLongFlag("humanPatch");
@@ -99,8 +106,6 @@ public class CheckBranchLauncher {
         opt2.setRequired(true);
         opt2.setHelp("Specify where to collect branches");
         jsap.registerParameter(opt2);
-
-        return jsap;
     }
 
     private void initConfig(JSAPResult arguments) {
@@ -134,7 +139,7 @@ public class CheckBranchLauncher {
 
     private void initNotifiers() {
         if (this.config.isNotifyEndProcess()) {
-            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines(LOGGER);
+            List<NotifierEngine> notifierEngines = LauncherUtils.initNotifierEngines( LOGGER);
             this.endProcessNotifier = new EndProcessNotifier(notifierEngines, LauncherType.CHECKBRANCHES.name().toLowerCase()+" (runid: "+this.config.getRunId()+")");
         }
     }

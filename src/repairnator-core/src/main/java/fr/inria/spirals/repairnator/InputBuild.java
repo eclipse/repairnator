@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface InputBuild {
     String toString();
-    List<String> getEnvVariables();
+    List<String> getEnvironmentVariables();
 }
