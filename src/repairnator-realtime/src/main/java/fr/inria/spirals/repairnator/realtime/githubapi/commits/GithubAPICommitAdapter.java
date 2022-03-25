@@ -11,6 +11,32 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
+abstract class Mode{
+    abstract void caseType(boolean isGithubActionsFailed, GHCommit commit, GHRepository repo);
+}
+class allType extends Mode{
+    void caseType(boolean isGithubActionsFailed,GHCommit commit,GHRepository repo){
+        List<SelectedCommit> res = new ArrayList<>();
+        res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+    }
+}
+
+class passingType extends Mode{
+    void caseType(boolean isGithubActionsFailed,GHCommit commit,GHRepository repo){
+        List<SelectedCommit> res = new ArrayList<>();
+        if(!isGithubActionsFailed)
+            res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+    }
+}
+
+class failedType extends Mode{
+    void caseType(boolean isGithubActionsFailed,GHCommit commit,GHRepository repo){
+        List<SelectedCommit> res = new ArrayList<>();
+        if(isGithubActionsFailed)
+            res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+    }
+}
 public class GithubAPICommitAdapter {
     private static GithubAPICommitAdapter _instance;
 
@@ -45,18 +71,30 @@ public class GithubAPICommitAdapter {
                 }
             }
 
+//            switch(fetchMode) {
+//                case ALL:
+//                    res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+//                    break;
+//                case PASSING:
+//                    if(!isGithubActionsFailed)
+//                        res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+//                    break;
+//                case FAILED:
+//                default:
+//                    if(isGithubActionsFailed)
+//                        res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+//                    break;
+
+            // Replace Conditional with polymorphism
             switch(fetchMode) {
                 case ALL:
-                    res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+                    new allType();
                     break;
                 case PASSING:
-                    if(!isGithubActionsFailed)
-                        res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+                    new passingType();
                     break;
                 case FAILED:
-                default:
-                    if(isGithubActionsFailed)
-                        res.add(new SelectedCommit(isGithubActionsFailed, commit.getSHA1(), repo.getFullName()));
+                    new failedType();
                     break;
             }
         }
