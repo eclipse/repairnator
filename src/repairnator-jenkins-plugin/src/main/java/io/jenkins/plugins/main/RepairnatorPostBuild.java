@@ -359,8 +359,8 @@ public class RepairnatorPostBuild extends Recorder {
                                         .withMavenHome(config.getMavenHome())
                                         .atWorkSpace(config.getWorkspaceDir().getAbsolutePath())
                                         .withOutputDir(config.getWorkspaceDir().getAbsolutePath());
-
-        ProcessBuilder builder = repProcBuilder.build().directory(config.getWorkspaceDir());
+        ProcessNew p = new ProcessNew();
+        ProcessBuilder builder = p.build().directory(config.getWorkspaceDir());
         builder.redirectErrorStream(true);
         builder.inheritIO().redirectOutput(ProcessBuilder.Redirect.PIPE);
         Process process = builder.start();

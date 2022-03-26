@@ -9,7 +9,7 @@ import java.io.File;
 
 /* Build subprocess to run repairnator Jar */
 public class RepairnatorProcessBuilder {
-	private final ArrayList<String> cmdList = new ArrayList<String>();
+	 final ArrayList<String> cmdList = new ArrayList<String>();
 	private static RepairnatorProcessBuilder repairnatorProcessBuilder;
 	private String javaExec;
 	private String jarLocation;
@@ -30,7 +30,8 @@ public class RepairnatorProcessBuilder {
 	private boolean useSmtpTLS;
 	private boolean noTravisRepair;
 
-	public RepairnatorProcessBuilder(){}
+	public RepairnatorProcessBuilder() {
+	}
 
 	public RepairnatorProcessBuilder useJavaExec(String javaExec) {
 		this.javaExec = javaExec;
@@ -123,7 +124,30 @@ public class RepairnatorProcessBuilder {
 		return this;
 	}
 
+}
+// Extract class
+class ProcessNew {
+	private static RepairnatorProcessBuilder repairnatorProcessBuilder;
+	private String javaExec;
+	private String gitOAuth;
+	private String jarLocation;
+	private String gitUrl;
+	private String gitBranch;
 
+    private final ArrayList<String> cmdList = new ArrayList<String>();
+	private String smtpUsername;
+	private String smtpPassword;
+	private String smtpServer;
+	private String smtpPort;
+	private String notifyTo;
+	private String workspace;
+	private String mavenHome;
+	private String outputDir;
+	private String sonarRules;
+	private boolean createPR;
+	private boolean useSmtpTLS;
+	private boolean noTravisRepair;
+	private String[] repairTools;
 	public void checkValid() {
 		if (this.javaExec == null || this.javaExec.equals("")) {
 			throw new IllegalArgumentException("Repairnator Process building failed: java executable location is null");
@@ -145,8 +169,8 @@ public class RepairnatorProcessBuilder {
 			throw new IllegalArgumentException("Repairnator Process building failed: no repair tools specified");
 		}
 	}
+	  public ProcessBuilder build() {
 
-	public ProcessBuilder build() {
 		this.checkValid();
 
 		cmdList.add(this.javaExec);
@@ -171,9 +195,9 @@ public class RepairnatorProcessBuilder {
 			cmdList.add("--gitrepobranch");
 			cmdList.add(this.gitBranch);
 		}
-		
+
 		cmdList.add("--repairTools");
-		cmdList.add(String.join(",",this.repairTools));
+		cmdList.add(String.join(",", this.repairTools));
 
 
 		if (!sonarRules.equals("") || sonarRules != null) {
@@ -183,8 +207,8 @@ public class RepairnatorProcessBuilder {
 
 		if (this.notifyTo != null && !this.notifyTo.equals("")) {
 			if (this.smtpUsername != null && !this.smtpUsername.equals("")) {
-			cmdList.add("--smtpUsername");
-			cmdList.add(this.smtpUsername);
+				cmdList.add("--smtpUsername");
+				cmdList.add(this.smtpUsername);
 			}
 
 			if (this.smtpPassword != null && !this.smtpPassword.equals("")) {
@@ -203,14 +227,14 @@ public class RepairnatorProcessBuilder {
 			}
 
 			cmdList.add("--notifyto");
-			cmdList.add(String.join(",",this.notifyTo));
+			cmdList.add(String.join(",", this.notifyTo));
 		}
 
 		if (this.useSmtpTLS) {
 			cmdList.add("--smtpTLS");
 		}
-		
-		if(!(this.gitOAuth.equals("") || this.gitOAuth == null)) {
+
+		if (!(this.gitOAuth.equals("") || this.gitOAuth == null)) {
 			cmdList.add("--ghOauth");
 			cmdList.add(this.gitOAuth);
 			cmdList.add("--createPR");

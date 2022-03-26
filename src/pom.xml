@@ -111,6 +111,12 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.28</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -169,7 +175,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <argLine>${argLine}</argLine>
+
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                 </configuration>
             </plugin>
@@ -247,7 +253,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.3</version>
+                        <version>4.0.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -258,28 +264,28 @@
                         </executions>
                     </plugin>
                     
-                    <plugin>
-                        <!-- Warning: there is another block maven-javadoc-plugin above -->
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.1.1</version>
-                        <configuration>
-                            <doclint>none</doclint>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    
+<!--                    <plugin>-->
+<!--                        &lt;!&ndash; Warning: there is another block maven-javadoc-plugin above &ndash;&gt;-->
+<!--&lt;!&ndash;                        <groupId>org.apache.maven.plugins</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <artifactId>maven-javadoc-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <version>3.1.1</version>&ndash;&gt;-->
+<!--                        <configuration>-->
+<!--                            <doclint>none</doclint>-->
+<!--                        </configuration>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>attach-javadocs</id>-->
+<!--                                <goals>-->
+<!--                                    <goal>jar</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
+<!--                    -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>3.0.1</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
