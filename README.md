@@ -1,9 +1,9 @@
 
-# Repairnator: an open-source platform for automatic program repair in continuous integration
+# Repairnator: an open-source platform for software bots on Github
 
-Repairnator is an open-source project for [automated program repair](https://en.wikipedia.org/wiki/Automatic_bug_fixing). All kinds of repair are considered: test failure repair, compilation error repair, static warning repair, crash repair, etc. Repairnator is integrated with continuous integration (Travis CI, Jenkins, etc.) and makes pull-requests with fixes. The project is hosted at the [Eclipse](https://www.eclipse.org/) open-source foundation.
+Repairnator is an open-source project for software bots on Github, in particular for [automated program repair](https://en.wikipedia.org/wiki/Automatic_bug_fixing): build failure repair, static warning repair (SoraldBot), etc. The project is hosted at the [Eclipse](https://www.eclipse.org/) open-source foundation.
 
-Eclipse/repairnator is a welcoming community :-) You're welcome to join the community with an existing piece of repair software, to be integrated and pushed in the repository. You're welcome to join the community with a novel project to be hosted in the repository. You're welcome to contribute, we have a number of [open issues](https://github.com/eclipse/repairnator/issues) on which new contributors can jump in. Say [hello](https://github.com/eclipse/repairnator/issues/798)!
+Eclipse/repairnator is a welcoming community :-) You're welcome to contribute, we have a number of [open issues](https://github.com/eclipse/repairnator/issues) on which new contributors can jump in. Say [hello](https://github.com/eclipse/repairnator/issues/798)!
 
 Repairnator is done by a [a nice team](https://github.com/eclipse/repairnator/contributors) of welcoming engineers and researchers. 
 
