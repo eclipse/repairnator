@@ -5,7 +5,6 @@ import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.table.CSVSerializerEngine;
-import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +16,6 @@ public class GitRepositoryLauncherUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitRepositoryLauncherUtils.class);
 
     public static void registerGitArgs(JSAP jsap) throws JSAPException {
-        // --gitRepo
-        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryMode());
         // --gitRepoUrl
         jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryUrl());
         // --gitRepoBranch
@@ -27,16 +24,13 @@ public class GitRepositoryLauncherUtils {
         jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryIdCommit());
         // --gitRepoFirstCommit
         jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryFirstCommit());
+        // --gitRepoPullRequest
+        jsap.registerParameter(GitRepositoryLauncherUtils.defineArgGitRepositoryPullRequest());
     }
 
     public static void initGitConfig(RepairnatorConfig config, JSAPResult arguments, JSAP jsap) {
-        if (GitRepositoryLauncherUtils.getArgGitRepositoryMode(arguments)) {
-            if (GitRepositoryLauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
-                config.setGitRepositoryFirstCommit(true);
-            }
-        } else {
-            LOGGER.error("Parameter 'gitrepo' is required in GIT_REPOSITORY launcher mode.");
-            LauncherUtils.printUsage(jsap, LauncherType.PIPELINE);
+        if (GitRepositoryLauncherUtils.getArgGitRepositoryFirstCommit(arguments)) {
+            config.setGitRepositoryFirstCommit(true);
         }
 
         if (arguments.getString("gitRepositoryUrl") == null) {
@@ -52,18 +46,7 @@ public class GitRepositoryLauncherUtils {
         config.setGitRepositoryUrl(GitRepositoryLauncherUtils.getArgGitRepositoryUrl(arguments));
         config.setGitRepositoryBranch(GitRepositoryLauncherUtils.getArgGitRepositoryBranch(arguments));
         config.setGitRepositoryIdCommit(GitRepositoryLauncherUtils.getArgGitRepositoryIdCommit(arguments));
-    }
-
-    public static Switch defineArgGitRepositoryMode() {
-        Switch sw = new Switch("gitRepo");
-        sw.setLongFlag("gitrepo");
-        sw.setDefault("false");
-        sw.setHelp("This mode allows to use Repairnator to analyze bugs present in a Git repository.");
-        return sw;
-    }
-
-    public static boolean getArgGitRepositoryMode(JSAPResult arguments) {
-        return arguments.getBoolean("gitRepo");
+        config.setGitRepositoryPullRequest(GitRepositoryLauncherUtils.getArgGitRepositoryPullRequest(arguments));
     }
 
     public static FlaggedOption defineArgGitRepositoryUrl() {
@@ -112,6 +95,19 @@ public class GitRepositoryLauncherUtils {
 
     public static boolean getArgGitRepositoryFirstCommit(JSAPResult arguments) {
         return arguments.getBoolean("gitRepositoryFirstCommit");
+    }
+
+    public static FlaggedOption defineArgGitRepositoryPullRequest() {
+        FlaggedOption opt = new FlaggedOption("gitRepositoryPullRequest");
+        opt.setLongFlag("gitrepopullrequest");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("-1");
+        opt.setHelp("Specify the pull request to analyze  (only in FAULT_LOCALIZATION mode).");
+        return opt;
+    }
+
+    public static Integer getArgGitRepositoryPullRequest(JSAPResult arguments) {
+        return arguments.getInt("gitRepositoryPullRequest");
     }
 
     public static List<SerializerEngine> initFileSerializerEngines(Logger logger) {

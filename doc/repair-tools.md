@@ -48,15 +48,15 @@ It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with t
 
 Currently this tool supports the following [rules](https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md) on SonarQube 
 
-It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `Sorald` with the corresponding handled rulenumber [in the configuration](repairnator-config.md#REPAIR_TOOLS). [Current supported ruleNumbers](https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md)
+It can be used [in the configuration](repairnator-config.md#REPAIR_TOOLS) with this value: `SoraldBot` with the corresponding handled rulenumber [in the configuration](repairnator-config.md#REPAIR_TOOLS). [Current supported ruleNumbers](https://github.com/kth-tcs/sonarqube-repair/blob/master/docs/HANDLED_RULES.md)
+Sorald resolves violations of `--sonarRules` in the files changed in a specified commit. 
 
-Moreover, Launcher choice need to be set with `--launcherChoice NEW` to use this tool.
+Moreover, the launcher mode should be set to `--launcherMode GIT_REPOSITORY` to use this tool.
 
 Additional parameters:
-* `--sonarRules`: the rules Sorald should analyze for warnings after input. Input format: 2116,1656... . Default: 2116
-* `--soraldRepairMode`: DEFAULT - the normal mode of Sorald, where the entire project is inputted. SEGMENT - the input project is sliced into smaller fixed-size segments.
-* `--soraldMaxFixesPerRule`: specify the upper bound of the number of warning fixes.
-* `--segmentSize`: the number of files per segment if Sorald runs in Segment mode.
+* `--sonarRules`: the rules Sorald should analyze for warnings after input. Input format: 2116,1656... .
+* `--gitrepourl`: the url of the target repo that should be fixed. Required only in the new version.
+* `--gitcommithash`: the hash number of the commit that Sorald will fix its changed files. Required only in the new version.
 
 ## Sequencer
 

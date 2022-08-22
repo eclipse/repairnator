@@ -166,11 +166,6 @@ public class TestMetrics4BearsJsonFile {
                 actual = actual.substring(actual.indexOf(path), actual.length());
                 assertTrue("Property failing: " + fieldComparisonFailureName,
                         actual.equals(expected));
-            } else {
-                assertTrue("Property failing: " + fieldComparisonFailureName +
-                                "\nexpected: " + fieldComparisonFailure.getExpected() +
-                                "\nactual: " + fieldComparisonFailure.getActual(),
-                        this.isPropertyToBeIgnored(fieldComparisonFailureName));
             }
         }
     }

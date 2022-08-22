@@ -18,6 +18,10 @@ public class InspectorFactory {
 		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4SequencerRepair());
 	}
 
+	public static ProjectInspector getFaultLocalizationInspector(BuildToBeInspected buildToBeInspected, String workspace, List<AbstractNotifier> notifiers){
+		return new ProjectInspector(buildToBeInspected,workspace,notifiers).setIRunInspector(new RunInspector4FaultLocalization());
+	}
+
 	public static GitRepositoryProjectInspector getGithubInspector(GithubInputBuild build, boolean isGitRepositoryFirstCommit,
     		String workspace, List<AbstractNotifier> notifiers) {
 		GitRepositoryProjectInspector inspector = new GitRepositoryProjectInspector(build, isGitRepositoryFirstCommit, workspace, notifiers);

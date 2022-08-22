@@ -17,7 +17,7 @@ public class Utils {
     public static final String GITHUB_OAUTH = "GITHUB_OAUTH";
     public static final String M2_HOME = "M2_HOME";
 
-    private static final String TRAVIS_URL = "http://travis-ci.org/";
+    private static final String TRAVIS_URL = "http://travis-ci.com/";
     public static final String TRAVIS_FILE = ".travis.yml";
 
     public static final String GITHUB_URL = "https://github.com/";

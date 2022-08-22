@@ -1,4 +1,4 @@
-FROM maven:3.6.1-jdk-8
+FROM maven:3.6.1-jdk-11
 
 LABEL Description="Repairnator Pipeline docker image" Vendor="Spirals" Version="0.0.0"
 
@@ -10,14 +10,15 @@ COPY build_repairnator.sh /root/
 COPY pipeline_launcher.sh /root/
 COPY ODSmodel.bin /root/
 
-RUN apt-get update 
+RUN apt-get update
 RUN apt-get install xmlstarlet apt-utils cloc libgomp1 -y
 RUN curl -O -s https://oss.sonatype.org/content/repositories/snapshots/fr/inria/repairnator/repairnator-pipeline/maven-metadata.xml
 RUN echo `xmlstarlet sel -t -v '//latest' maven-metadata.xml` > /root/version.ini
 RUN chmod +x /root/*.sh
-RUN echo "Europe/Paris" > /etc/timezone 
-RUN /root/configure_git.sh 
-RUN /root/build_repairnator.sh
+RUN echo "Europe/Paris" > /etc/timezone
+RUN /root/configure_git.sh
+RUN /root/build_repairnator.sh # This script builds the latest version available on central.
+#COPY repairnator-pipeline.jar /root/repairnator-pipeline.jar # If you want to bypass it, and use a built jar, uncomment this line and comment the one above.
 
 ENV M2_HOME=$MAVEN_HOME
 ENV GITHUB_OAUTH=

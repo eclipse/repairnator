@@ -80,7 +80,8 @@ public class GithubAPICommitAdapter {
         repositories.parallelStream().forEach( repoName -> {
             try {
                 GHRepository repo = GAA.g().getRepository(repoName);
-                System.out.println("Checking commits for: " + repo.getName() + " " + cnt.incrementAndGet() + " " + repositories.size()
+                System.out.println("Checking commits for: " + repo.getName() + " " + cnt.incrementAndGet() + " from "
+                        + repositories.size()
                         + " " + new Date(intervalStart));
                 boolean isMaven = false;
                 for (GHTreeEntry treeEntry : repo.getTree("HEAD").getTree()) {
@@ -105,4 +106,5 @@ public class GithubAPICommitAdapter {
 
         return selectedCommits;
     }
+
 }

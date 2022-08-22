@@ -59,15 +59,6 @@ public class RepairnatorConfig {
         ODS_CORRECT
     }
    
-    /** 
-      * DEFAULT - the project files is scanned by Sorald as a single unit. If the repair fails then it fails completely and no fixes are produced if there could have been any
-      * SEGMENT - the project is sliced into fix-sized segments to be scanned one by one. If the repair fails for a segment, it will salvage the situation by continuing on with other segments
-      */
-    public enum SORALD_REPAIR_MODE {
-        DEFAULT,
-        SEGMENT
-    }
-
     private String runId;
     private LauncherMode launcherMode = LauncherMode.REPAIR;
 
@@ -122,18 +113,20 @@ public class RepairnatorConfig {
     private String gitRepositoryBranch;
     private String gitRepositoryIdCommit;
     private boolean gitRepositoryFirstCommit;
+    private Integer gitRepositoryPullRequest;
 
     private String[] sonarRules;
     private boolean isStaticAnalysis;
-    private int soraldMaxFixesPerRule;
-    private int segmentSize;
-    private SORALD_REPAIR_MODE soraldRepairMode;
     private boolean measureSoraldTime;
 
     private String npeSelection;
     private Integer npeNbIteration;
     private String npeScope;
     private String npeRepairStrategy;
+
+    private Double flacocoThreshold;
+    private Integer flacocoTopK;
+    private String flacocoResultsRepository;
 
     private PATCH_CLASSIFICATION_MODE patchClassificationMode;
     private PATCH_FILTERING_MODE patchFilteringMode;
@@ -151,6 +144,7 @@ public class RepairnatorConfig {
     // Realtime
     private File whiteList;
     private File blackList;
+    private File projectsToScan;
     private int jobSleepTime;
     private int buildSleepTime;
     private int maxInspectedBuilds;
@@ -561,6 +555,14 @@ public class RepairnatorConfig {
         this.blackList = blackList;
     }
 
+    public File getProjectsToScan() {
+        return projectsToScan;
+    }
+
+    public void setProjectsToScan(File projectsToScan) {
+        this.projectsToScan = projectsToScan;
+    }
+
     public int getJobSleepTime() {
         return jobSleepTime;
     }
@@ -753,30 +755,6 @@ public class RepairnatorConfig {
         return this.isStaticAnalysis;
     }
 
-    public void setSegmentSize(int segmentSize) {
-        this.segmentSize = segmentSize;
-    }
-
-    public int getSegmentSize() {
-        return this.segmentSize;
-    }
-
-    public void setSoraldRepairMode(SORALD_REPAIR_MODE soraldRepairMode) {
-        this.soraldRepairMode = soraldRepairMode;
-    }
-
-    public SORALD_REPAIR_MODE getSoraldRepairMode() {
-        return this.soraldRepairMode;
-    }
-
-    public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
-        this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
-    }
-
-    public int getSoraldMaxFixesPerRule() {
-        return this.soraldMaxFixesPerRule;
-    }
-
     public String getNPESelection() {
         return npeSelection;
     }
@@ -807,6 +785,30 @@ public class RepairnatorConfig {
 
     public void setNPERepairStrategy(String npeRepairStrategy) {
         this.npeRepairStrategy = npeRepairStrategy;
+    }
+
+    public Double getFlacocoThreshold() {
+        return flacocoThreshold;
+    }
+
+    public void setFlacocoThreshold(Double flacocoThreshold) {
+        this.flacocoThreshold = flacocoThreshold;
+    }
+
+    public Integer getFlacocoTopK() {
+        return flacocoTopK;
+    }
+
+    public void setFlacocoTopK(Integer flacocoTopK) {
+        this.flacocoTopK = flacocoTopK;
+    }
+
+    public String getFlacocoResultsRepository() {
+        return flacocoResultsRepository;
+    }
+
+    public void setFlacocoResultsRepository(String flacocoResultsRepository) {
+        this.flacocoResultsRepository = flacocoResultsRepository;
     }
 
     @Override
@@ -881,6 +883,9 @@ public class RepairnatorConfig {
                 ", noTravisRepair=" + noTravisRepair +
                 ", jTravisEndpoint=" + jTravisEndpoint +
                 ", travisToken=" + travisToken +
+                ", flacocoThreshold=" + flacocoThreshold +
+                ", flacocoTopK=" + flacocoTopK +
+                ", flacocoResultsRepository=" + flacocoResultsRepository +
                 '}';
     }
 
@@ -956,7 +961,15 @@ public class RepairnatorConfig {
 		this.gitRepositoryFirstCommit = gitRepositoryFirstCommit;
 	}
 
-	public String getGitRepositoryId() {
+    public Integer getGitRepositoryPullRequest() {
+        return gitRepositoryPullRequest;
+    }
+
+    public void setGitRepositoryPullRequest(Integer gitRepositoryPullRequest) {
+        this.gitRepositoryPullRequest = gitRepositoryPullRequest;
+    }
+
+    public String getGitRepositoryId() {
 		return getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
 				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
 				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");

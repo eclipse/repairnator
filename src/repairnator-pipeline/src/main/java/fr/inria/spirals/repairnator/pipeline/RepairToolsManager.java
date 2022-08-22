@@ -2,7 +2,6 @@ package fr.inria.spirals.repairnator.pipeline;
 
 import fr.inria.spirals.repairnator.process.step.repair.AbstractRepairStep;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepair;
-import fr.inria.spirals.repairnator.process.step.repair.Sorald;
 import fr.inria.spirals.repairnator.process.step.repair.NPERepairSafe;
 import fr.inria.spirals.repairnator.process.step.repair.AssertFixerRepair;
 import fr.inria.spirals.repairnator.process.step.repair.sequencer.SequencerRepair;
@@ -13,12 +12,12 @@ import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJKaliRepair;
 import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJGenProgRepair;
 import fr.inria.spirals.repairnator.process.step.repair.astor.AstorJMutRepair;
 import fr.inria.spirals.repairnator.process.step.repair.styler.StylerRepair;
+import fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldBot;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.ArrayList;
 
 /**
  * This class defines a java ServiceLoader to automatically discover the available
@@ -26,8 +25,8 @@ import java.util.ArrayList;
  */
 public class RepairToolsManager {
     private static RepairToolsManager instance;
-    private Map<String, AbstractRepairStep> repairTools;
-    private ServiceLoader<AbstractRepairStep> repairToolLoader = ServiceLoader.load(AbstractRepairStep.class);
+    private final Map<String, AbstractRepairStep> repairTools;
+    private final ServiceLoader<AbstractRepairStep> repairToolLoader = ServiceLoader.load(AbstractRepairStep.class);
     private RepairToolsManager() {
         this.repairTools = new HashMap<>();
         this.discoverRepairTools();
@@ -78,10 +77,10 @@ public class RepairToolsManager {
         this.repairTools.put(astorJKali.getRepairToolName(),astorJKali);
         AbstractRepairStep astorJMut = new AstorJMutRepair();
         this.repairTools.put(astorJMut.getRepairToolName(),astorJMut);
-        AbstractRepairStep sorald = new Sorald();
-        this.repairTools.put(sorald.getRepairToolName(),sorald);
         AbstractRepairStep styler = new StylerRepair();
         this.repairTools.put(styler.getRepairToolName(), styler);
+        AbstractRepairStep soraldBot = new SoraldBot();
+        this.repairTools.put(soraldBot.getRepairToolName(),soraldBot);
     }
 
     public static AbstractRepairStep getStepFromName(String name) {

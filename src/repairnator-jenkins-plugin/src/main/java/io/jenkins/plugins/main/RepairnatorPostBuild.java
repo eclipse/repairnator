@@ -111,12 +111,9 @@ public class RepairnatorPostBuild extends Recorder {
     private boolean rule4973;
 
     private SonarRulesBlock sonarRulesBlock;
-    private String soraldRepairMode;
-    private int soraldMaxFixesPerRule;
-    private int segmentSize;
 
     @DataBoundConstructor
-    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo, String soraldRepairMode, int segmentSize, int soraldMaxFixesPerRule,SonarRulesBlock sonarRulesBlock) {
+    public RepairnatorPostBuild(String gitUrl,String gitOAuthToken,String gitBranch,String notifyTo,SonarRulesBlock sonarRulesBlock) {
         this.gitUrl = gitUrl;
         this.gitOAuthToken = gitOAuthToken;
         this.gitBranch = gitBranch;
@@ -126,23 +123,6 @@ public class RepairnatorPostBuild extends Recorder {
             sonarRulesBlock.rulesProvided = true;
         } 
 
-        if (soraldRepairMode == null) {
-            this.soraldRepairMode = "DEFAULT";
-        } else {
-            this.soraldRepairMode = soraldRepairMode;
-        }
-
-        if (soraldMaxFixesPerRule <= 0) {
-            this.soraldMaxFixesPerRule = 2000;
-        } else {
-            this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
-        }
-
-        if (segmentSize <= 0) {
-            this.segmentSize = 200;
-        } else {
-            this.segmentSize = segmentSize;
-        }
     }
 
     public RepairnatorPostBuild() {
@@ -245,30 +225,6 @@ public class RepairnatorPostBuild extends Recorder {
 
     public boolean getRule4973() {
         return SonarRulesBlock.rule4973;
-    }
-
-    public void setSoraldRepairMode(String soraldRepairMode) {
-        this.soraldRepairMode = soraldRepairMode;
-    }
-
-    public String getSoraldRepairMode() {
-        return this.soraldRepairMode;
-    }
-
-    public void setSoraldMaxFixesPerRule(int soraldMaxFixesPerRule) {
-        this.soraldMaxFixesPerRule = soraldMaxFixesPerRule;
-    }
-
-    public int getSoraldMaxFixesPerRule() {
-        return this.soraldMaxFixesPerRule;
-    }
-
-    public void setSegmentSize(int segmentSize) {
-        this.segmentSize = segmentSize;
-    }
-
-    public int getSegmentSize() {
-        return this.segmentSize;
     }
 
     public void setGitUrl(String gitUrl) {
@@ -402,10 +358,7 @@ public class RepairnatorPostBuild extends Recorder {
                                         .alsoCreatePR()
                                         .withMavenHome(config.getMavenHome())
                                         .atWorkSpace(config.getWorkspaceDir().getAbsolutePath())
-                                        .withOutputDir(config.getWorkspaceDir().getAbsolutePath())
-                                        .withSegmentSize(config.getSegmentSize())
-                                        .withSoraldRepairMode(config.getSoraldRepairMode())
-                                        .withSoraldMaxFixesPerRule(config.getSoraldMaxFixesPerRule());
+                                        .withOutputDir(config.getWorkspaceDir().getAbsolutePath());
 
         ProcessBuilder builder = repProcBuilder.build().directory(config.getWorkspaceDir());
         builder.redirectErrorStream(true);
@@ -522,9 +475,6 @@ public class RepairnatorPostBuild extends Recorder {
         config.setTools(this.getTools());
         config.setNotifyTo(this.notifyTo);
         config.setSonarRules(SonarRulesBlock.constructCmdStr4Rules());
-        config.setSoraldRepairMode(this.soraldRepairMode);
-        config.setSoraldMaxFixesPerRule(this.soraldMaxFixesPerRule);
-        config.setSegmentSize(this.segmentSize);
         config.setWorkspaceDir(workspaceDir);
     }
 

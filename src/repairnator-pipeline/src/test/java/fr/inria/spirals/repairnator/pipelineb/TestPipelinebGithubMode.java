@@ -34,7 +34,6 @@ public class TestPipelinebGithubMode {
     @Test
     public void testPipelineOnlyGitRepository() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
                 "--output", outputFolder.getRoot().getAbsolutePath()
@@ -51,7 +50,6 @@ public class TestPipelinebGithubMode {
     @Test
     public void testPipelineGitRepositoryAndBranch() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepobranch", "astor-jkali-failure",
                 "--repairTools", "AstorJKali",
@@ -66,7 +64,6 @@ public class TestPipelinebGithubMode {
     @Test
     public void testPipelineGitRepositoryAndCommitIdWithFailure() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepobranch", "no-infinite-loop",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
@@ -80,7 +77,6 @@ public class TestPipelinebGithubMode {
     @Test
     public void testPipelineGitRepositoryAndCommitIdWithSuccess() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepoidcommit", "7e1837df8db7a563fba65f75f7f477c43c9c75e9",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
@@ -96,29 +92,8 @@ public class TestPipelinebGithubMode {
     }
 
     @Test
-    public void testSoraldWithSuccess() throws Exception {
-        GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
-                "--gitrepo",
-                "--gitrepourl", "https://github.com/henry-lp/SonarQubeRepairTests",
-                "--gitrepobranch", "master",
-                "--sonarRules", "2116",
-                "--repairTools", "Sorald",
-                "--soraldMaxFixesPerRule", "1",
-                "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
-                "--output", outputFolder.getRoot().getAbsolutePath(),
-        });
-
-        Patches patchNotifier = new Patches();
-        mainProc.setPatchNotifier(patchNotifier);
-        mainProc.run();
-        assertEquals("PATCHED", mainProc.getInspector().getFinding());
-        assertEquals(1, patchNotifier.allpatches.size());
-    }
-
-    @Test
     public void testPipelineGitRepositoryFirstCommit() throws Exception {
         GithubMainProcess mainProc = (GithubMainProcess) MainProcessFactory.getGithubMainProcess(new String[]{
-                "--gitrepo",
                 "--gitrepourl", "https://github.com/repairnator/failingProject",
                 "--gitrepofirstcommit",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),

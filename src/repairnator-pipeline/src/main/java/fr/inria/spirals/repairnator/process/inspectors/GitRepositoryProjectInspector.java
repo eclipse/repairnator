@@ -30,7 +30,7 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
 
         this.gitSlug = this.inputBuild.getSlug().replace("/", "-");
         this.workspace = workspace;
-        this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected() + "_repo";
+        this.repoLocalPath = workspace + File.separator + getProjectIdToBeInspected() + "_" + System.currentTimeMillis() + "_repo";
 
         this.repoToPushLocalPath = repoLocalPath+"_topush";
         this.m2LocalPath = new File(this.repoLocalPath + File.separator + ".m2").getAbsolutePath();
@@ -87,12 +87,17 @@ public class GitRepositoryProjectInspector extends ProjectInspector {
     public boolean isGitRepositoryFirstCommit() {
     	return this.gitRepositoryFirstCommit;
     }
+
+    public Integer getGitRepositoryPullRequest() {
+        return this.inputBuild.getPr();
+    }
     
     @Override
     public String getProjectIdToBeInspected() {
     	return getGitSlug() + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
 				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
-				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+				(isGitRepositoryFirstCommit() ? "-firstCommit" : "") +
+                (getGitRepositoryPullRequest() != null ? "-" + getGitRepositoryPullRequest() : "");
     }
 
 }

@@ -42,4 +42,8 @@ public enum LauncherMode {
 	 */
 	SEQUENCER_REPAIR,
 
+	/**
+	 * FAULT_LOCALIZATION: specific pipeline for running fault localization and push its results
+	 */
+	FAULT_LOCALIZATION
 }

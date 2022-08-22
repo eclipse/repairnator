@@ -25,7 +25,7 @@ public class SequencerLearnerScanner implements Runnable {
     public void run() {
         LOGGER.debug("Start running inspect Jobs...");
 
-        GithubScanner scanner = new GithubScanner(GithubScanner.FetchMode.PASSING);
+        GithubScanner scanner = new GithubScanner();
         SequencerCollector collector;
         
         try {
@@ -38,7 +38,7 @@ public class SequencerLearnerScanner implements Runnable {
         Set<String> done = new HashSet<>();
         while (true) {
             try {
-                List<SelectedCommit> latestJobList = scanner.fetch();
+                List<SelectedCommit> latestJobList = scanner.fetch(GithubScanner.FetchMode.PASSING, null);
             		for (SelectedCommit job : latestJobList) {
                     	    collector.handle(job.getRepoName(), job.getCommitId());
                         	done.add(job.getRepoName() + job.getCommitId());

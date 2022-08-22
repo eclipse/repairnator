@@ -67,6 +67,8 @@ public class LauncherUtils {
         jsap.registerParameter(LauncherUtils.defineArgGithubUserEmail());
         // --createPR
         jsap.registerParameter(LauncherUtils.defineArgCreatePR());
+        // --createFork
+        jsap.registerParameter(LauncherUtils.defineArgCreateFork());
 
         // --z3
         jsap.registerParameter(LauncherUtils.defineArgZ3());
@@ -109,12 +111,6 @@ public class LauncherUtils {
 
         // --sonarRules
         jsap.registerParameter(LauncherUtils.defineArgSonarRules());
-        // --soraldRepairMode
-        jsap.registerParameter(LauncherUtils.defineArgSoraldRepairMode());
-        // --segmentSize
-        jsap.registerParameter(LauncherUtils.defineArgSegmentSize());
-        // --soraldMaxFixesPerRule
-        jsap.registerParameter(LauncherUtils.defineArgSoraldMaxFixesPerRule());
 
         // --npeSelection
         jsap.registerParameter(LauncherUtils.defineArgNPESelection());
@@ -125,12 +121,21 @@ public class LauncherUtils {
         // --npeRepairStrategy
         jsap.registerParameter(LauncherUtils.defineArgNPERepairStrategy());
 
+        // --flacocoTreshold
+        jsap.registerParameter(LauncherUtils.defineArgFlacocoThreshold());
+        // --flacocoTopK
+        jsap.registerParameter(LauncherUtils.defineArgFlacocoTopK());
+        // --flacocoResultsRepository
+        jsap.registerParameter(LauncherUtils.defineArgFlacocoResultsRepository());
+
         // --bears
         jsap.registerParameter(LauncherUtils.defineArgBearsMode());
         // --checkstyle
         jsap.registerParameter(LauncherUtils.defineArgCheckstyleMode());
         // --sequencerRepair
         jsap.registerParameter(LauncherUtils.defineArgSequencerRepairMode());
+        // --faultLocalization
+        jsap.registerParameter(LauncherUtils.defineArgFaultLocalizationMode());
 
         // --patchClassification
         jsap.registerParameter(LauncherUtils.defineArgPatchClassification());
@@ -154,6 +159,8 @@ public class LauncherUtils {
             config.setLauncherMode(LauncherMode.CHECKSTYLE);
         } else if (LauncherUtils.getArgSequencerRepairMode(arguments)) {
             config.setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+        } else if (LauncherUtils.getArgFaultLocalizationMode(arguments)) {
+            config.setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
         } else {
             config.setLauncherMode(LauncherMode.REPAIR);
         }
@@ -188,6 +195,9 @@ public class LauncherUtils {
         if (config.isCreatePR() || (config.getSmtpServer() != null && !config.getSmtpServer().isEmpty() && config.getNotifyTo() != null && config.getNotifyTo().length > 0 && config.getGithubToken() != null)) {
             config.setFork(true);
         }
+
+        if(LauncherUtils.getArgCreateFork(arguments))
+            config.setFork(true);
 
         config.setZ3solverPath(new File(LauncherUtils.getArgZ3(arguments)).getAbsolutePath());
         config.setWorkspacePath(LauncherUtils.getArgWorkspace(arguments));
@@ -231,14 +241,15 @@ public class LauncherUtils {
         }
 
         config.setSonarRules(Arrays.stream(LauncherUtils.getArgSonarRules(arguments).split(",")).distinct().toArray(String[]::new));
-        config.setSegmentSize(LauncherUtils.getArgSegmentSize(arguments));
-        config.setSoraldRepairMode(RepairnatorConfig.SORALD_REPAIR_MODE.valueOf(LauncherUtils.getArgSoraldRepairMode(arguments)));
-        config.setSoraldMaxFixesPerRule(LauncherUtils.getArgSoraldMaxFixesPerRule(arguments));
 
         config.setNPESelection(LauncherUtils.getArgNPESelection(arguments));
         config.setNPENbIteration(LauncherUtils.getArgNPENbIteration(arguments));
         config.setNPEScope(LauncherUtils.getArgNPEScope(arguments));
         config.setNPERepairStrategy(LauncherUtils.getArgNPERepairStrategy(arguments));
+
+        config.setFlacocoThreshold(LauncherUtils.getArgFlacocoThreshold(arguments));
+        config.setFlacocoTopK(LauncherUtils.getArgFlacocoTopK(arguments));
+        config.setFlacocoResultsRepository(LauncherUtils.getArgFlacocoResultsRepository(arguments));
 
         config.setPatchClassificationMode(LauncherUtils.getArgPatchClassificationMode(arguments));
         config.setPatchClassification(LauncherUtils.getArgPatchClassification(arguments));
@@ -296,6 +307,18 @@ public class LauncherUtils {
         return arguments.getBoolean("createPR");
     }
 
+    public static Switch defineArgCreateFork() {
+        Switch sw = new Switch("createFork");
+        sw.setLongFlag("createFork");
+        sw.setDefault("false");
+        sw.setHelp("Activate the creation of a Pull Request in case of patch.");
+        return sw;
+    }
+
+    public static boolean getArgCreateFork(JSAPResult arguments) {
+        return arguments.getBoolean("createFork");
+    }
+
     public static Switch defineArgCheckstyleMode() {
         Switch sw = new Switch("checkstyle");
         sw.setLongFlag("checkstyle");
@@ -318,6 +341,18 @@ public class LauncherUtils {
 
     public static boolean getArgSequencerRepairMode(JSAPResult arguments) {
         return arguments.getBoolean("sequencerRepair");
+    }
+
+    public static Switch defineArgFaultLocalizationMode() {
+        Switch sw = new Switch("faultLocalization");
+        sw.setLongFlag("faultLocalization");
+        sw.setDefault("false");
+        sw.setHelp("This mode allows to use repairnator's fault localization mode.");
+        return sw;
+    }
+
+    public static boolean getArgFaultLocalizationMode(JSAPResult arguments) {
+        return arguments.getBoolean("faultLocalization");
     }
 
     public static Switch defineArgBearsMode() {
@@ -822,7 +857,7 @@ public class LauncherUtils {
 
     public static FlaggedOption defineArgGitCommitHash() {
         FlaggedOption opt = new FlaggedOption("gitcommithash");
-        opt.setLongFlag("gitcommit");
+        opt.setLongFlag("gitcommithash");
         opt.setStringParser(JSAP.STRING_PARSER);
         opt.setHelp("the hash of your git commit");
         return opt;
@@ -870,45 +905,6 @@ public class LauncherUtils {
 
     public static String getArgSonarRules(JSAPResult arguments) {
         return arguments.getString("sonarRules");
-    }
-
-    public static FlaggedOption defineArgSoraldRepairMode() {
-        FlaggedOption opt = new FlaggedOption("soraldRepairMode");
-        opt.setLongFlag("soraldRepairMode");
-        opt.setStringParser(JSAP.STRING_PARSER);
-        opt.setDefault(RepairnatorConfig.SORALD_REPAIR_MODE.DEFAULT.name());
-        opt.setHelp("DEFAULT - default mode , load everything in at once into Sorald. SEGMENT - repair segments of the projects instead, segmentsize can be specified.");
-        return opt;
-    }
-
-    public static String getArgSoraldRepairMode(JSAPResult arguments) {
-        return arguments.getString("soraldRepairMode");
-    }
-
-    public static FlaggedOption defineArgSegmentSize() {
-        FlaggedOption opt = new FlaggedOption("segmentSize");
-        opt.setLongFlag("segmentSize");
-        opt.setStringParser(JSAP.INTEGER_PARSER);
-        opt.setDefault("200");
-        opt.setHelp("Segment size for the segment repair.");
-        return opt;
-    }
-
-    public static Integer getArgSegmentSize(JSAPResult arguments) {
-        return arguments.getInt("segmentSize");
-    }
-
-    public static FlaggedOption defineArgSoraldMaxFixesPerRule() {
-        FlaggedOption opt = new FlaggedOption("soraldMaxFixesPerRule");
-        opt.setLongFlag("soraldMaxFixesPerRule");
-        opt.setStringParser(JSAP.INTEGER_PARSER);
-        opt.setDefault("2000");
-        opt.setHelp("Number of fixes per SonarQube rule.");
-        return opt;
-    }
-
-    public static Integer getArgSoraldMaxFixesPerRule(JSAPResult arguments) {
-        return arguments.getInt("soraldMaxFixesPerRule");
     }
 
     public static FlaggedOption defineArgNPESelection() {
@@ -961,6 +957,45 @@ public class LauncherUtils {
 
     public static String getArgNPERepairStrategy(JSAPResult arguments) {
         return arguments.getString("npeRepairStrategy");
+    }
+
+    public static FlaggedOption defineArgFlacocoThreshold() {
+        FlaggedOption opt = new FlaggedOption("flacocoThreshold");
+        opt.setLongFlag("flacocoThreshold");
+        opt.setStringParser(JSAP.DOUBLE_PARSER);
+        opt.setDefault("0.1");
+        opt.setHelp("Threshold for flacoco fault localization");
+        return opt;
+    }
+
+    public static Double getArgFlacocoThreshold(JSAPResult arguments) {
+        return arguments.getDouble("flacocoThreshold");
+    }
+
+    public static FlaggedOption defineArgFlacocoTopK() {
+        FlaggedOption opt = new FlaggedOption("flacocoTopK");
+        opt.setLongFlag("flacocoTopK");
+        opt.setStringParser(JSAP.INTEGER_PARSER);
+        opt.setDefault("5");
+        opt.setHelp("Number of results to be pushed by flacocobot");
+        return opt;
+    }
+
+    public static Integer getArgFlacocoTopK(JSAPResult arguments) {
+        return arguments.getInt("flacocoTopK");
+    }
+
+    private static Parameter defineArgFlacocoResultsRepository() {
+        FlaggedOption opt = new FlaggedOption("flacocoResultsRepository");
+        opt.setLongFlag("flacocoResultsRepository");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("");
+        opt.setHelp("Repository where to save the results of flacocobot");
+        return opt;
+    }
+
+    private static String getArgFlacocoResultsRepository(JSAPResult arguments) {
+        return arguments.getString("flacocoResultsRepository");
     }
 
     public static FlaggedOption defineArgODSPath() {

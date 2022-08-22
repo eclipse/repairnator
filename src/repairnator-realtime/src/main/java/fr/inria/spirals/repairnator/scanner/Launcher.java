@@ -178,7 +178,7 @@ public class Launcher {
         opt2 = new FlaggedOption("jtravisendpoint");
         opt2.setLongFlag("jtravisendpoint");
         opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault("https://api.travis-ci.org");
+        opt2.setDefault("https://api.travis-ci.com");
         opt2.setHelp("The endpoint where JTravis points its requests");
         jsap.registerParameter(opt2);
 

@@ -1,4 +1,5 @@
 # Documentation of Repairnator
+# Documentation of Repairnator
 
 This directory provides the official documentation about the Repairnator project.
 
@@ -12,6 +13,7 @@ Repairnator can be used:
 * [as a Github app](https://github.com/eclipse/repairnator/blob/master/doc/repairnator-github-app.md)
 * as a command line tool, see "Command line" below
 * as a Travis CI scanner, see "Travis Scanner" below
+* as Pull Requests scanner with Flacocobot, see "Flacoco Scanner" below
 
 ## Contributing
 
@@ -25,7 +27,7 @@ A first way to contribute is to look at the label [good-first-issue](https://git
 To fix a specific Travis CI build:
 
 ```
-docker run -e BUILD_ID=564711868 -e GITHUB_OAUTH=<GITHUB TOKEN> repairnator/pipeline
+docker run -e BUILD_ID=235838150 -e GITHUB_OAUTH=<GITHUB TOKEN> repairnator/pipeline
 ```
 
 It is possible to create your own GitHub token from [this page](https://github.com/settings/tokens), by selecting `public_repo` referring to the scope that has to be associated with the token.
@@ -44,6 +46,19 @@ cd repairnator/src/scripts/
 # doc at https://github.com/eclipse/repairnator/blob/master/doc/scripts.md#launch_rtscannersh
 bash launch_rtscanner.sh
 ```
+
+### Flacoco Scanner
+
+Prerequisites: Java, Docker
+
+```
+git clone https://github.com/eclipse/repairnator/
+cd repairnator/src/repairnator-realtime
+mvn clean package -DskipTests
+java -cp target/repairnator-realtime-<version>-jar-with-dependencies.jar fr.inria.spirals.repairnator.realtime.FlacocoScanner
+```
+
+The documentation is available [here](main-classes.md#flacoco-scanner).
 
 ## Program repair tools used in Repairnator
  

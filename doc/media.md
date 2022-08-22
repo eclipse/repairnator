@@ -2,7 +2,7 @@
 
 ## Academic papers
 
-
+* [A Software-Repair Robot Based on Continual Learning](https://ieeexplore.ieee.org/abstract/document/9393494), In IEEE Software (Volume: 38, Issue: 4, July-Aug. 2021)
 * [Repairnator patches programs automatically](https://ubiquity.acm.org/article.cfm?id=3349589), In Ubiquity, Association for Computing Machinery, vol. July, no. 2, pp. 1-12, 2019. 
 * [Human-competitive Patches in Automatic Program Repair with Repairnator](http://arxiv.org/abs/1810.05806v1) (Martin Monperrus, Simon Urli, Thomas Durieux, Matias Martinez, Benoit Baudry, Lionel Seinturier) arXiv 1810.05806, 2018
 * [Bears: An Extensible Java Bug Benchmark for Automatic Program Repair Studies](https://arxiv.org/pdf/1901.06024) In 26th IEEE International Conference on Software Analysis, Evolution and Reengineering, 2019.
