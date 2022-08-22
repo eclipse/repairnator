@@ -13,10 +13,6 @@ Repairnator is done by a [a nice team](https://github.com/eclipse/repairnator/co
 
 The entry point to the documentation is <https://github.com/eclipse/repairnator/blob/master/doc/README.md>. The post ["Repairnator patches programs automatically"](https://ubiquity.acm.org/article.cfm?id=3349589) gives a high-level overview of Repairnator.
 
-## Community
-
-Subscribe to the [Repairnator newsletter](mailto:repairnator.subscribe@4open.science).
-
 ## Media coverage
 
 See <https://github.com/eclipse/repairnator/blob/master/doc/media.md>.
