@@ -45,18 +45,6 @@ public class TestRTScanner {
     }
 
     @Test
-    public void testRepositoryWithoutCheckstyleIsInteresting() {
-        String slug = "repairnator/embedded-cassandra";
-        RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
-        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.org");
-        Optional<Repository> repositoryOptional = getOptionalRepository(slug);
-
-        RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
-        boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
-        assertTrue(result);
-    }
-
-    @Test
     public void testRepositoryWithSuccessfulBuildIsInteresting() {
         String slug = "eclipse/repairnator";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
