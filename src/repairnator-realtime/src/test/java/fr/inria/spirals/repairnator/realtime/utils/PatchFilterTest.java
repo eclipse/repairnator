@@ -18,8 +18,9 @@ public class PatchFilterTest {
     public void testSingleLineCommit() throws IOException {
         
         PatchFilter filter = new PatchFilter();
-        
-        GitHub github = GitHub.connectAnonymously();
+
+        //TODO: should use the credentials stored in Jenkins.
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
