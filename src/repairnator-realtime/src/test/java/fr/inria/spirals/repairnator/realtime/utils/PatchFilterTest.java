@@ -43,7 +43,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -67,7 +67,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -91,7 +91,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -115,7 +115,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -139,7 +139,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -163,7 +163,7 @@ public class PatchFilterTest {
 
         PatchFilter filter = new PatchFilter();
 
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
