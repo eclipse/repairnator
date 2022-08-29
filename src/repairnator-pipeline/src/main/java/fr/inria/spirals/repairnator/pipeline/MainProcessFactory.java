@@ -159,6 +159,7 @@ public class MainProcessFactory {
 		String workspacePath = getConfig().getWorkspacePath();
 
 		switch (launcherMode){
+			// TODO: add FEEDBACK.. MAYBE
 			case BEARS:
 				inspector = InspectorFactory.getBearsInspector(buildToBeInspected, workspacePath, notifiers);
 				break;

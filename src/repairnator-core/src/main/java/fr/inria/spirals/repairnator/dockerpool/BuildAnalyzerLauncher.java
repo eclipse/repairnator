@@ -166,6 +166,8 @@ public class BuildAnalyzerLauncher {
         }
 
         this.config.setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+        this.config.setFeedbackTools(new HashSet<>(Arrays.asList(arguments.getStringArray("feedbackTools"))));
+
     }
 
     private void initSerializerEngines() {

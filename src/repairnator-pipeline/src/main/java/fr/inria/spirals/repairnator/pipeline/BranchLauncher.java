@@ -17,6 +17,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * For now what I understood is that this class is in charge of providing the Launcher interface with
+ * methods to iniciate the process
+ * @autor of changes: SB
+ */
 public class BranchLauncher implements LauncherAPI{
 	private static Logger LOGGER = LoggerFactory.getLogger(BranchLauncher.class);
 	private String[] args;
@@ -42,10 +48,12 @@ public class BranchLauncher implements LauncherAPI{
         opt2.setShortFlag('l');
         opt2.setLongFlag("launcherMode");
         opt2.setStringParser(JSAP.STRING_PARSER);
-        opt2.setDefault(LauncherMode.REPAIR.name());
+        opt2.setDefault(LauncherMode.REPAIR.name());// HARDCODED??????
         opt2.setHelp("specify launcherMode." 
-        	+ "REPAIR: standard repairnator repair with Travis build ids. BEARS: analyze pairs of bugs and human-produced patches. "
-        	+ "CHECKSTYLE: analyze build failing because of checkstyle. "
+        	+ "REPAIR: standard repairnator repair with Travis build ids."
+        	+ "BEARS: analyze pairs of bugs and human-produced patches. "
+			+ "FEEDBACK: returns feedback from SOBO "			//edited by SB
+			+ "CHECKSTYLE: analyze build failing because of checkstyle. "
         	+ "GIT_REPOSITORY: repairnator repair with Git instead of standard Travis. "
 			+ "KUBERNETES_LISTENER: run repairnator as a Activemq server listening for Travis build ids."
 			+ "SEQUENCER_REPAIR: run the custom SequencerRepair pipeline."
@@ -81,8 +89,15 @@ public class BranchLauncher implements LauncherAPI{
 		} else if (launcherMode.equals(LauncherMode.FAULT_LOCALIZATION.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
 			return MainProcessFactory.getGithubMainProcess(args);
+		}
+		else if(launcherMode.equals(LauncherMode.FEEDBACK.name())){
+			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FEEDBACK);
+			return MainProcessFactory.getGithubMainProcess(args); //TODO: check if you need MainProcessFactory.getTravisMainProcess(args),
+																						// MainProcessFactory.getGithubMainProcess(args) or
+																						//MainProcessFactory.getPipelineListenerMainProcess(args);
 		} else {
-			LOGGER.warn("Unknown launcher mode. Please choose the following: REPAIR, BEARS, CHECKSTYLE, GIT_REPOSITORY, KUBERNETES_LISTENER, JENKINS_PLUGIN, FAULT_LOCALIZATION");
+			//edited by SB
+			LOGGER.warn("Unknown launcher mode. Please choose the following: REPAIR, BEARS, FEEDBACK, CHECKSTYLE, GIT_REPOSITORY, KUBERNETES_LISTENER, JENKINS_PLUGIN, FAULT_LOCALIZATION");
 			return null;
 		}
 	}

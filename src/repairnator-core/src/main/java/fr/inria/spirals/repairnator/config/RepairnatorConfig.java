@@ -9,15 +9,14 @@ import org.kohsuke.github.GitHub;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by urli on 08/03/2017.
  */
 public class RepairnatorConfig {
+
+
     public enum PIPELINE_MODE {
         DOCKER("fr.inria.spirals.repairnator.realtime.DockerPipelineRunner"),
         KUBERNETES("fr.inria.spirals.repairnator.realtime.ActiveMQPipelineRunner"),
@@ -60,7 +59,7 @@ public class RepairnatorConfig {
     }
    
     private String runId;
-    private LauncherMode launcherMode = LauncherMode.REPAIR;
+    private LauncherMode launcherMode;
 
     private String inputPath;
     private String outputPath;
@@ -96,6 +95,7 @@ public class RepairnatorConfig {
     private String githubToken;
     private String projectsToIgnoreFilePath;
     private Set<String> repairTools;
+    private Set<String> feedbackTools;
     private String githubUserName;
     private String githubUserEmail;
     private String[] experimentalPluginRepoList;
@@ -176,6 +176,7 @@ public class RepairnatorConfig {
 
     private RepairnatorConfig() {
         this.repairTools = new HashSet<>();
+        this.feedbackTools = new HashSet<>();
     }
 
     public void readFromFile() throws RepairnatorConfigException {
@@ -654,6 +655,13 @@ public class RepairnatorConfig {
     public void setRepairTools(Set<String> repairTools) {
         this.repairTools = repairTools;
     }
+    public Set<String> getFeedbackTools() {
+        return feedbackTools;
+    }
+    public void setFeedbackTools(Set<String> feedbackTools) {
+        this.feedbackTools = feedbackTools;
+    }
+
 
     public boolean isBearsDelimiter() {
         return bearsDelimiter;

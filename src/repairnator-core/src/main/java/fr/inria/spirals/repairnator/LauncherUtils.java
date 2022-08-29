@@ -109,7 +109,7 @@ public class LauncherUtils {
         // --tmpDirAsWorkSpace
         jsap.registerParameter(LauncherUtils.defineArgTmpDirAsWorkSpace());
 
-        // --sonarRules
+        // --sonarRules   TODO:might be useful for SOBO
         jsap.registerParameter(LauncherUtils.defineArgSonarRules());
 
         // --npeSelection
@@ -137,6 +137,15 @@ public class LauncherUtils {
         // --faultLocalization
         jsap.registerParameter(LauncherUtils.defineArgFaultLocalizationMode());
 
+        // --feedback TODO:SB
+        jsap.registerParameter(LauncherUtils.defineArgFeedbackMode());
+
+        // --launcherMode
+        jsap.registerParameter(LauncherUtils.defineArgLauncherMode());
+
+        // --feedbackTools
+        jsap.registerParameter(LauncherUtils.defineArgFeedbackTools());
+
         // --patchClassification
         jsap.registerParameter(LauncherUtils.defineArgPatchClassification());
         // --patchClassificationMode
@@ -152,6 +161,8 @@ public class LauncherUtils {
 
     }
 
+
+
     public static void initCommonConfig(RepairnatorConfig config, JSAPResult arguments) {
         if (LauncherUtils.getArgBearsMode(arguments)) {
             config.setLauncherMode(LauncherMode.BEARS);
@@ -161,9 +172,13 @@ public class LauncherUtils {
             config.setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
         } else if (LauncherUtils.getArgFaultLocalizationMode(arguments)) {
             config.setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
-        } else {
+        } else if (LauncherUtils.getArgFeedbackMode(arguments)){ // TODO: add FEEDBACK variable
+            config.setLauncherMode(LauncherMode.FEEDBACK);
+        }
+        else {
             config.setLauncherMode(LauncherMode.REPAIR);
         }
+
 
         if (LauncherUtils.getArgDebug(arguments)) {
             config.setDebug(true);
@@ -366,6 +381,41 @@ public class LauncherUtils {
     public static boolean getArgBearsMode(JSAPResult arguments) {
         return arguments.getBoolean("bears");
     }
+
+    /**
+     * m
+     * @return a switch, more info at  com.martiansoftware.jsap.Parameter
+     */
+    public static Switch defineArgFeedbackMode() {
+        Switch sw = new Switch("feedback");
+        sw.setLongFlag("feedback");
+        sw.setDefault("false");
+        sw.setHelp("This mode allows to use repairnator to analyze commits and return feedback about violations");
+        return sw;
+    }
+
+    public static boolean getArgFeedbackMode(JSAPResult arguments) {
+        return arguments.getBoolean("feedback");
+    }
+
+    private static FlaggedOption defineArgFeedbackTools() {
+        FlaggedOption opt = new FlaggedOption("feedbackTools");
+        opt.setLongFlag("feedbackTools");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("");
+        opt.setHelp("Specify the feedback tools for this launch.");
+        return opt;
+    }
+
+    private static FlaggedOption defineArgLauncherMode() {
+        FlaggedOption opt = new FlaggedOption("launcherMode");
+        opt.setLongFlag("launcherMode");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("REPAIR");
+        opt.setHelp("Specify the launcherMode for this launch.");
+        return opt;
+    }
+
 
     public static FlaggedOption defineArgRunId() {
         FlaggedOption opt = new FlaggedOption("runId");

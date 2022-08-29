@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static fr.inria.spirals.repairnator.realtime.Constants.SORALD_NAME;
+import static fr.inria.spirals.repairnator.realtime.Constants.SOBO_NAME;
 
 public class SimplePipelineRunner implements PipelineRunner {
     private Path tmpWorkspaceFolder, tmpOutputFolder;
@@ -59,13 +60,15 @@ public class SimplePipelineRunner implements PipelineRunner {
 
             try {
                 Launcher launcher = new Launcher(launcherConfig.toArray(new String[0]));
-                launcher.mainProcess();
+                launcher.mainProcess(); // what happens after this
             } catch (JSAPException e) {
                 throw new RuntimeException("Cannot create launcher.");
             }
 
 
-        } else {
+        }
+        else if(repairTool != null && repairTool.equals(SOBO_NAME)) {}
+        else {
             throw new RuntimeException("Simple pipeline is not defined for repair tools other than Sorald");
         }
     }
