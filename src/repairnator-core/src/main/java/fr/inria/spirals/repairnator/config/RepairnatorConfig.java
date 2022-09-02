@@ -190,7 +190,7 @@ public class RepairnatorConfig {
     }
 
     public static RepairnatorConfig getInstance() {
-        if (instance == null) {
+    if (instance == null) {
             instance = new RepairnatorConfig();
         }
         return instance;

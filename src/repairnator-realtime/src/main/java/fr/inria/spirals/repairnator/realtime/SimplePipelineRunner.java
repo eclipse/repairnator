@@ -32,44 +32,83 @@ public class SimplePipelineRunner implements PipelineRunner {
 
     @Override
     public void submitBuild(InputBuild b) {
-        String repairTool = System.getenv("REPAIR_TOOL");
+        String launcherMode=System.getenv("launcherMode");
+        if (launcherMode.equals(LauncherMode.FEEDBACK.name())) {
+            String feedbackTool = System.getenv("FEEDBACK_TOOL");
+            if (feedbackTool != null && feedbackTool.equals(SOBO_NAME)) {
+                if (!(b instanceof GithubInputBuild))
+                    throw new RuntimeException("The input build is not a github build");
 
-        if (repairTool != null && repairTool.equals(SORALD_NAME)) {
-            if(!(b instanceof GithubInputBuild))
-                throw new RuntimeException("The input build is not a github build");
+                GithubInputBuild githubInputBuild = (GithubInputBuild) b;
+                String sonarRules = System.getenv("SONAR_RULES"), gitUrl = githubInputBuild.getUrl(),
+                        gitCommit = githubInputBuild.getSha(),
+                        workspace = System.getenv().containsKey("WORKSPACE_FOLDER") ? System.getenv("WORKSPACE_FOLDER") :
+                                tmpWorkspaceFolder.toAbsolutePath().toString(),
+                        output = System.getenv().containsKey("OUTPUT_FOLDER") ? System.getenv("OUTPUT_FOLDER") :
+                                tmpOutputFolder.toAbsolutePath().toString();
 
-            GithubInputBuild githubInputBuild = (GithubInputBuild) b;
-            String sonarRules = System.getenv("SONAR_RULES"), gitUrl = githubInputBuild.getUrl(),
-                    gitCommit = githubInputBuild.getSha(),
-                    workspace = System.getenv().containsKey("WORKSPACE_FOLDER") ? System.getenv("WORKSPACE_FOLDER") :
-                            tmpWorkspaceFolder.toAbsolutePath().toString(),
-                    output = System.getenv().containsKey("OUTPUT_FOLDER") ? System.getenv("OUTPUT_FOLDER") :
-                            tmpOutputFolder.toAbsolutePath().toString();
+                List<String> launcherConfig = new ArrayList<String>(Arrays.asList(
+                        "--gitrepourl", gitUrl,
+                        "--gitcommithash", gitCommit,
+                        "--sonarRules", sonarRules,
+                        "--repairTools", SOBO_NAME,
+                        "--launcherMode", LauncherMode.FEEDBACK.name(),
+                        "--workspace", workspace,
+                        "--output", output));
 
-            List<String> launcherConfig = new ArrayList<String>(Arrays.asList(
-                    "--gitrepourl", gitUrl,
-                    "--gitcommithash", gitCommit,
-                    "--sonarRules", sonarRules,
-                    "--repairTools", SORALD_NAME,
-                    "--launcherMode", LauncherMode.GIT_REPOSITORY.name(),
-                    "--workspace", workspace,
-                    "--output", output));
 
-            if(System.getenv().containsKey("CREATE_FORK") && Boolean.parseBoolean(System.getenv().get("CREATE_FORK")))
-                launcherConfig.add("--createFork");
+                try {
+                    Launcher launcher = new Launcher(launcherConfig.toArray(new String[0]));
+                    launcher.mainProcess(); // what happens after this
+                } catch (JSAPException e) {
+                    throw new RuntimeException("Cannot create launcher.");
+                }
 
-            try {
-                Launcher launcher = new Launcher(launcherConfig.toArray(new String[0]));
-                launcher.mainProcess(); // what happens after this
-            } catch (JSAPException e) {
-                throw new RuntimeException("Cannot create launcher.");
+
             }
-
-
+            else {
+                throw new RuntimeException("Simple pipeline is not defined for feedback tools other than SOBO");
+            }
         }
-        else if(repairTool != null && repairTool.equals(SOBO_NAME)) {}
-        else {
-            throw new RuntimeException("Simple pipeline is not defined for repair tools other than Sorald");
+        else{
+            String repairTool = System.getenv("REPAIR_TOOL");
+
+            if (repairTool != null && repairTool.equals(SORALD_NAME)) {
+                if (!(b instanceof GithubInputBuild))
+                    throw new RuntimeException("The input build is not a github build");
+
+                GithubInputBuild githubInputBuild = (GithubInputBuild) b;
+                String sonarRules = System.getenv("SONAR_RULES"), gitUrl = githubInputBuild.getUrl(),
+                        gitCommit = githubInputBuild.getSha(),
+                        workspace = System.getenv().containsKey("WORKSPACE_FOLDER") ? System.getenv("WORKSPACE_FOLDER") :
+                                tmpWorkspaceFolder.toAbsolutePath().toString(),
+                        output = System.getenv().containsKey("OUTPUT_FOLDER") ? System.getenv("OUTPUT_FOLDER") :
+                                tmpOutputFolder.toAbsolutePath().toString();
+
+                List<String> launcherConfig = new ArrayList<String>(Arrays.asList(
+                        "--gitrepourl", gitUrl,
+                        "--gitcommithash", gitCommit,
+                        "--sonarRules", sonarRules,
+                        "--repairTools", SORALD_NAME,
+                        "--launcherMode", LauncherMode.GIT_REPOSITORY.name(),
+                        "--workspace", workspace,
+                        "--output", output));
+
+                if (System.getenv().containsKey("CREATE_FORK") && Boolean.parseBoolean(System.getenv().get("CREATE_FORK")))
+                    launcherConfig.add("--createFork");
+
+                try {
+                    Launcher launcher = new Launcher(launcherConfig.toArray(new String[0]));
+                    launcher.mainProcess(); // what happens after this
+                } catch (JSAPException e) {
+                    throw new RuntimeException("Cannot create launcher.");
+                }
+
+
+            }
+            else {
+                throw new RuntimeException("Simple pipeline is not defined for repair tools other than Sorald");
+            }
         }
     }
 }

@@ -24,7 +24,9 @@ import static fr.inria.spirals.repairnator.realtime.Constants.SORALD_NAME;
 
 public class GithubScanner {
     private final static Logger logger = LoggerFactory.getLogger(GithubScanner.class);
-
+    //TODO: You might not need this because the students won't have GA and
+    // this variable consider the time of the commit to prevent a "datarace"
+    // between GA and repairnator
     static long scanIntervalDelay = 60 * 60 * 1000; // 1 hour
     static long frequency = 60 * 60 * 1000; // 1 hour
 
@@ -46,7 +48,7 @@ public class GithubScanner {
             // a list of repos to be monitored online is provided
             Set<String> repos = new HashSet<>(FileUtils.readLines(new File(reposPath), "UTF-8"));
             FetchMode fetchMode = parseFetchMode();
-
+            // here is how we send the line to check the repos
             scanner.fetchAndProcessCommitsPeriodically(repos, fetchMode);
         } else {
             List<SelectedCommit> selectedCommits = readSelectedCommitsFromFile();
@@ -72,7 +74,7 @@ public class GithubScanner {
             }
         }
     }
-
+    //TODO: CREATE THE FEEDBACK PATH TO CONNECT THE ELEMENTS
     private void processSelectedCommits(List<SelectedCommit> selectedCommits) {
         for (int i = 0; i < selectedCommits.size(); i++) {
             SelectedCommit commit = selectedCommits.get(i);
@@ -89,37 +91,52 @@ public class GithubScanner {
                 .collect(Collectors.toList());
     }
 
+    // If you want to monitor... certain commits in a period of time you used this,
+    // in SOBO we will not have the list of commits, we will find for the new commits
     public List<SelectedCommit> fetch(FetchMode fetchMode, Set<String> repos) throws Exception {
         long endTime = System.currentTimeMillis() - scanIntervalDelay;
 //        long startTime = endTime - scanIntervalLength;
         long startTime = lastFetchedTime < 0 ? scanStartTime : lastFetchedTime;
 
+        //TODO: fix the overload in the fetch method
         List<SelectedCommit> commits = fetch(startTime, endTime, fetchMode, repos);
         lastFetchedTime = endTime;
         return commits;
     }
 
+    //TODO: ADD FEEDBACK STEP + SOBO-Bot integration
     public void setup() {
         Set<String> repairTools = new HashSet();
-        String repairTool = getEnvOrDefault("REPAIR_TOOL", SEQUENCER_NAME);
-        repairTools.add(repairTool);
-        RepairnatorConfig.getInstance().setRepairTools(repairTools);
-
+        Set<String> feedbackTools = new HashSet();
+        String launcherMode=getEnvOrDefault("launcherMode", "REPAIR");
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
 
-        if (repairTool.equals(SORALD_NAME)) {
+        if (launcherMode.equals("FEEDBACK")){
+            // Donde se está llamando al Launcher?
+            String feedbackTool = getEnvOrDefault("FEEDBACK_TOOL", "SoboBot");
+            feedbackTools.add(feedbackTool);
+            RepairnatorConfig.getInstance().setFeedbackTools(feedbackTools);
             runner = new SimplePipelineRunner();
-        } else if (repairTool.equals(SEQUENCER_NAME)) {
-            RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
+            runner.initRunner();
+        }else{
+            String repairTool = getEnvOrDefault("REPAIR_TOOL", SEQUENCER_NAME);
+            repairTools.add(repairTool);
+            RepairnatorConfig.getInstance().setRepairTools(repairTools);
+            if (repairTool.equals(SORALD_NAME)) {
+                runner = new SimplePipelineRunner();
+            } else if (repairTool.equals(SEQUENCER_NAME)) {
+                RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
 
-            RepairnatorConfig.getInstance().setNbThreads(16);
+                RepairnatorConfig.getInstance().setNbThreads(16);
 
-            RepairnatorConfig.getInstance().setPipelineMode(RepairnatorConfig.PIPELINE_MODE.DOCKER.name());
-            RepairnatorConfig.getInstance().setDockerImageName(System.getenv("DOCKER_IMAGE_NAME"));
-            runner = new DockerPipelineRunner();
+                RepairnatorConfig.getInstance().setPipelineMode(RepairnatorConfig.PIPELINE_MODE.DOCKER.name());
+                RepairnatorConfig.getInstance().setDockerImageName(System.getenv("DOCKER_IMAGE_NAME"));
+                runner = new DockerPipelineRunner();
+            }
+
+            runner.initRunner();
+
         }
-
-        runner.initRunner();
 
         try {
             if (System.getenv().containsKey("SCAN_START_TIME"))

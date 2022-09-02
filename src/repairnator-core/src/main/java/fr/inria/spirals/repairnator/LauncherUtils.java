@@ -172,7 +172,7 @@ public class LauncherUtils {
             config.setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
         } else if (LauncherUtils.getArgFaultLocalizationMode(arguments)) {
             config.setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
-        } else if (LauncherUtils.getArgFeedbackMode(arguments)){ // TODO: add FEEDBACK variable
+        } else if (LauncherUtils.getArgLauncherMode(arguments).equals("FEEDBACK")){ // TODO: add FEEDBACK variable
             config.setLauncherMode(LauncherMode.FEEDBACK);
         }
         else {
@@ -180,12 +180,13 @@ public class LauncherUtils {
         }
 
 
-        if (LauncherUtils.getArgDebug(arguments)) {
+        /**if (LauncherUtils.getArgDebug(arguments)) {
             config.setDebug(true);
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
         }
+         */
         config.setClean(true);
         config.setRunId(LauncherUtils.getArgRunId(arguments));
         config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
@@ -397,6 +398,11 @@ public class LauncherUtils {
     public static boolean getArgFeedbackMode(JSAPResult arguments) {
         return arguments.getBoolean("feedback");
     }
+
+    public static String getArgLauncherMode(JSAPResult arguments) {
+            return arguments.getString("launcherMode");
+    }
+
 
     private static FlaggedOption defineArgFeedbackTools() {
         FlaggedOption opt = new FlaggedOption("feedbackTools");

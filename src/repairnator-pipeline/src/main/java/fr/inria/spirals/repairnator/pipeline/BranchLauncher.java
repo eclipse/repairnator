@@ -36,11 +36,12 @@ public class BranchLauncher implements LauncherAPI{
 		JSAPResult result = jsap.parse(args);
 		LauncherUtils.initCommonConfig(getConfig(), result);
 
-		mainProcess = getMainProcess(args);
+		mainProcess = getMainProcess(args, result);
 	}
 
 
 	/* This should be only those args necessary to construct the correct launcher */
+	//TODO FIX THIS
 	public static JSAP defineBasicArgs() throws JSAPException {
 		JSAP jsap = new JSAP();
 
@@ -62,11 +63,11 @@ public class BranchLauncher implements LauncherAPI{
         return jsap;
 	}
 
-	public static MainProcess getMainProcess(String[] args) throws JSAPException{
-		JSAP jsap = defineBasicArgs();
-		JSAPResult jsapResult = jsap.parse(args);
+	public static MainProcess getMainProcess(String [] args, JSAPResult parse_args) throws JSAPException{
+		//JSAP jsap = new JSAP();
+		//JSAPResult jsapResult = jsap.parse(args);
 
-		String launcherMode = jsapResult.getString("launcherMode");
+		String launcherMode = parse_args.getString("launcherMode");
 
 		if (launcherMode.equals(LauncherMode.REPAIR.name())) {
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);

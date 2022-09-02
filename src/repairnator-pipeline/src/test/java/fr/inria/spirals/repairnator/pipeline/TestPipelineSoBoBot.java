@@ -15,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestPipelineSoBoBot {
     @Rule
@@ -43,8 +42,10 @@ public class TestPipelineSoBoBot {
         });
 
         // config is forced to use SoraldBot as the only repair tool.
+        assertEquals(0, launcher.getConfig().getRepairTools().size());
         assertEquals(1, launcher.getConfig().getFeedbackTools().size());
-        assertTrue(launcher.getConfig().getRepairTools().contains("SoboBot"));
+        assertTrue(launcher.getConfig().getFeedbackTools().contains("SoboBot"));
+        assertFalse(launcher.getConfig().getRepairTools().contains("SoboBot"));
 
         Patches patchNotifier = new Patches();
         launcher.setPatchNotifier(patchNotifier);
@@ -53,7 +54,7 @@ public class TestPipelineSoBoBot {
 
         List<AbstractStep> steps =  launcher.getInspector().getSteps()
                 .stream()
-                .filter(step -> step.getName().equals("SoraldBot"))
+                .filter(step -> step.getName().equals("SoboBot"))
                 .collect(Collectors.toList()); //test fix sorald-bot repair
 
         assertEquals(1, steps.size());
