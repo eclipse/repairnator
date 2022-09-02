@@ -256,9 +256,8 @@ public class PatchFilter {
             URL u = new URL(urlStr);
             data = IOUtils.toString(u,"UTF-8");
         }catch (Exception e){
-            System.out.println("message"+e.getMessage());
-            System.out.println("cause"+ e.getCause().toString());
-            throw new RuntimeException("Error while reading file from URL:" + urlStr + " -- type: " + e.getClass().getName());
+
+            throw new RuntimeException("Error while reading file from URL:" + urlStr + " -- type: " + e.getClass().getName() +" --message "+e.getMessage()+" --cause "+ e.getCause().toString()));
         }
         return data;
     }
