@@ -55,7 +55,7 @@ public class TestSequencerCollector {
         
         
         //Mock hunk filter since mock commit is used
-        Mockito.when(filter.getCommitPatches(Mockito.any(GHCommit.class), Mockito.anyBoolean(), Mockito.anyInt(), Mockito.any(Map.class)))
+        Mockito.when(filter.getCommitPatches(Mockito.any(GHCommit.class), Mockito.anyBoolean(), Mockito.anyInt(), Mockito.any(Map.class),mockRepo))
                 .thenReturn(emptyList);
         Mockito.when(filter.getHunks(Mockito.any(ArrayList.class), Mockito.anyBoolean(), Mockito.anyInt())).thenReturn(mockHunkList);
         
