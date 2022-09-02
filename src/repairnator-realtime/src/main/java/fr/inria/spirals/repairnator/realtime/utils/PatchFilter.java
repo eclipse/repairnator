@@ -245,13 +245,19 @@ public class PatchFilter {
         return ret;
     }
 
+    /**
+     * Method to get a file from a GitHub repository using its URL path
+     * @param urlStr path of the file
+     * @return the data in the file as plain text
+     */
     String readFromURL(String urlStr){
         String data;
         try {
             URL u = new URL(urlStr);
             data = IOUtils.toString(u,"UTF-8");
         }catch (Exception e){
-            throw new RuntimeException("Error while reading file from URL:" + urlStr);
+
+            throw new RuntimeException("Error while reading file from URL:" + urlStr + " -- type: " + e.getClass().getName());
         }
         return data;
     }
