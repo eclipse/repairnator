@@ -50,52 +50,23 @@ public abstract class AbstractFeedbackStep extends AbstractStep {
 
     public void setProjectInspector(ProjectInspector inspector) {
         super.setProjectInspector(inspector);
-        this.setName(this.getRepairToolName());
+        this.setName(this.getFeedbackToolName());
     }
 
     @Override
     public void execute() {
-        if (this.getConfig().getRepairTools().contains(this.getRepairToolName())) {
+        if (this.getConfig().getFeedbackTools().contains(this.getFeedbackToolName())) {
             super.execute();
         } else {
-            this.getLogger().warn("Skipping repair step "+this.getRepairToolName());
+            this.getLogger().warn("Skipping feedback step "+this.getFeedbackToolName());
             this.getInspector().getJobStatus().addStepStatus(StepStatus.buildSkipped(this,"Not configured to run."));
             super.executeNextStep();
         }
     }
 
-    protected List<File> serializePatches(List<RepairPatch> patchList) throws IOException {
-        File parentDirectory = new File(this.getInspector().getRepoToPushLocalPath(), DEFAULT_DIR_PATCHES);
-        if (!parentDirectory.exists()) {
-            parentDirectory.mkdirs();
-        }
 
-        File toolDirectory = new File(parentDirectory, this.getRepairToolName());
-        toolDirectory.mkdirs();
 
-        List<File> serializedPatches = new ArrayList<>();
-        int i = 1;
-        String dirPath = DEFAULT_DIR_PATCHES + "/" + this.getRepairToolName() + "/";
-        for (RepairPatch repairPatch : patchList) {
-            File patchFile = new File(toolDirectory, "patch_" + (i++) + ".patch");
-            BufferedWriter bufferedWriter = Files.newBufferedWriter(patchFile.toPath());
-            bufferedWriter.write(repairPatch.getDiff());
-            bufferedWriter.close();
-            this.getInspector().getJobStatus().addFileToPush(dirPath + patchFile.getName());
-            serializedPatches.add(patchFile);
-        }
 
-        return serializedPatches;
-    }
-
-    protected void notify(List<RepairPatch> patches) {
-        this.forkRepository();
-
-        PatchNotifier patchNotifier = this.getInspector().getPatchNotifier();
-        if (patchNotifier != null) {
-            patchNotifier.notify(this.getInspector(), this.getRepairToolName(), patches);
-        }
-    }
 
     protected void setPrText(String prText) {
         this.prText = prText;
@@ -161,31 +132,7 @@ public abstract class AbstractFeedbackStep extends AbstractStep {
         return patchList;
     }
 
-    protected void recordPatches(List<RepairPatch> patchList,int patchNbsLimit) {
-        this.getInspector().getJobStatus().addPatches(this.getRepairToolName(), patchList);
 
-        if (!patchList.isEmpty()) {
-            this.getInspector().getJobStatus().setHasBeenPatched(true);
-            List<File> serializedPatches = null;
-            try {
-                serializedPatches = this.serializePatches(patchList);
-            } catch (IOException e) {
-                this.addStepError("Error while serializing patches", e);
-            }
-            if (this.getConfig().isCreatePR()) {
-                if (serializedPatches != null) {
-                    try {
-                        this.performStandardPRCreation(serializedPatches,patchNbsLimit);
-                    } catch (IOException | GitAPIException | URISyntaxException e) {
-                        this.addStepError("Error while creating the PR", e);
-                    }
-                } else {
-                    this.addStepError("No file has been serialized, so no PR will be created");
-                }
-            }
-            this.notify(patchList);
-        }
-    }
 
     protected void performStandardPRCreation(List<File> patchList,int nbPatch) throws IOException, GitAPIException, URISyntaxException {
         String newBranch = "repairnator-patch-" + DateUtils.formatFilenameDate(new Date());
@@ -308,8 +255,8 @@ public abstract class AbstractFeedbackStep extends AbstractStep {
     }
 
     protected void recordToolDiagnostic(JsonElement element) {
-        this.getInspector().getJobStatus().addToolDiagnostic(this.getRepairToolName(), element);
+        this.getInspector().getJobStatus().addToolDiagnostic(this.getFeedbackToolName(), element);
     }
 
-    public abstract String getRepairToolName();
+    public abstract String getFeedbackToolName();
 }

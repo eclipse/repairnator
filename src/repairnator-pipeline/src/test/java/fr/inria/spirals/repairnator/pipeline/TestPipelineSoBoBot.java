@@ -32,8 +32,8 @@ public class TestPipelineSoBoBot {
     @Test
     public void TestPipelineSoboFeedbackTool() throws Exception {
         Launcher launcher = new Launcher(new String[]{
-                "--gitrepourl", "https://github.com/khaes-kth/Sorald-CI-Sample",
-                "--gitcommithash", "e2e0e568412cd05efb4475715f457473b3777437",
+                "--gitrepourl", "https://gits-15.sys.kth.se/sofbob/test-inda-repo.git",
+                //"--gitcommithash", "e2e0e568412cd05efb4475715f457473b3777437",
                 "--sonarRules", "S109",
                 "--feedbackTools", "SoboBot",
                 "--launcherMode", "FEEDBACK", //not sure if feedback or git_repository
@@ -47,26 +47,15 @@ public class TestPipelineSoBoBot {
         assertTrue(launcher.getConfig().getFeedbackTools().contains("SoboBot"));
         assertFalse(launcher.getConfig().getRepairTools().contains("SoboBot"));
 
-        Patches patchNotifier = new Patches();
-        launcher.setPatchNotifier(patchNotifier);
 
         launcher.mainProcess();
 
-        List<AbstractStep> steps =  launcher.getInspector().getSteps()
+        List<AbstractStep> steps = launcher.getInspector().getSteps()
                 .stream()
                 .filter(step -> step.getName().equals("SoboBot"))
                 .collect(Collectors.toList()); //test fix sorald-bot repair
 
         assertEquals(1, steps.size());
-        assertEquals(1, patchNotifier.allpatches.size());
     }
 
-    class Patches implements PatchNotifier {
-        List<RepairPatch> allpatches = new ArrayList<>();
-
-        @Override
-        public void notify(ProjectInspector inspector, String toolname, List<RepairPatch> patches) {
-            allpatches.addAll(patches);
-        }
-    }
 }

@@ -77,6 +77,24 @@ public class SoraldAdapter {
         Main.main(args);
     }
 
+    //TODO: just add the output file and use it in the server
+
+    /**
+     * Method to use the mine call in sorald
+     * @param rule rule or rules to mine
+     * @param repoDir repo to mine
+     * @param outputFile name of the exist Json file with the data
+     */
+    public void mine(String rule, File repoDir, String outputFile) {
+        String[] args = new String[]{
+                Constants.MINE_COMMAND_NAME,
+                Constants.ARG_SOURCE, repoDir.getPath(),
+                Constants.ARG_RULE_KEYS, rule,
+                Constants.ARG_STATS_OUTPUT_FILE,outputFile};
+
+        Main.main(args);
+    }
+
     /**
      * @return A map from ruleNumber to the set of files with more violation locations in the new version.
      */

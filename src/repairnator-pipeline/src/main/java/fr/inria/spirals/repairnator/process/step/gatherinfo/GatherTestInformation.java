@@ -53,7 +53,7 @@ public class GatherTestInformation extends AbstractStep {
      * A contract is asked to know if the step should find test failure or if everything must pass. Moreover, this step send by default
      * information to the JobStatus, but it can be skipping by setting the boolean to true.
      *
-     * @param inspector                    The inspector responsible of the step pipeline
+     * @param inspector                    The inspector responsible for the step pipeline
      * @param contract                     The contract to know in which case the step should stop the pipeline
      * @param skipSettingStatusInformation If set to true, the step won't push any information to the JobStatus of the inspector.
      */
