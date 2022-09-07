@@ -1,5 +1,4 @@
 # Documentation of Repairnator
-# Documentation of Repairnator
 
 This directory provides the official documentation about the Repairnator project.
 
@@ -22,7 +21,16 @@ A first way to contribute is to look at the label [good-first-issue](https://git
 
 ## Running Repairnator
 
-### Command line
+### Command line (pure Java)
+
+To fix a specific Travis CI build, eg <https://app.travis-ci.com/github/repairnator/failingProject/builds/224246334>
+
+```
+cd src/repairnator-pipeline
+mvn exec:java -Dexec.mainClass=fr.inria.spirals.repairnator.pipeline.Launcher -Dexec.args="--buildId=235838150"
+```
+
+### Command line (docker)
 
 To fix a specific Travis CI build:
 
