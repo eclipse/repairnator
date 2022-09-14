@@ -81,15 +81,16 @@ public class SoraldAdapter {
 
     /**
      * Method to use the mine call in sorald
-     * @param rule rule or rules to mine
+     * @param rules rule or rules to mine
      * @param repoDir repo to mine
      * @param outputFile name of the exist Json file with the data
      */
-    public void mine(String rule, File repoDir, String outputFile) {
+    public void mine(String rules, File repoDir, String outputFile) {
+        String path=repoDir.getPath();
         String[] args = new String[]{
                 Constants.MINE_COMMAND_NAME,
                 Constants.ARG_SOURCE, repoDir.getPath(),
-                Constants.ARG_RULE_KEYS, rule,
+                Constants.ARG_RULE_KEYS, rules,
                 Constants.ARG_STATS_OUTPUT_FILE,outputFile};
 
         Main.main(args);
