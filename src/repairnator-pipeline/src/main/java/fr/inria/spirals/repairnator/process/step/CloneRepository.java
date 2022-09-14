@@ -1,12 +1,19 @@
 package fr.inria.spirals.repairnator.process.step;
 
 import fr.inria.jtravis.entities.Build;
+import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.states.PipelineState;
+import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by urli on 03/01/2017.
@@ -17,23 +24,41 @@ public class CloneRepository extends AbstractStep {
 
     public CloneRepository(ProjectInspector inspector) {
         super(inspector, true);
-        this.build = inspector.getBuggyBuild();
     }
 
     @Override
     protected StepStatus businessExecute() {
-        String repoSlug = this.build.getRepository().getSlug();
-        String repoRemotePath = Utils.getCompleteGithubRepoUrl(repoSlug);
-        String repoLocalPath = this.getInspector().getRepoLocalPath();
+        GitRepositoryProjectInspector githubInspector;
 
         try {
-            this.getLogger().debug("Cloning repository " + repoSlug + " in the following directory: " + repoLocalPath);
+            githubInspector = (GitRepositoryProjectInspector) getInspector();
+        } catch (Exception ex) {
+            this.addStepError("Problem with calling the inspector");
+            return StepStatus.buildError(this, PipelineState.NOTCLONABLE);
+        }
+        String branch = null;
+        if (githubInspector.getGitRepositoryBranch() != null) {
+            branch = "refs/heads/" + githubInspector.getGitRepositoryBranch();
+        }
+        String repoUrl = githubInspector.getGitRepositoryUrl() + ".git";
+        String repoLocalPath = githubInspector.getRepoLocalPath();
+        try {
+            this.getLogger().info("Cloning repository " + repoUrl + " in the following directory: " + repoLocalPath);
 
-            Git.cloneRepository().setCloneSubmodules(true).setURI(repoRemotePath).setDirectory(new File(repoLocalPath)).call();
+
+            FileUtils.deleteDirectory(new File(repoLocalPath));
+
+            CloneCommand cloneRepositoryCommand = Git.cloneRepository()
+                    .setCloneSubmodules(true)
+                    .setURI(repoUrl)
+                    .setDirectory(new File(repoLocalPath));
+
+            Git git = cloneRepositoryCommand.call();
+            Repository repository = git.getRepository();
 
             return StepStatus.buildSuccess(this);
         } catch (Exception e) {
-            this.addStepError("Repository " + repoSlug + " cannot be cloned.", e);
+            this.addStepError("Repository " + repoUrl + " cannot be cloned.", e);
             return StepStatus.buildError(this, PipelineState.NOTCLONABLE);
         }
     }

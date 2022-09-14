@@ -112,7 +112,7 @@ public class RepairnatorConfig {
     private String gitRepositoryUrl;
     private String gitRepositoryBranch;
     private String gitRepositoryIdCommit;
-    private boolean gitRepositoryFirstCommit;
+    private boolean gitRepositoryFirstCommit = false;
     private Integer gitRepositoryPullRequest;
 
     private String[] sonarRules;
