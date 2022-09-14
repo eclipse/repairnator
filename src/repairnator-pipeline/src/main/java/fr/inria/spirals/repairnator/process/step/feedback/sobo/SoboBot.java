@@ -4,22 +4,21 @@ import com.google.common.collect.Lists;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.feedback.AbstractFeedbackStep;
+import fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldAdapter;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldBot;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.models.SoraldTargetCommit;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class SoboBot extends AbstractFeedbackStep {
-    String repo;
+    String repoName;
     private SoraldTargetCommit commit;
     private String originalBranchName;
     private String workingRepoPath;
@@ -45,12 +44,31 @@ public class SoboBot extends AbstractFeedbackStep {
     protected StepStatus businessExecute() {
         boolean successfulInit= init();
         //mine the repo, fetch the output file, send the commit
-        getLogger().info("Working on: " + commit+ " -- On repo: " +repo);
+        getLogger().info("Working on: " + commit.getCommitId()+ " -- On repo: " +commit.getRepoName() );
         if (!successfulInit) {
             return StepStatus.buildSkipped(this, "Error while sending feedback with Sobo");
         }
 
         RepairnatorConfig debug = getConfig();
+        String rules = "S109,S1155,S1481";//Arrays.asList(RepairnatorConfig.getInstance().getSonarRules());
+        getLogger().info("Working on: " + commit.getCommitUrl() + " " + commit.getCommitId() + " " );
+        String dir =getInspector().getWorkspace()+"\\stats.json";
+        try{
+
+            Git git = getInspector().openAndGetGitObject();
+            Repository repo=git.getRepository();
+            String exitFile=commit.getRepoName()+"-"+commit.getCommitId()+"-stat.json";
+            SoraldAdapter.getInstance(getInspector().getWorkspace()).mine(rules,repo.getDirectory().getParentFile(),dir);
+            //parse the exit file
+            // send the data to the DB
+            // make a request to the database
+            //create the issue
+
+
+        } catch (Exception e) {
+            return StepStatus.buildSkipped(this, "Error while mining with Sorald");
+        }
+
 
         return StepStatus.buildSuccess(this);
     }
@@ -93,5 +111,9 @@ public class SoboBot extends AbstractFeedbackStep {
                     .filter(b -> b.equals("master") || b.equals("main") || b.contains("/master") || b.contains("/main")).findAny();
 
             return selectedBranch.isPresent() ? selectedBranch.get() : containingBranches.iterator().next();
+        }
+
+        public void extractViolations(){
+
         }
 }
