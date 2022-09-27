@@ -64,12 +64,32 @@ public class BuildRainer extends WebSocketClient implements BuildSubmitter{
     @Override
     public void onMessage( String message ) {
         if (isJSONValid(message)) {
-            JSONObject obj = new JSONObject(message);
-            String state = obj.getJSONObject("data").getString("state");
-            String language = obj.getJSONObject("data").getJSONObject("config").getString("language");
+            JSONObject obj = null;
+            try {
+                obj = new JSONObject(message);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String state = null;
+            try {
+                state = obj.getJSONObject("data").getString("state");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String language = null;
+            try {
+                language = obj.getJSONObject("data").getJSONObject("config").getString("language");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             if (state.equals("failed") && language.equals("java")) {
                 LOGGER.info("state: " + state + " language: " + language);
-                int build_id = obj.getJSONObject("data").getInt("build_id");
+                int build_id = 0;
+                try {
+                    build_id = obj.getJSONObject("data").getInt("build_id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 this.submitBuild(new TravisInputBuild(build_id));
             }
         }
