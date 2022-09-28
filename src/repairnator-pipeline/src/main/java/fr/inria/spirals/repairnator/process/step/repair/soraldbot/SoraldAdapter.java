@@ -94,6 +94,7 @@ public class SoraldAdapter {
                 Constants.ARG_STATS_OUTPUT_FILE,outputFile};
 
         Main.main(args);
+
     }
 
     /**
@@ -104,6 +105,7 @@ public class SoraldAdapter {
         File copyRepoDir = new File(tmpdir + File.separator + "copy_repo");
         if (copyRepoDir.exists())
             FileUtils.deleteDirectory(copyRepoDir);
+
 
         copyRepoDir.mkdirs();
 
