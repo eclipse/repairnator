@@ -49,7 +49,7 @@ public class SoboBot extends AbstractFeedbackStep {
             return StepStatus.buildSkipped(this, "Error while sending feedback with Sobo");
         }
 
-        RepairnatorConfig debug = getConfig();
+
         String rules = "S109,S1155,S1481";//Arrays.asList(RepairnatorConfig.getInstance().getSonarRules());
         getLogger().info("Working on: " + commit.getCommitUrl() + " " + commit.getCommitId() + " " );
         String dir =getInspector().getWorkspace()+"\\stats.json";
@@ -57,12 +57,20 @@ public class SoboBot extends AbstractFeedbackStep {
 
             Git git = getInspector().openAndGetGitObject();
             Repository repo=git.getRepository();
+            String userName = getUserName(commit.getRepoName());
+            String task= getTask(commit.getRepoName());
             String exitFile=commit.getRepoName()+"-"+commit.getCommitId()+"-stat.json";
+            System.out.println(System.getProperty("user.dir"));
             SoraldAdapter.getInstance(getInspector().getWorkspace()).mine(rules,repo.getDirectory().getParentFile(),dir);
+
+            SoboAdapter.getInstance(getInspector().getWorkspace()).readExitFile(dir,commit.getCommitId(),userName,task);
+
+
             //parse the exit file
             // send the data to the DB
             // make a request to the database
-            //create the issue
+            //create the issue                              //String commit, String user, String task, ProjectInspector inspector
+            SoboAdapter.getInstance(getInspector().getWorkspace()).getMostCommonRule(commit.getCommitId(),userName,task,getInspector() );
 
 
         } catch (Exception e) {
@@ -113,7 +121,42 @@ public class SoboBot extends AbstractFeedbackStep {
             return selectedBranch.isPresent() ? selectedBranch.get() : containingBranches.iterator().next();
         }
 
-        public void extractViolations(){
+        public String getUserName(String repoName){
+            char[] chars = repoName.toCharArray();
+            String user="";
+            int index = repoName.indexOf("inda-");
+            if (index!=-1){
+                for(int i =index+8;i< chars.length;i++){
+                    if(chars[i]=='-'){
+                        return user;
+                    }
+                    user+=chars[i];
+
+                }
+                return user;
+            }
+            index = repoName.indexOf('/');
+
+            for(int i =0;i<index;i++){
+                user+=chars[i];
+            }
+            return user;
 
         }
+    public String getTask(String repoName){
+        String task="";
+        char[] chars = repoName.toCharArray();
+
+        // iterate over `char[]` array using enhanced for-loop
+
+        int index = repoName.indexOf("task-");
+        if (index==-1){
+            return task;
+        }
+        for(int i =index;i< chars.length;i++){
+            task+=chars[i];
+        }
+        return task;
+
+    }
 }
