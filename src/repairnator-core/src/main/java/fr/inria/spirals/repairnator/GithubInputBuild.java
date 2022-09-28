@@ -35,7 +35,14 @@ public class GithubInputBuild implements InputBuild {
     }
 
     public String getSlug() {
-        return url.split("https://github.com/",2)[1];
+        try{
+            String slug=url.split("https://github.com/",2)[1];
+            return slug;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String slug=url.split("https://gits-15.sys.kth.se/",2)[1];
+        return slug;
     }
 
     public Integer getPr() {
