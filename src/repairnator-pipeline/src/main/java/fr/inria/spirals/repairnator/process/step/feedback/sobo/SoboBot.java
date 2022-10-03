@@ -55,14 +55,26 @@ public class SoboBot extends AbstractFeedbackStep {
         String dir =getInspector().getWorkspace()+"\\stats.json";
         try{
 
+
             Git git = getInspector().openAndGetGitObject();
             Repository repo=git.getRepository();
             String userName = getUserName(commit.getRepoName());
             String task= getTask(commit.getRepoName());
-            String exitFile=commit.getRepoName()+"-"+commit.getCommitId()+"-stat.json";
-            System.out.println(System.getProperty("user.dir"));
+
+            if(System.getenv("command")!=null){
+                // get Main Issue
+                //get the comment - command
+                //execute
+                SoboAdapter.getInstance(getInspector().getWorkspace()).getMainIssue(getInspector());
+
+
+            }
+            else{
+
+            getLogger().info("Mining Sonar Rules");
             SoraldAdapter.getInstance(getInspector().getWorkspace()).mine(rules,repo.getDirectory().getParentFile(),dir);
 
+            getLogger().info("Catching mining File and sending the data to MongoDB");
             SoboAdapter.getInstance(getInspector().getWorkspace()).readExitFile(dir,commit.getCommitId(),userName,task);
 
 
@@ -70,7 +82,7 @@ public class SoboBot extends AbstractFeedbackStep {
             // send the data to the DB
             // make a request to the database
             //create the issue                              //String commit, String user, String task, ProjectInspector inspector
-            SoboAdapter.getInstance(getInspector().getWorkspace()).getMostCommonRule(commit.getCommitId(),userName,task,getInspector() );
+            SoboAdapter.getInstance(getInspector().getWorkspace()).getMostCommonRule(commit.getCommitId(),userName,task,getInspector() );}
 
 
         } catch (Exception e) {
