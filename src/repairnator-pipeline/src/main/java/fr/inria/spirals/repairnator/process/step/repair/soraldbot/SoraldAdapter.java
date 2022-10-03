@@ -86,10 +86,9 @@ public class SoraldAdapter {
      * @param outputFile name of the exist Json file with the data
      */
     public void mine(String rules, File repoDir, String outputFile) {
-        String path=repoDir.getPath();
         String[] args = new String[]{
                 Constants.MINE_COMMAND_NAME,
-                Constants.ARG_SOURCE, repoDir.getPath(),
+               Constants.ARG_SOURCE, repoDir.getPath(),
                 Constants.ARG_RULE_KEYS, rules,
                 Constants.ARG_STATS_OUTPUT_FILE,outputFile};
 

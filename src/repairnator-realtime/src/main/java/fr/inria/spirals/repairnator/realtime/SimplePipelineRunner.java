@@ -50,8 +50,8 @@ public class SimplePipelineRunner implements PipelineRunner {
                 List<String> launcherConfig = new ArrayList<String>(Arrays.asList(
                         "--gitrepourl", gitUrl,
                         "--gitcommithash", gitCommit,
-                        "--sonarRules", sonarRules,
-                        "--repairTools", SOBO_NAME,
+                        "--sonarRules", "S109",
+                        "--feedbackTools", SOBO_NAME,
                         "--launcherMode", LauncherMode.FEEDBACK.name(),
                         "--workspace", workspace,
                         "--output", output));

@@ -6,10 +6,12 @@ import fr.inria.spirals.repairnator.utils.Utils;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.states.PipelineState;
 import org.apache.commons.io.FileUtils;
+import org.apache.http.client.UserTokenHandler;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,10 +53,14 @@ public class CloneRepository extends AbstractStep {
             CloneCommand cloneRepositoryCommand = Git.cloneRepository()
                     .setCloneSubmodules(true)
                     .setURI(repoUrl)
-                    .setDirectory(new File(repoLocalPath));
-
-            Git git = cloneRepositoryCommand.call();
-            Repository repository = git.getRepository();
+                    .setDirectory(new File(repoLocalPath))
+                    ;
+            String auth=System.getenv("GOAUTH");
+            if(auth!=null){
+                cloneRepositoryCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(
+                        System.getenv("GOAUTH"),""));
+            }
+            cloneRepositoryCommand.call();
 
             return StepStatus.buildSuccess(this);
         } catch (Exception e) {

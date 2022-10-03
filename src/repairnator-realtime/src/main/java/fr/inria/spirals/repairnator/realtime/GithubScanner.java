@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.spirals.repairnator.GithubInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.step.feedback.sobo.SoboAdapter;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.GithubAPICommitAdapter;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
 import fr.inria.spirals.repairnator.states.LauncherMode;
@@ -43,7 +44,6 @@ public class GithubScanner {
         GithubScanner scanner = new GithubScanner();
 
         String reposPath = System.getenv("REPOS_PATH");
-
         if (reposPath != null) {
             // a list of repos to be monitored online is provided
             Set<String> repos = new HashSet<>(FileUtils.readLines(new File(reposPath), "UTF-8"));
@@ -154,10 +154,15 @@ public class GithubScanner {
     }
 
     public void process(SelectedCommit commit) {
-        String url = "https://github.com/" + commit.getRepoName();
         String sha = commit.getCommitId();
+        if(System.getenv("FEEDBACK_TOOL").equals("SoboBot")){
+            String url = "https://gits-15.sys.kth.se/" + commit.getRepoName();
+            runner.submitBuild(new GithubInputBuild(url, null, sha));
 
-        runner.submitBuild(new GithubInputBuild(url, null, sha));
+        }else{
+        String url = "https://github.com/" + commit.getRepoName();
+
+        runner.submitBuild(new GithubInputBuild(url, null, sha));}
     }
 
     private static String getEnvOrDefault(String name, String dfault) {
@@ -179,6 +184,18 @@ public class GithubScanner {
             default:
                 return FetchMode.FAILED;
         }
+    }
+    private static String getPath(String drl, String whereIAm) {
+        System.out.println("Looking for :" + drl+ " in :" + whereIAm);
+        File dir = new File(whereIAm);
+        for(File e : dir.listFiles()) {
+            if(!e.isDirectory() && e.getName().equals(drl)) {return e.getPath();}
+            if(e.isDirectory()) {
+                String idiot = getPath(drl, e.getPath());
+                if(idiot != null) {return idiot;}
+            }
+        }
+        return null;
     }
 
     public enum FetchMode {
