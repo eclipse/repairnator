@@ -39,7 +39,7 @@ public class GithubInputBuild implements InputBuild {
             String slug=url.split("https://github.com/",2)[1];
             return slug;
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Not a public Github project");;
         }
         String slug=url.split("https://gits-15.sys.kth.se/",2)[1];
         return slug;

@@ -978,9 +978,21 @@ public class RepairnatorConfig {
     }
 
     public String getGitRepositoryId() {
-		return getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
-				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
-				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+        try {
+            String repoId= getGitRepositoryUrl().split("https://gits-15.sys.kth.se/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
+                    (getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
+                    (isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+            return repoId;
+
+        } catch (Exception e) {
+            System.out.println("Repo ot found in KTH Github server");
+        }
+        String repoId= getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
+                (getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
+                (isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+        return repoId;
+
+
     }
 
     public String getJTravisEndpoint() {
