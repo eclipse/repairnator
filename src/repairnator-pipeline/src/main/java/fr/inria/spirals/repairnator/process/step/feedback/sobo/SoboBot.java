@@ -2,6 +2,7 @@ package fr.inria.spirals.repairnator.process.step.feedback.sobo;
 
 import com.google.common.collect.Lists;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
+import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.feedback.AbstractFeedbackStep;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldAdapter;
@@ -24,6 +25,13 @@ public class SoboBot extends AbstractFeedbackStep {
     private String workingRepoPath;
     private static final String REPO_PATH = "tmp_repo";
 
+    public SoboBot(ProjectInspector inspector) {
+        super(inspector, true);
+    }
+    public SoboBot() {
+        super();
+    }
+
     /**
      * {@return if the initialization is successful}
      */
@@ -42,55 +50,69 @@ public class SoboBot extends AbstractFeedbackStep {
 
     @Override
     protected StepStatus businessExecute() {
-        boolean successfulInit= init();
-        //mine the repo, fetch the output file, send the commit
-        getLogger().info("Working on: " + commit.getCommitId()+ " -- On repo: " +commit.getRepoName() );
-        if (!successfulInit) {
-            return StepStatus.buildSkipped(this, "Error while sending feedback with Sobo");
+        Git git = null;
+        try {
+            git = getInspector().openAndGetGitObject();
+        } catch (IOException e) {
+            getInspector().getLogger().info("Not able to open GitHub Object");
         }
+        Repository repo = git.getRepository();
+        String userName = getUserName(getInspector().getRepoSlug());
+        String task = getTask(getInspector().getRepoSlug());
 
 
-        String rules = "S109,S1155,S1481";//Arrays.asList(RepairnatorConfig.getInstance().getSonarRules());
-        getLogger().info("Working on: " + commit.getCommitUrl() + " " + commit.getCommitId() + " " );
-        String dir =getInspector().getWorkspace()+"\\stats.json";
-        try{
+        boolean checkUser = SoboAdapter.getInstance(getInspector().getWorkspace()).checkUser(userName);
 
-
-            Git git = getInspector().openAndGetGitObject();
-            Repository repo=git.getRepository();
-            String userName = getUserName(commit.getRepoName());
-            String task= getTask(commit.getRepoName());
-
-            if(System.getenv("command")!=null){
-                // get Main Issue
-                //get the comment - command
-                //execute
-                SoboAdapter.getInstance(getInspector().getWorkspace()).getMainIssue(getInspector());
-
-
+        if (System.getenv("command").equals("true") && checkUser) {
+            // get Main Issue
+            //get the comment - command
+            //execute
+            try {
+                SoboAdapter.getInstance(getInspector().getWorkspace()).readCommand(getInspector(), userName, task);
+                return StepStatus.buildSuccess(this);
+            } catch (Exception e) {
+                getInspector().getLogger().info("can't read command");
+                return StepStatus.buildSkipped(this, "There are no new commands to process");
             }
-            else{
-
-            getLogger().info("Mining Sonar Rules");
-            SoraldAdapter.getInstance(getInspector().getWorkspace()).mine(rules,repo.getDirectory().getParentFile(),dir);
-
-            getLogger().info("Catching mining File and sending the data to MongoDB");
-            SoboAdapter.getInstance(getInspector().getWorkspace()).readExitFile(dir,commit.getCommitId(),userName,task);
 
 
-            //parse the exit file
-            // send the data to the DB
-            // make a request to the database
-            //create the issue                              //String commit, String user, String task, ProjectInspector inspector
-            SoboAdapter.getInstance(getInspector().getWorkspace()).getMostCommonRule(commit.getCommitId(),userName,task,getInspector() );}
+        } else {
+            boolean successfulInit = init();
+            //mine the repo, fetch the output file, send the commit
+            getLogger().info("Working on: " + commit.getCommitId() + " -- On repo: " + commit.getRepoName());
+            if (!successfulInit) {
+                return StepStatus.buildSkipped(this, "Error while sending feedback with Sobo");
+            }
 
 
-        } catch (Exception e) {
-            return StepStatus.buildSkipped(this, "Error while mining with Sorald");
+            String rules = "S109,S1155,S1481";//Arrays.asList(RepairnatorConfig.getInstance().getSonarRules());
+            getLogger().info("Working on: " + commit.getCommitUrl() + " " + commit.getCommitId() + " ");
+            String dir = getInspector().getWorkspace() + "\\stats.json";
+            try {
+                if (SoboAdapter.getInstance(getInspector().getWorkspace()).checkUserRepo(userName, task)) {
+
+                    getLogger().info("Mining Sonar Rules");
+                    SoraldAdapter.getInstance(getInspector().getWorkspace()).mine(rules, repo.getDirectory().getParentFile(), dir);
+
+                    getLogger().info("Catching mining File and sending the data to MongoDB");
+                    SoboAdapter.getInstance(getInspector().getWorkspace()).readExitFile(dir, commit.getCommitId(), userName, task);
+
+
+                    //parse the exit file
+                    // send the data to the DB
+                    // make a request to the database
+                    //create the issue                              //String commit, String user, String task, ProjectInspector inspector
+                    SoboAdapter.getInstance(getInspector().getWorkspace()).getMostCommonRule(commit.getCommitId(), userName, task, getInspector());
+                }
+
+
+            } catch (Exception e) {
+                return StepStatus.buildSkipped(this, "Error while mining with Sorald");
+            }
+
+
+            return StepStatus.buildSuccess(this);
         }
-
-
-        return StepStatus.buildSuccess(this);
     }
 
     @Override

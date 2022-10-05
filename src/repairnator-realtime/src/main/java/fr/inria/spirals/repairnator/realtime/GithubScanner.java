@@ -47,15 +47,43 @@ public class GithubScanner {
         if (reposPath != null) {
             // a list of repos to be monitored online is provided
             Set<String> repos = new HashSet<>(FileUtils.readLines(new File(reposPath), "UTF-8"));
+
+            if(System.getenv("launcherMode").equals("FEEDBACK") && System.getenv("command").equals("true") ){
+                scanner.fetchAndProcessCommandsPeriodically(repos);
+            }else{
             FetchMode fetchMode = parseFetchMode();
             // here is how we send the line to check the repos
-            scanner.fetchAndProcessCommitsPeriodically(repos, fetchMode);
+            scanner.fetchAndProcessCommitsPeriodically(repos, fetchMode);}
         } else {
             List<SelectedCommit> selectedCommits = readSelectedCommitsFromFile();
 
             scanner.processSelectedCommits(selectedCommits);
         }
     }
+
+    private void fetchAndProcessCommandsPeriodically(Set<String> repos) {
+        while (true) {
+            try {
+
+                logger.info("fetched commands: ");
+                for (String repo: repos) {
+
+                    if (System.getenv("FEEDBACK_TOOL").equals("SoboBot")) {
+                        String url = "https://gits-15.sys.kth.se/" + repo;
+                        runner.submitBuild(new GithubInputBuild(url, null, ""));
+                    }
+                }
+
+                TimeUnit.MILLISECONDS.sleep(30000);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+
+
 
     private void fetchAndProcessCommitsPeriodically(Set<String> repos, FetchMode fetchMode) {
         while (true) {
@@ -115,6 +143,7 @@ public class GithubScanner {
             // Donde se está llamando al Launcher?
             String feedbackTool = getEnvOrDefault("FEEDBACK_TOOL", "SoboBot");
             feedbackTools.add(feedbackTool);
+            RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FEEDBACK);
             RepairnatorConfig.getInstance().setFeedbackTools(feedbackTools);
             runner = new SimplePipelineRunner();
             runner.initRunner();

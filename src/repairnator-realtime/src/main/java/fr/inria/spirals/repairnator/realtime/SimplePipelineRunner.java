@@ -38,30 +38,54 @@ public class SimplePipelineRunner implements PipelineRunner {
             if (feedbackTool != null && feedbackTool.equals(SOBO_NAME)) {
                 if (!(b instanceof GithubInputBuild))
                     throw new RuntimeException("The input build is not a github build");
+                if(System.getenv("command").equals("true")){
 
-                GithubInputBuild githubInputBuild = (GithubInputBuild) b;
-                String sonarRules = System.getenv("SONAR_RULES"), gitUrl = githubInputBuild.getUrl(),
-                        gitCommit = githubInputBuild.getSha(),
-                        workspace = System.getenv().containsKey("WORKSPACE_FOLDER") ? System.getenv("WORKSPACE_FOLDER") :
-                                tmpWorkspaceFolder.toAbsolutePath().toString(),
-                        output = System.getenv().containsKey("OUTPUT_FOLDER") ? System.getenv("OUTPUT_FOLDER") :
-                                tmpOutputFolder.toAbsolutePath().toString();
+                    GithubInputBuild githubInputBuild = (GithubInputBuild) b;
+                    String  gitUrl = githubInputBuild.getUrl(), workspace = System.getenv().containsKey("WORKSPACE_FOLDER") ? System.getenv("WORKSPACE_FOLDER") :
+                                    tmpWorkspaceFolder.toAbsolutePath().toString(),
+                            output = System.getenv().containsKey("OUTPUT_FOLDER") ? System.getenv("OUTPUT_FOLDER") :
+                                    tmpOutputFolder.toAbsolutePath().toString();
 
-                List<String> launcherConfig = new ArrayList<String>(Arrays.asList(
-                        "--gitrepourl", gitUrl,
-                        "--gitcommithash", gitCommit,
-                        "--sonarRules", "S109",
-                        "--feedbackTools", SOBO_NAME,
-                        "--launcherMode", LauncherMode.FEEDBACK.name(),
-                        "--workspace", workspace,
-                        "--output", output));
+                    List<String> launcherConfig = new ArrayList<String>(Arrays.asList(
+                            "--gitrepourl", gitUrl,
+                            "--feedbackTools", SOBO_NAME,
+                            "--launcherMode", LauncherMode.FEEDBACK.name(),
+                            "--workspace", workspace,
+                            "--output", output));
 
 
-                try {
-                    Launcher launcher = new Launcher(launcherConfig.toArray(new String[0]));
-                    launcher.mainProcess(); // what happens after this
-                } catch (JSAPException e) {
-                    throw new RuntimeException("Cannot create launcher.");
+                    try {
+                        Launcher launcher = new Launcher(launcherConfig.toArray(new String[0]));
+                        launcher.mainProcess(); // what happens after this
+                    } catch (JSAPException e) {
+                        throw new RuntimeException("Cannot create launcher.");
+                    }
+                }else {
+
+                    GithubInputBuild githubInputBuild = (GithubInputBuild) b;
+                    String sonarRules = System.getenv("SONAR_RULES"), gitUrl = githubInputBuild.getUrl(),
+                            gitCommit = githubInputBuild.getSha(),
+                            workspace = System.getenv().containsKey("WORKSPACE_FOLDER") ? System.getenv("WORKSPACE_FOLDER") :
+                                    tmpWorkspaceFolder.toAbsolutePath().toString(),
+                            output = System.getenv().containsKey("OUTPUT_FOLDER") ? System.getenv("OUTPUT_FOLDER") :
+                                    tmpOutputFolder.toAbsolutePath().toString();
+
+                    List<String> launcherConfig = new ArrayList<String>(Arrays.asList(
+                            "--gitrepourl", gitUrl,
+                            "--gitcommithash", gitCommit,
+                            "--sonarRules", "S109",
+                            "--feedbackTools", SOBO_NAME,
+                            "--launcherMode", LauncherMode.FEEDBACK.name(),
+                            "--workspace", workspace,
+                            "--output", output));
+
+
+                    try {
+                        Launcher launcher = new Launcher(launcherConfig.toArray(new String[0]));
+                        launcher.mainProcess(); // what happens after this
+                    } catch (JSAPException e) {
+                        throw new RuntimeException("Cannot create launcher.");
+                    }
                 }
 
 

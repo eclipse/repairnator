@@ -13,7 +13,9 @@ public class SoboConstants {
     public static final String STOP= "--stop";
     public static final String GO="--go";
     public static final String MORE="--more";
-    public static final String RULE="-rule";
+    public static final String RULE="--rule";
+    public static final String COMMAND_ISSUE_TITLE="SOBO - Command Issue";
+    public static final String FEEDBACK_ISSUE_TITLE="SOBO - Commit Analyzer";
 
     public static final ArrayList COMMANDS= new ArrayList<>(
             Arrays.asList("--help", "--stop", "--go", "--more", "-rule"));
