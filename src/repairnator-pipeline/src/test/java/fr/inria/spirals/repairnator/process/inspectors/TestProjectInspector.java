@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.*;
@@ -136,13 +135,13 @@ public class TestProjectInspector {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("End of the Repairnator process"));
+        assertTrue(commit.getShortMessage().contains("End of the Repairnator process"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
+        assertTrue(commit.getShortMessage().contains("Automatic repair"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit"));
+        assertTrue(commit.getShortMessage().contains("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
     }

@@ -14,9 +14,6 @@ import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.push.PushProcessEnd;
 import fr.inria.spirals.repairnator.process.utils4tests.Utils4Tests;
 import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
-import fr.inria.spirals.repairnator.serializer.InspectorSerializer4Bears;
-import fr.inria.spirals.repairnator.serializer.SerializerType;
-import fr.inria.spirals.repairnator.serializer.engines.SerializedData;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
 import fr.inria.spirals.repairnator.states.PipelineState;
@@ -35,14 +32,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyListOf;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
@@ -130,13 +123,13 @@ public class TestProjectInspector4Bears {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("End of the bug and patch reproduction process"));
+        assertTrue(commit.getShortMessage().contains("End of the bug and patch reproduction process"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Human patch"));
+        assertTrue(commit.getShortMessage().contains("Human patch"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit"));
+        assertTrue(commit.getShortMessage().contains("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
     }
@@ -183,18 +176,18 @@ public class TestProjectInspector4Bears {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("End of the bug and patch reproduction process"));
+        assertTrue(commit.getShortMessage().contains("End of the bug and patch reproduction process"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Human patch"));
+        assertTrue(commit.getShortMessage().contains("Human patch"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Changes in the tests"));
+        assertTrue(commit.getShortMessage().contains("Changes in the tests"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit"));
+        assertTrue(commit.getShortMessage().contains("Bug commit"));
 
-        assertThat(iterator.hasNext(), is(false));
+        assertFalse(iterator.hasNext());
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {

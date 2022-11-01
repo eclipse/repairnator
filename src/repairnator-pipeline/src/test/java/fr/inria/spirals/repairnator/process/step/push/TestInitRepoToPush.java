@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -90,8 +89,8 @@ public class TestInitRepoToPush {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit"));
-        assertThat(iterator.hasNext(), is(false));
+        assertTrue(commit.getShortMessage().contains("Bug commit"));
+        assertFalse(iterator.hasNext());
     }
 
    /*This test has been ignored since an unit test is already testing the method 

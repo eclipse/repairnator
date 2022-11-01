@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -89,10 +88,10 @@ public class TestCommitPatch {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
+        assertTrue(commit.getShortMessage().contains("Automatic repair"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit"));
+        assertTrue(commit.getShortMessage().contains("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
     }

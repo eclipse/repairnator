@@ -31,10 +31,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.startsWith;
 
 /**
  * Created by urli on 21/04/2017.
@@ -115,7 +114,8 @@ public class TestCheckoutBuggyBuildSourceCode {
                 List<DiffEntry> diff = gitDir.diff().setOldTree(oldTreeIter).setNewTree(newTreeIter).call();
 
                 for (DiffEntry entry : diff) {
-                    assertThat(entry.getOldPath(), startsWith("src/main/java/"));
+                    String expextedHead="src/main/java/";
+                    assertTrue(entry.getOldPath().startsWith(expextedHead));
                 }
 
                 revCommit = prevCommit;
@@ -196,7 +196,7 @@ public class TestCheckoutBuggyBuildSourceCode {
                 List<DiffEntry> diff = gitDir.diff().setOldTree(oldTreeIter).setNewTree(newTreeIter).call();
 
                 for (DiffEntry entry : diff) {
-                    assertThat(entry.getOldPath(), startsWith("src/main/java/"));
+                    assertTrue(entry.getOldPath().startsWith("src/main/java/"));
                 }
 
                 revCommit = prevCommit;
@@ -278,7 +278,7 @@ public class TestCheckoutBuggyBuildSourceCode {
                 List<DiffEntry> diff = gitDir.diff().setOldTree(oldTreeIter).setNewTree(newTreeIter).call();
 
                 for (DiffEntry entry : diff) {
-                    assertThat(entry.getOldPath(), startsWith("src/main/java/"));
+                    assertTrue(entry.getOldPath().startsWith("src/main/java/"));
                 }
 
                 revCommit = prevCommit;
