@@ -23,8 +23,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <java.src.version>1.8</java.src.version>
-        <java.test.version>1.8</java.test.version>
+        <java.src.version>11</java.src.version>
+        <java.test.version>11</java.test.version>
 
         <npefix.version>0.7</npefix.version>
     </properties>

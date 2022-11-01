@@ -25,12 +25,6 @@
             <name>tdurieux.github.io maven-repository</name>
             <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -53,7 +47,7 @@
         <dependency>
             <groupId>se.kth.castor</groupId>
             <artifactId>sorald</artifactId>
-            <version>0.5.0</version>
+            <version>0.6.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -76,6 +70,12 @@
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
             <version>1.135</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sonatype.oss</groupId>
+            <artifactId>oss-parent</artifactId>
+            <version>9</version>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>fr.inria.repairnator</groupId>
