@@ -20,7 +20,9 @@ import static org.junit.Assert.assertTrue;
 
 public class ProjectScannerTest {
 
+
     @Test
+    @Ignore //TODO: Find a valid JTravis project
     public void testBuildWithoutFailingTestAndRepairMode() {
         long buildId = 220482792; // repairnator/failingProject build without failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -37,7 +39,9 @@ public class ProjectScannerTest {
         assertFalse(isOKForRepair);
     }
 
+
     @Test
+     @Ignore //TODO: Find a valid JTravis project
     public void testBuildWithFailingTestAndRepairMode() {
         long buildId = 220926535; // repairnator/failingProject build with failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -55,6 +59,7 @@ public class ProjectScannerTest {
     }
 
     @Test
+    @Ignore //TODO: Find a valid JTravis project
     public void testBuildWithFailingAndBearsMode() {
         long buildId = 220926535; // repairnator/failingProject build with failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -72,6 +77,7 @@ public class ProjectScannerTest {
     }
 
     @Test
+    @Ignore //TODO: Find a valid JTravis project
     public void testBuildWithPassingAndBearsMode() {
         long buildId = 220482792; // repairnator/failingProject build without failing tests
         RepairnatorConfig config = RepairnatorConfig.getInstance();
@@ -87,6 +93,8 @@ public class ProjectScannerTest {
 
         assertTrue(isOKForBears);
     }
+
+
 
     @Test
     @Ignore // because too slow, because it iterates over all builds of Spoon which is too much and a little worse every day
