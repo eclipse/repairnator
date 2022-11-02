@@ -63,14 +63,13 @@ public class TestRTScanner {
 
     @Test
     public void testRepositoryWithoutJavaLanguageIsNotInteresting() {
-        String slug = "eclipse/repairnator";
+        String slug = "rails/rails";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
-        RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.com");
         Optional<Repository> repositoryOptional = getOptionalRepository(slug);
 
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
