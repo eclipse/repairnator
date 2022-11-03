@@ -1,16 +1,13 @@
 package fr.inria.spirals.repairnator.process.maven;
 
+import com.mongodb.AggregationOptions;
+import com.thoughtworks.qdox.builder.ModelBuilderFactory;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.maven.output.MavenErrorHandler;
 import fr.inria.spirals.repairnator.process.maven.output.MavenFilterOutputHandler;
 import fr.inria.spirals.repairnator.process.maven.output.MavenMuteOutputHandler;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.building.DefaultModelBuilder;
-import org.apache.maven.model.building.DefaultModelBuilderFactory;
-import org.apache.maven.model.building.DefaultModelBuildingRequest;
-import org.apache.maven.model.building.ModelBuildingException;
-import org.apache.maven.model.building.ModelBuildingRequest;
-import org.apache.maven.model.building.ModelBuildingResult;
+import org.apache.maven.model.building.*;
 import org.apache.maven.shared.invoker.InvocationOutputHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,15 +142,16 @@ public class MavenHelper {
         req.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
         req.setModelResolver(new RepositoryModelResolver(localMavenRepository));
 
-        DefaultModelBuilder defaultModelBuilder = new DefaultModelBuilderFactory().newInstance();
+        ModelBuilder modelBuilder =  new DefaultModelBuilderFactory().newInstance();
+
 
         // we try to build the model, and if we fail, we try to get the raw model
         try {
-            ModelBuildingResult modelBuildingResult = defaultModelBuilder.build(req);
+            ModelBuildingResult modelBuildingResult = modelBuilder.build(req);
             return modelBuildingResult.getEffectiveModel();
         } catch (ModelBuildingException e) {
             LOGGER.error("Error while building complete model. The raw model will be used. Error message: " + e.getMessage());
-            return defaultModelBuilder.buildRawModel(pomXml, ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL, true).get();
+            return modelBuilder.buildRawModel(pomXml, ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL, true).get();
         }
 
     }

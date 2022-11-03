@@ -9,6 +9,7 @@ import fr.inria.spirals.repairnator.serializer.SerializerType;
 import fr.inria.spirals.repairnator.serializer.engines.SerializerEngine;
 import fr.inria.spirals.repairnator.serializer.engines.json.JSONFileSerializerEngine;
 import fr.inria.spirals.repairnator.states.LauncherMode;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -34,6 +35,7 @@ public class TestRTScanner {
     }
 
     @Test
+    @Ignore //TODO: Find a valid JTravis project
     public void testRepositoryWithoutCheckstyleIsNotInteresting() {
         String slug = "repairnator/test-repairnator";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.CHECKSTYLE);
@@ -45,12 +47,12 @@ public class TestRTScanner {
     }
 
 
-    /** TODO: Find a valid JTravis project for this test
-     *
+
 
     @Test
+    @Ignore //TODO: Find a valid JTravis project
     public void testRepositoryWithSuccessfulBuildIsInteresting() {
-        String slug = "eclipse/repairnator";
+        String slug = "resthub/resthub-spring-stack";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
         //TODO: check if we should change the default  JTravisEndpoint
         RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.com");
@@ -59,7 +61,7 @@ public class TestRTScanner {
         RTScanner rtScanner = new RTScanner("test", new ArrayList<>());
         boolean result = rtScanner.isRepositoryInteresting(repositoryOptional.get().getId());
         assertTrue(result);
-    }*/
+    }
 
     @Test
     public void testRepositoryWithoutJavaLanguageIsNotInteresting() {
