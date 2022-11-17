@@ -1,25 +1,25 @@
 package fr.inria.spirals.repairnator.process.step.feedback.sobo;
 
 import com.google.common.collect.Lists;
-import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.StepStatus;
 import fr.inria.spirals.repairnator.process.step.feedback.AbstractFeedbackStep;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldAdapter;
-import fr.inria.spirals.repairnator.process.step.repair.soraldbot.SoraldBot;
 import fr.inria.spirals.repairnator.process.step.repair.soraldbot.models.SoraldTargetCommit;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHUser;
+import org.kohsuke.github.GitHub;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 public class SoboBot extends AbstractFeedbackStep {
-    String repoName;
     private SoraldTargetCommit commit;
     private String originalBranchName;
     private String workingRepoPath;
@@ -57,18 +57,14 @@ public class SoboBot extends AbstractFeedbackStep {
             getInspector().getLogger().info("Not able to open GitHub Object");
         }
         Repository repo = git.getRepository();
-        String userName = getUserName(getInspector().getRepoSlug());
+        String repoOwnerUserName = getUserName(getInspector().getRepoSlug());
         String task = getTask(getInspector().getRepoSlug());
 
 
-        boolean checkUser = SoboAdapter.getInstance(getInspector().getWorkspace()).checkUser(userName);
+        if (System.getenv("command").equals("true") ) {
 
-        if (System.getenv("command").equals("true") && checkUser) {
-            // get Main Issue
-            //get the comment - command
-            //execute
             try {
-                SoboAdapter.getInstance(getInspector().getWorkspace()).readCommand(getInspector(), userName, task);
+                SoboAdapter.getInstance(getInspector().getWorkspace()).readCommand(getInspector(), repoOwnerUserName, task);
                 return StepStatus.buildSuccess(this);
             } catch (Exception e) {
                 getInspector().getLogger().info("can't read command");
@@ -78,36 +74,58 @@ public class SoboBot extends AbstractFeedbackStep {
 
         } else {
             boolean successfulInit = init();
-            //mine the repo, fetch the output file, send the commit
-            getLogger().info("Working on: " + commit.getCommitId() + " -- On repo: " + commit.getRepoName());
             if (!successfulInit) {
                 return StepStatus.buildSkipped(this, "Error while sending feedback with Sobo");
             }
 
-
-            String rules = "S109,S1155,S1481";//Arrays.asList(RepairnatorConfig.getInstance().getSonarRules());
-            getLogger().info("Working on: " + commit.getCommitUrl() + " " + commit.getCommitId() + " ");
-            String dir = getInspector().getWorkspace() + "\\stats.json";
+            getLogger().info("Working on: " + commit.getCommitId() + " -- On repo: " + commit.getRepoName());
+            GitHub github = SoboAdapter.getInstance(getInspector().getWorkspace()).connectWithGH();
+            String commitAuthor;
+            GHCommit commitObject;
+            Date commitDate;
             try {
-                if (SoboAdapter.getInstance(getInspector().getWorkspace()).checkUserRepo(userName, task)) {
+                commitObject = github.getRepository(getInspector().getRepoSlug()).getCommit(commit.getCommitId());
+                if(commitObject.getAuthor()!=null){
+                commitAuthor = commitObject.getAuthor().getLogin();}
+                else commitAuthor= repoOwnerUserName;
+                commitDate=commitObject.getCommitDate();
+                getLogger().info("Commit author : "+  commitAuthor);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return StepStatus.buildSkipped(this, "Error while getting commit author");
+
+            }
+
+
+            String rules = System.getenv("SONAR_RULES")!=null? System.getenv("SONAR_RULES"): SoboConstants.RULES_SLOT_1;//Arrays.asList(RepairnatorConfig.getInstance().getSonarRules());
+            getLogger().info("Working with rules: " + rules);
+            String dir = getInspector().getWorkspace() + "\\stats.json";
+            boolean isRepoAuthorized4AutomaticFeedback=SoboAdapter.getInstance(getInspector().getWorkspace()).checkUserRepo(repoOwnerUserName, task) ;
+            boolean isCommitAuthorStudent=SoboAdapter.getInstance(getInspector().getWorkspace()).checkUser(commitAuthor);
+            if (isRepoAuthorized4AutomaticFeedback && isCommitAuthorStudent) {
+                try {
 
                     getLogger().info("Mining Sonar Rules");
                     SoraldAdapter.getInstance(getInspector().getWorkspace()).mine(rules, repo.getDirectory().getParentFile(), dir);
-
-                    getLogger().info("Catching mining File and sending the data to MongoDB");
-                    SoboAdapter.getInstance(getInspector().getWorkspace()).readExitFile(dir, commit.getCommitId(), userName, task);
-
-
-                    //parse the exit file
-                    // send the data to the DB
-                    // make a request to the database
-                    //create the issue                              //String commit, String user, String task, ProjectInspector inspector
-                    SoboAdapter.getInstance(getInspector().getWorkspace()).getMostCommonRule(commit.getCommitId(), userName, task, getInspector());
+                } catch (Exception e) {
+                    return StepStatus.buildSkipped(this, "Error while mining with Sorald");
                 }
 
+                try{
+                    getLogger().info("Catching mining File and sending the data to MongoDB");
 
-            } catch (Exception e) {
-                return StepStatus.buildSkipped(this, "Error while mining with Sorald");
+                    SoboAdapter.getInstance(getInspector().getWorkspace()).readExitFile(dir, commit.getCommitId(), commitAuthor, task, getInspector(),  commitDate);
+                } catch (Exception e) {
+                    return StepStatus.buildSkipped(this, "Error while analizing exit file");
+                }
+                try{
+                    getLogger().info("Getting the most common rule, creating the issue and updating db");
+                    //create the issue                              //String commit, String user, String task, ProjectInspector inspector
+                    SoboAdapter.getInstance(getInspector().getWorkspace()).getMostCommonRule(commit.getCommitId(), commitAuthor, task, getInspector());
+                } catch (Exception e) {
+                    return StepStatus.buildSkipped(this, "Error while analyzing exit file");
+                }
+
             }
 
 
@@ -155,7 +173,12 @@ public class SoboBot extends AbstractFeedbackStep {
             return selectedBranch.isPresent() ? selectedBranch.get() : containingBranches.iterator().next();
         }
 
-        public String getUserName(String repoName){
+    /**
+     *
+     * @param repoName the slug of the student repository following the sintax inda-{year}/{user}-task-{n}
+     * @return userName of the owner of the repo
+     */
+    public String getUserName(String repoName){
             char[] chars = repoName.toCharArray();
             String user="";
             int index = repoName.indexOf("inda-");
@@ -177,20 +200,28 @@ public class SoboBot extends AbstractFeedbackStep {
             return user;
 
         }
+
+    /**
+     *
+     * @param repoName the slug of the student repository following the sintax inda-{year}/{user}-task-{n}
+     * @return task related to the repository
+     */
     public String getTask(String repoName){
-        String task="";
+        StringBuilder task= new StringBuilder();
         char[] chars = repoName.toCharArray();
 
         // iterate over `char[]` array using enhanced for-loop
 
         int index = repoName.indexOf("task-");
         if (index==-1){
-            return task;
+            return task.toString();
         }
         for(int i =index;i< chars.length;i++){
-            task+=chars[i];
+            task.append(chars[i]);
         }
-        return task;
+        return task.toString();
 
     }
+
+
 }

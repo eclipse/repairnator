@@ -32,8 +32,8 @@ public class TestPipelineSoBoBot {
     @Test
     public void TestPipelineSoboFeedbackTool() throws Exception {
         Launcher launcher = new Launcher(new String[]{
-                "--gitrepourl", "https://github.com/khaes-kth/Sorald-CI-Sample",
-                "--gitcommithash", "e2e0e568412cd05efb4475715f457473b3777437",
+                "--gitrepourl", "https://gits-15.sys.kth.se/inda-19/linusost-task-11",
+                "--gitcommithash", "10b75090bf93ecae250ace247cf1815c7c5b084b",
                 "--sonarRules", "S109",
                 "--feedbackTools", "SoboBot",
                 "--launcherMode", "FEEDBACK", //not sure if feedback or git_repository
