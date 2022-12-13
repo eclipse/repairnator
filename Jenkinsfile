@@ -25,10 +25,10 @@ spec:
     resources:
       limits:
         memory: "8Gi"
-        cpu: "4"
+        cpu: "2"
       requests:
         memory: "8Gi"
-        cpu: "4"
+        cpu: "2"
   volumes:
     - name: settings-xml
       secret:
