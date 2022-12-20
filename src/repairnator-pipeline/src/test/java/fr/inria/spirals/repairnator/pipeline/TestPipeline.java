@@ -31,7 +31,6 @@ public class TestPipeline {
     }
 
     @Test
-    @Ignore //while fixing CI, pass on 03/11
     public void testPipeline() throws Exception {
         // requires env variable M2_HOME and GITHUB_OAUTH
         // (set in Travis config)

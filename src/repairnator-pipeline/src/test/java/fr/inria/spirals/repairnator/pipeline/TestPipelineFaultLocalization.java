@@ -36,7 +36,6 @@ public class TestPipelineFaultLocalization {
      * @throws Exception
      */
     @Test
-    @Ignore //while fixing CI takes 50+ minutes
     public void testPipelineFaultLocalization() throws Exception {
         Launcher launcher = new Launcher(new String[]{
                 "--gitrepourl", "https://github.com/repairnator/failingProject",

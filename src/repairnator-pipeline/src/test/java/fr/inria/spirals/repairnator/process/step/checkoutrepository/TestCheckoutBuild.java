@@ -55,7 +55,7 @@ public class TestCheckoutBuild {
 
     @Test
     public void testCheckoutBuggyBuild() throws IOException, GitAPIException {
-        long buildId = 220946365; // repairnator/failingProject build
+        long buildId = 236072240; // repairnator/failingProject build
 
         RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
         repairnatorConfig.setClean(false);
@@ -111,7 +111,7 @@ public class TestCheckoutBuild {
     @Test
     public void testCheckoutBuildFromPRWithMissingMerge() throws IOException {
         RepairnatorConfig.getInstance().setJTravisEndpoint("https://api.travis-ci.org");
-        long buildId = 199527447; // 4pr0n/ripme build
+        long buildId = 236072240; // repairnator/failingProject build
 
         Build build = this.checkBuildAndReturn(buildId, true);
 
