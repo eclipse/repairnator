@@ -47,11 +47,12 @@ public class TestPipelineFaultLocalization {
                 "--output", outputFolder.getRoot().getAbsolutePath()
         });
 
+        System.out.println("Entering main process");
         launcher.mainProcess();
-
+        System.out.println("Checking steps to see if the pipeline has been built for fault localization ");
         // we check that the pipeline has been built for fault localization
         List<AbstractStep> steps = launcher.getInspector().getSteps();
-
+        System.out.println("Assert section");
         assertThat(steps.size(), is(9));
         assertThat(steps.get(7), instanceOf(FlacocoLocalization.class));
         assertThat(steps.get(8), instanceOf(PushFaultLocalizationSuggestions.class));
