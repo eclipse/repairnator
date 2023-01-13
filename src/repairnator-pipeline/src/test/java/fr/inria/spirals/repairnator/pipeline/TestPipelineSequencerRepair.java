@@ -14,6 +14,13 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
+/**
+ * Dear maintainer, the CI on Travis might fail or process this test too late because the information of the test
+ * results stops existing after an amount of time. If this happens go to repainator/failinProject repository and
+ * rerun the jobs of the commits used below. For this you need the autorization of repairnator Github organization,
+ * so just ask @monperrus for this and you will have the power to do this.
+ * Last time jobs where run: 2023-01-13 by @Sofi1410
+ */
 public class TestPipelineSequencerRepair {
 
     @Rule
