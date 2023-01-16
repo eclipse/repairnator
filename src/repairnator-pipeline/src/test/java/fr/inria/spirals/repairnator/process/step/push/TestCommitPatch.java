@@ -30,8 +30,7 @@ import java.util.Iterator;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by urli on 27/04/2017.
@@ -79,13 +78,13 @@ public class TestCommitPatch {
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new InitRepoToPush(inspector)).addNextStep(new CommitPatch(inspector, CommitType.COMMIT_REPAIR_INFO));
         cloneStep.execute();
 
-        assertThat(jobStatus.getPushStates().contains(PushState.REPAIR_INFO_COMMITTED), is(true));
+        assertTrue(jobStatus.getPushStates().contains(PushState.REPAIR_INFO_COMMITTED));
 
         Git gitDir = Git.open(new File(tmpDir, "repotopush"));
         Iterable<RevCommit> logs = gitDir.log().call();
 
         Iterator<RevCommit> iterator = logs.iterator();
-        assertThat(iterator.hasNext(), is(true));
+        assertTrue(iterator.hasNext());
 
         RevCommit commit = iterator.next();
         assertTrue(commit.getShortMessage().contains("Automatic repair"));
@@ -93,7 +92,7 @@ public class TestCommitPatch {
         commit = iterator.next();
         assertTrue(commit.getShortMessage().contains("Bug commit"));
 
-        assertThat(iterator.hasNext(), is(false));
+        assertFalse(iterator.hasNext());
     }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {

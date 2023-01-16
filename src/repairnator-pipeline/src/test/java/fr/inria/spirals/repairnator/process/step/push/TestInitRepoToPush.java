@@ -80,13 +80,13 @@ public class TestInitRepoToPush {
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new InitRepoToPush(inspector));
         cloneStep.execute();
 
-        assertThat(jobStatus.getPushStates().contains(PushState.REPO_INITIALIZED), is(true));
+        assertTrue(jobStatus.getPushStates().contains(PushState.REPO_INITIALIZED));
 
         Git gitDir = Git.open(new File(tmpDir, "repotopush"));
         Iterable<RevCommit> logs = gitDir.log().call();
 
         Iterator<RevCommit> iterator = logs.iterator();
-        assertThat(iterator.hasNext(), is(true));
+        assertTrue(iterator.hasNext());
 
         RevCommit commit = iterator.next();
         assertTrue(commit.getShortMessage().contains("Bug commit"));

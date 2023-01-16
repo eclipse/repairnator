@@ -35,8 +35,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by urli on 11/07/2017.
@@ -60,7 +59,7 @@ public class TestNPERepair {
 
     @Test
     public void testNPERepair() throws IOException {
-        long buildId = 220951790; // repairnator/failingProject simple-npe
+        long buildId = 220951790; // repairnator/failingProject simple-npe rerun on 23/01/13
         RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
 
         Build build = this.checkBuildAndReturn(buildId, false);
@@ -87,15 +86,15 @@ public class TestNPERepair {
 
         cloneStep.execute();
 
-        assertThat(npeRepair.isShouldStop(), is(false));
+        assertFalse(npeRepair.isShouldStop());
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(9));
+        assertEquals(stepStatusList.size(), 9);
         StepStatus npeStatus = stepStatusList.get(8);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
         for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
+            assertTrue(stepStatus.isSuccess());
         }
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
@@ -143,7 +142,7 @@ public class TestNPERepair {
         assertThat(npeRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(9));
+        assertEquals(stepStatusList.size(), 9);
         StepStatus npeStatus = stepStatusList.get(8);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
@@ -196,7 +195,7 @@ public class TestNPERepair {
         assertThat(npeRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(9));
+        assertEquals(stepStatusList.size(), 9);
         StepStatus npeStatus = stepStatusList.get(8);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
@@ -218,7 +217,7 @@ public class TestNPERepair {
 
     @Test
     public void testNPERepairStackScope() throws IOException {
-        long buildId = 220951924; // repairnator/failingProject npefix-scope
+        long buildId = 220951924; // repairnator/failingProject npefix-scope rerun on 23/01/13
         RepairnatorConfig.getInstance().setNPEScope("stack");
         RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
 
@@ -249,7 +248,7 @@ public class TestNPERepair {
         assertThat(npeRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(9));
+        assertEquals(stepStatusList.size(), 9);
         StepStatus npeStatus = stepStatusList.get(8);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
@@ -302,19 +301,19 @@ public class TestNPERepair {
         assertThat(npeRepair.isShouldStop(), is(false));
 
         List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-        assertThat(stepStatusList.size(), is(9));
+        assertEquals(stepStatusList.size(), 9);
         StepStatus npeStatus = stepStatusList.get(8);
         assertThat(npeStatus.getStep(), is(npeRepair));
 
         for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
+            assertTrue(stepStatus.isSuccess());
         }
 
         String finalStatus = AbstractDataSerializer.getPrettyPrintState(inspector);
         assertThat(finalStatus, is("PATCHED"));
 
         List<RepairPatch> allPatches = inspector.getJobStatus().getAllPatches();
-        assertThat(allPatches.size(), is(23));
+        assertEquals(allPatches.size(), 23);
         assertThat(inspector.getJobStatus().getToolDiagnostic().get(npeRepair.getRepairToolName()), notNullValue());
 
         for (RepairPatch repairPatch : allPatches) {
