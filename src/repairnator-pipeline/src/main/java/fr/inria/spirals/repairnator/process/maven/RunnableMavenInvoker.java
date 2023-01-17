@@ -35,14 +35,17 @@ public class RunnableMavenInvoker implements Runnable {
         request.setPomFile(new File(this.mavenHelper.getPomFile()));
         request.setGoals(Arrays.asList(this.mavenHelper.getGoal()));
         Properties props = this.mavenHelper.getProperties();
+        String mavenHome="";
         if (System.getenv("M2_HOME") == null) {
             // sensible value
             // https://stackoverflow.com/questions/14793015/programmatically-launch-m2e-maven-command
-            String mavenHome = RepairnatorConfig.getInstance().getMavenHome();
+             mavenHome = RepairnatorConfig.getInstance().getMavenHome();
             System.out.println("M2_HOME not found, using provided input value instead - " + mavenHome);
+
             System.setProperty("maven.home", mavenHome);
         } else if ( System.getProperty("maven.home") == null ) {
-            System.setProperty("maven.home", System.getenv("M2_HOME"));
+            mavenHome = System.getenv("M2_HOME");
+            System.setProperty("maven.home", mavenHome);
         }
         request.setProperties(props);
         request.setBatchMode(true);
@@ -54,6 +57,8 @@ public class RunnableMavenInvoker implements Runnable {
             invoker.setErrorHandler(this.mavenHelper.getErrorHandler());
         }
         invoker.setOutputHandler(this.mavenHelper.getOutputHandler());
+        invoker.setMavenHome(new File(mavenHome));
+
 
         try {
             InvocationResult result = invoker.execute(request);
