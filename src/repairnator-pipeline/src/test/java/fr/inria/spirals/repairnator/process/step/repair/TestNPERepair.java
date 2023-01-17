@@ -59,7 +59,6 @@ public class TestNPERepair {
     }
 
     @Test
-    @Ignore
     public void testNPERepair() throws IOException {
         long buildId = 220951790; // repairnator/failingProject simple-npe rerun on 23/01/13
         RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
