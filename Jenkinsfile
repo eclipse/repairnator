@@ -42,61 +42,6 @@ spec:
     }
   }
   stages {
-    stage('repairnator-core'){
-      environment {
-          TEST_PATH="src/repairnator-core/"
-      }
-      steps {
-        container('maven') {
-          sh 'bash ./.ci/ci-run.sh'
-        }
-      }
-      options {
-          timeout(time: 15, unit: "MINUTES")
-      }
-    }
-    stage('repairnator-realtime'){
-      environment {
-        TEST_PATH="src/repairnator-realtime/"
-        TEST_LIST="**"
-        GITHUB_OAUTH=credentials('github-bot-token')
-      }
-      steps {
-        container('maven') {
-          sh 'bash ./.ci/ci-run-with-core.sh'
-        }
-      }
-      options {
-        timeout(time: 15, unit: "MINUTES")
-      }
-    }
-    stage('repairnator-jenkins-plugin'){
-      environment {
-          TEST_PATH="src/repairnator-jenkins-plugin/"
-      }
-      steps {
-        container('maven') {
-          sh 'bash ./.ci/ci-run.sh'
-        }
-      }
-      options {
-        timeout(time: 15, unit: "MINUTES")
-      }
-    }
-    stage('repairnator-maven-repair'){
-      environment {
-        TEST_PATH="src/maven-repair/"
-        TEST_LIST="**"
-      }
-      steps {
-        container('maven') {
-          sh 'bash ./.ci/ci-maven-repair.sh'
-        }
-      }
-      options {
-        timeout(time: 30, unit: "MINUTES")
-      }
-    }
     stage('repairnator-pipeline'){
       environment {
         TEST_PATH="src/repairnator-pipeline/"
