@@ -4,7 +4,8 @@
 set -e
 set -x
 export M2_HOME=/usr/share/maven
-
+ls ./
+ls M2_HOME
 NPEFIX_VERSION=`xmlstarlet sel -t -v '//_:dependency[_:artifactId="npefix"]/_:version' src/maven-repair/pom.xml`
 
 mvn clean install -B -f src/repairnator-core/ -DskipTests && \
