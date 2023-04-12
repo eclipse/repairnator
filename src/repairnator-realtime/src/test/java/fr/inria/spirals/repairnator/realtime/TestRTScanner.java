@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 public class TestRTScanner {
     
     @Test
+    @Ignore //TODO: Find a valid JTravis project
     public void testRepositoryWithoutSuccessfulBuildIsNotInteresting() {
         String slug = "repairnator/failingProject";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
@@ -64,6 +65,7 @@ public class TestRTScanner {
     }
 
     @Test
+    @Ignore //TODO: Find a valid JTravis project
     public void testRepositoryWithoutJavaLanguageIsNotInteresting() {
         String slug = "rails/rails";
         RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.REPAIR);
@@ -75,6 +77,7 @@ public class TestRTScanner {
     }
 
     @Test
+    @Ignore //TODO: Find a valid JTravis project
     public void testBlacklisting() throws Exception {
       String fileName = "./"+ SerializerType.BLACKLISTED.getName()+".json";
       new File(fileName).delete();
