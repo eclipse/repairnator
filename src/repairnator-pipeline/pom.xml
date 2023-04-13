@@ -52,7 +52,7 @@
         <dependency>
             <groupId>se.kth.castor</groupId>
             <artifactId>sorald</artifactId>
-            <version>0.8.1-SNAPSHOT</version>
+            <version>0.6.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
