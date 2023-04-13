@@ -44,30 +44,32 @@ public class TestGithubScanner {
         scanner.setup();
 
         List<SelectedCommit> commits =
-                scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("11/06/2022").getTime(),
-                        new SimpleDateFormat("dd/MM/yyyy").parse("14/12/2022").getTime(),
+                scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("14/12/2022").getTime(),
+                        new SimpleDateFormat("dd/MM/yyyy").parse("10/04/2023").getTime(),
                         GithubScanner.FetchMode.ALL, repos);
-        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("2693a1e2da8d74135c7c9be1e1aa5758c30f86f7")));
-        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("4460f47ef5f7c482efc9b953312e79ebfc0eebdd")));
-        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("36b10489c6ae71fba089c8db551d0ce2663d19d4")));
-        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("7411d15444a88cd5832364f3434ea66779de5918")));
+        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("462bca1472db3198c2e47aff072126209f796bce")));
+        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("f8a2607178ed48e5843768c3cbc8e60406d63a66")));
+        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("e2e8afe4a06c437c5eb4a3edc20c3152450ac702")));
+        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("5180598adbdff8f9d3c53c6e647290614bf752b9")));
 
     }
 
     @Test
     public void testFetchingFailed() throws Exception {
         // repo https://github.com/castor-software/depclean/commits/master
+        // for future mantainer make  sure the failing commit is not related to a codecov failure
         Set<String> repos = new HashSet<String>(FileUtils.readLines(new File(getClass()
                 .getResource("/GithubScannerTest_repos.txt").getFile()), "UTF-8"));
         GithubScanner scanner = new GithubScanner();
         scanner.setup();
 
         List<SelectedCommit> commits =
-                scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("11/06/2022").getTime(),
-                        new SimpleDateFormat("dd/MM/yyyy").parse("14/12/2022").getTime(),
+                scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("14/06/2021").getTime(),
+                        new SimpleDateFormat("dd/MM/yyyy").parse("10/09/2022").getTime(),
                         GithubScanner.FetchMode.FAILED, repos);
-        assertFalse(commits.stream().anyMatch(x -> x.getCommitId().equals("2693a1e2da8d74135c7c9be1e1aa5758c30f86f7")));
-        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("4460f47ef5f7c482efc9b953312e79ebfc0eebdd")));
+
+        assertFalse(commits.stream().anyMatch(x -> x.getCommitId().equals("063572c0b7747498940a06c240a71193ec8314ee")));
+        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("332672710a7a90c5c51a09064f0917435bd5a6ec")));
     }
 
     @Test
@@ -79,11 +81,11 @@ public class TestGithubScanner {
         scanner.setup();
 
         List<SelectedCommit> commits =
-                scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("11/06/2022").getTime(),
-                        new SimpleDateFormat("dd/MM/yyyy").parse("14/12/2022").getTime(),
+                scanner.fetch(new SimpleDateFormat("dd/MM/yyyy").parse("14/06/2021").getTime(),
+                        new SimpleDateFormat("dd/MM/yyyy").parse("10/09/2021").getTime(),
                         GithubScanner.FetchMode.PASSING, repos);
-        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("36b10489c6ae71fba089c8db551d0ce2663d19d4")));
-        assertFalse(commits.stream().anyMatch(x -> x.getCommitId().equals("7411d15444a88cd5832364f3434ea66779de5918")));
+        assertTrue(commits.stream().anyMatch(x -> x.getCommitId().equals("08cddb1c57eebb3ccd320061b75fd26cb09fc1fd")));
+        assertFalse(commits.stream().anyMatch(x -> x.getCommitId().equals("332672710a7a90c5c51a09064f0917435bd5a6ec")));
     }
 
 }
