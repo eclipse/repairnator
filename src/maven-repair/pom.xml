@@ -72,6 +72,7 @@
             <artifactId>maven-core</artifactId>
             <!--do not upgrade to >= 3.6.0, as it will cause a compatibility issue with other guava dependencies-->
             <version>3.5.4</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
