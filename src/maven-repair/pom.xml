@@ -23,8 +23,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <java.src.version>11</java.src.version>
-        <java.test.version>11</java.test.version>
+        <java.src.version>1.8</java.src.version>
+        <java.test.version>1.8</java.test.version>
 
         <npefix.version>0.7</npefix.version>
     </properties>
@@ -49,12 +49,6 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven.plugin-tools</groupId>
-            <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.7.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -235,25 +229,32 @@
 	          </plugin>   
 	      </plugins>
 	      <pluginManagement>
-	        <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.6.2</version>
-                    <executions>
-                        <execution>
-                            <id>mojo-descriptor</id>
-                            <goals>
-                                <goal>descriptor</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                    </configuration>
-                </plugin>
-
-	          </plugins>
+              <plugins>
+                  <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-plugin-plugin</artifactId>
+                      <version>3.6.1</version>
+                      <configuration>
+                          <goalPrefix>repair</goalPrefix>
+                          <skipErrorNoDescriptorsFound>true
+                          </skipErrorNoDescriptorsFound>
+                      </configuration>
+                      <executions>
+                          <execution>
+                              <id>mojo-descriptor</id>
+                              <goals>
+                                  <goal>descriptor</goal>
+                              </goals>
+                          </execution>
+                          <execution>
+                              <id>help-goal</id>
+                              <goals>
+                                  <goal>helpmojo</goal>
+                              </goals>
+                          </execution>
+                      </executions>
+                  </plugin>
+              </plugins>
 	      </pluginManagement>
     </build>
 
