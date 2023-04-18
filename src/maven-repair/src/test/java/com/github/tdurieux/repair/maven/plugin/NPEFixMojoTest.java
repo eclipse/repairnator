@@ -13,6 +13,11 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Future maintainer remember to set your M2_HOME variable.
+ * You can find it by running mvn --version on your machine
+ */
+
 public class NPEFixMojoTest extends BetterAbstractMojoTestCase {
     private final String projectPath = "src/test/resources/projects/example2/";
 
