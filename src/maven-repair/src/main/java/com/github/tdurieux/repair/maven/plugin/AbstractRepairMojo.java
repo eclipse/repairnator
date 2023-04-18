@@ -140,7 +140,7 @@ public abstract class AbstractRepairMojo extends AbstractMojo {
 
     protected void setGzoltarDebug(boolean debugValue) {
         try {
-            Field debug = com.gzoltar.core.util.ClassUtils.class.getDeclaredField("debug");
+            Field debug = com.gzoltar.core.agent.Launcher.class.getDeclaredField("debug");
             debug.setAccessible(true);
             debug.setBoolean(null, debugValue);
         } catch (NoSuchFieldException | IllegalAccessException e) {
