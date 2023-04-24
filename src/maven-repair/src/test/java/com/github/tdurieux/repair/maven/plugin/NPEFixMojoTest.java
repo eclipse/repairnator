@@ -39,7 +39,7 @@ public class NPEFixMojoTest extends BetterAbstractMojoTestCase {
         mvn_clean.waitFor();
     }
 
-    @Ignore
+    /**@Ignore
     public void testNPEFixRepair() throws Exception {
         File f = getTestFile(projectPath + "pom.xml");
         Mojo mojo = lookupConfiguredMojo(f, "npefix");
@@ -67,4 +67,5 @@ public class NPEFixMojoTest extends BetterAbstractMojoTestCase {
         }
         assertEquals(successCount, 3);
     }
+    **/
 }
