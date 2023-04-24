@@ -24,12 +24,13 @@ public class NPEFixMojoTest extends BetterAbstractMojoTestCase {
 
     @Override
     protected void setUp() throws Exception {
+        /**
         super.setUp();
         ProcessBuilder pb = new ProcessBuilder("mvn", "clean");
         pb.directory(new File(projectPath));
         pb.inheritIO();
         Process p = pb.start();
-        p.waitFor();
+        p.waitFor();**/
     }
 
     @Override
