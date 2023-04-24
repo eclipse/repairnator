@@ -35,13 +35,15 @@ public class NPEFixMojoTest extends BetterAbstractMojoTestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        /**
         super.tearDown();
         Process mvn_clean = Runtime.getRuntime().exec("mvn clean", null, new File(projectPath));
-        mvn_clean.waitFor();
+        mvn_clean.waitFor();**/
     }
 
-    /**@Ignore
+    @Ignore
     public void testNPEFixRepair() throws Exception {
+    /**
         File f = getTestFile(projectPath + "pom.xml");
         Mojo mojo = lookupConfiguredMojo(f, "npefix");
         assertNotNull(mojo);
@@ -67,6 +69,7 @@ public class NPEFixMojoTest extends BetterAbstractMojoTestCase {
             }
         }
         assertEquals(successCount, 3);
+     **/
     }
-    **/
+
 }
