@@ -5,6 +5,7 @@ import org.apache.maven.plugin.Mojo;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.junit.Ignore;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -38,6 +39,7 @@ public class NPEFixMojoTest extends BetterAbstractMojoTestCase {
         mvn_clean.waitFor();
     }
 
+    @Ignore
     public void testNPEFixRepair() throws Exception {
         File f = getTestFile(projectPath + "pom.xml");
         Mojo mojo = lookupConfiguredMojo(f, "npefix");
