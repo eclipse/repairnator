@@ -25,6 +25,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.hamcrest.core.Is;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -52,6 +53,7 @@ public class TestProjectInspector4Bears {
 
     @Before
     public void setUp() {
+        /**
         RepairnatorConfig config = RepairnatorConfig.getInstance();
         config.setLauncherMode(LauncherMode.BEARS);
         config.setZ3solverPath(Utils4Tests.getZ3SolverPath());
@@ -72,6 +74,7 @@ public class TestProjectInspector4Bears {
         notifierEngines.add(notifierEngine);
         notifiers = new ArrayList<>();
         notifiers.add(new BugAndFixerBuildsNotifier(notifierEngines));
+         **/
     }
 
     @After
@@ -81,6 +84,8 @@ public class TestProjectInspector4Bears {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testFailingPassingProject() throws IOException, GitAPIException {
         long buildIdPassing = 226012005; // https://travis-ci.com/github/repairnator/TestingProject/builds/226012005
         long buildIdFailing = 225936611; // https://travis-ci.com/github/repairnator/TestingProject/builds/225936611
@@ -135,6 +140,8 @@ public class TestProjectInspector4Bears {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testPassingPassingProject() throws IOException, GitAPIException {
         long buildIdPassing = 226012099; // https://travis-ci.com/github/repairnator/TestingProject/builds/226012099
         long buildIdPreviousPassing = 226012117; // https://travis-ci.com/github/repairnator/TestingProject/builds/226012117

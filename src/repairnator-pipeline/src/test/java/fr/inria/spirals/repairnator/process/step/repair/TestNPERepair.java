@@ -59,6 +59,8 @@ public class TestNPERepair {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testNPERepair() throws IOException {
         long buildId = 220951790; // repairnator/failingProject simple-npe rerun on 23/01/13
         RepairnatorConfig.getInstance().setOutputPath(Files.createTempDirectory("test_nperepair_output").toFile().getAbsolutePath());
@@ -111,6 +113,8 @@ public class TestNPERepair {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testNPERepairClassScope() throws IOException {
         long buildId = 220951924; // repairnator/failingProject npefix-scope
         RepairnatorConfig.getInstance().setNPEScope("class");
@@ -164,6 +168,8 @@ public class TestNPERepair {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testNPERepairPackageScope() throws IOException {
         long buildId = 220951924; // repairnator/failingProject npefix-scope
         RepairnatorConfig.getInstance().setNPEScope("package");
@@ -217,6 +223,8 @@ public class TestNPERepair {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testNPERepairStackScope() throws IOException {
         long buildId = 220951924; // repairnator/failingProject npefix-scope rerun on 23/01/13
         RepairnatorConfig.getInstance().setNPEScope("stack");
@@ -270,6 +278,8 @@ public class TestNPERepair {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testNPERepairProjectScope() throws IOException {
         long buildId = 220951924; // repairnator/failingProject npefix-scope
         RepairnatorConfig.getInstance().setNPEScope("project");
