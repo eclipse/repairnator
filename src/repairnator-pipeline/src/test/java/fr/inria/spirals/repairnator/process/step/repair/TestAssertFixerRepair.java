@@ -23,6 +23,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -55,6 +56,8 @@ public class TestAssertFixerRepair {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testAssertFixerFixes() throws IOException {
         long buildId = 220950016; // repairnator/failingProject build
 
