@@ -35,7 +35,7 @@ public class TestPipelineSoraldBot {
         Launcher launcher = new Launcher(new String[]{
                 "--gitrepourl", "https://github.com/khaes-kth/Sorald-CI-Sample",
                 "--gitcommithash", "e2e0e568412cd05efb4475715f457473b3777437",
-                "--sonarRules", "1217",
+                "--sonarRules", "S1217",
                 "--repairTools", "SoraldBot",
                 "--launcherMode", "GIT_REPOSITORY",
                 "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
@@ -57,7 +57,7 @@ public class TestPipelineSoraldBot {
                 .collect(Collectors.toList()); //test fix sorald-bot repair
 
         assertEquals(1, steps.size());
-        //assertEquals(1, patchNotifier.allpatches.size());
+        assertEquals(1, patchNotifier.allpatches.size());
     }
 
     class Patches implements PatchNotifier {
