@@ -51,8 +51,13 @@
         </dependency>
         <dependency>
             <groupId>se.kth.castor</groupId>
+            <artifactId>sorald-api</artifactId>
+            <version>0.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>se.kth.castor</groupId>
             <artifactId>sorald</artifactId>
-            <version>0.6.0</version>
+            <version>0.8.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
