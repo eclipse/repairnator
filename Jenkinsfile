@@ -101,6 +101,7 @@ spec:
       environment {
         TEST_PATH="src/repairnator-pipeline/"
         TEST_LIST="**"
+        M2_HOME="/usr/share/maven"
       }
       steps {
         container('maven') {
