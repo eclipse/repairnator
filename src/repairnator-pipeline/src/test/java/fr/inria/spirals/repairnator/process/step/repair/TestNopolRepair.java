@@ -62,7 +62,7 @@ public class TestNopolRepair {
 
     @Test
     @Ignore
-    //TODO: Add a test with a failing build from GitHub Actions
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testNopolRepairWithExclusion() throws IOException {
         long buildId = 220951452; // repairnator/failingProject build
 

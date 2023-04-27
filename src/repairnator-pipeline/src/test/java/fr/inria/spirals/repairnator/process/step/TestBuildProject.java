@@ -50,7 +50,8 @@ public class TestBuildProject {
     }
 
     @Test
-    @Ignore //while fixing CI
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testBuildProject() throws IOException {
         // slug y commit hash
         long buildId = 220946365; // repairnator/failingProject erroring-branch
@@ -82,8 +83,8 @@ public class TestBuildProject {
     }
 
     @Test
-
-    @Ignore //while fixing CI
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testBuildProjectWithPomNotInRoot() throws IOException {
         long buildId = 220957920; // repairnator/failingProject other-directory-for-pom-file
 

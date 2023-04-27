@@ -85,7 +85,7 @@ public class TestProjectInspector4Bears {
 
     @Test
     @Ignore
-    //TODO: Add a test with a failing build from GitHub Actions
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testFailingPassingProject() throws IOException, GitAPIException {
         long buildIdPassing = 226012005; // https://travis-ci.com/github/repairnator/TestingProject/builds/226012005
         long buildIdFailing = 225936611; // https://travis-ci.com/github/repairnator/TestingProject/builds/225936611
@@ -141,7 +141,7 @@ public class TestProjectInspector4Bears {
 
     @Test
     @Ignore
-    //TODO: Add a test with a failing build from GitHub Actions
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testPassingPassingProject() throws IOException, GitAPIException {
         long buildIdPassing = 226012099; // https://travis-ci.com/github/repairnator/TestingProject/builds/226012099
         long buildIdPreviousPassing = 226012117; // https://travis-ci.com/github/repairnator/TestingProject/builds/226012117

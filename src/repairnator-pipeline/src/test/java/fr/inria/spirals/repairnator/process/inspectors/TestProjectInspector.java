@@ -151,6 +151,7 @@ public class TestProjectInspector {
 
     @Test
     @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     //TODO: Add a test with a failing build from GitHub Actions
     public void testFailingProjectNotBuildable() throws IOException {
         long buildId = 220945185; // repairnator/failingProject only-one-failing
