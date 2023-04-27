@@ -35,6 +35,8 @@ public class TestPipelineSequencerRepair {
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void TestPipelineSequencerRepairTool() throws Exception {
         // ec915681fbd6a8b2c30580b2618e62636204abe4 -> repairnator/failingProject -> syntax
         Launcher launcher = new Launcher(new String[]{
@@ -61,6 +63,8 @@ public class TestPipelineSequencerRepair {
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void TestPipelineBuildPassBranch() throws Exception{
         // e182ccb9ef41b5adab602ed12bfc71b744ff0241 -> repairnator/failingProject -> nofixes
         Launcher launcher = new Launcher(new String[]{
@@ -79,6 +83,8 @@ public class TestPipelineSequencerRepair {
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void TestPipelineBuildFailBranch() throws Exception{
         // ec915681fbd6a8b2c30580b2618e62636204abe4 -> repairnator/failingProject -> syntax error
         Launcher launcher = new Launcher(new String[]{
