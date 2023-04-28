@@ -68,7 +68,7 @@
         <dependency>
             <groupId>com.github.spoonlabs</groupId>
             <artifactId>flacoco</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
