@@ -1,12 +1,13 @@
 name: GitHub Actions 4 Repairnator
-run-name: ${{ github.actor }} is running ${{ github.workflow }} for ${{ github.repository }}
+
 on :
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
-    workflow_dispatch: true
+  env:
+    GITHUB_OAUTH: ${{ secrets.GH_TOKEN }}
 
   jobs:
       build:
@@ -30,23 +31,17 @@ on :
             env:
               TEST_PATH: src/repairnator-realtime/
               TEST_LIST: "**"
-              # token from a temporal GitHub account, will be removed after the test
-              GITHUB_OAUTH: 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
               run: bash ./.ci/ci-run-with-core.sh
 
           - name: Repairnator Maven Repair
             env:
               TEST_PATH: src/maven-repair/
               TEST_LIST: "**"
-              # token from a temporal GitHub account, will be removed after the test
-              GITHUB_OAUTH: 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
               run: bash ./.ci/ci-maven-repair.sh
 
           - name: Repairnator Pipeline
             env:
               TEST_PATH: src/repairnator-pipeline/
               TEST_LIST: "**"
-              # token from a temporal GitHub account, will be removed after the test
-              GITHUB_OAUTH: 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
             run: bash ./.ci/ci-run-with-core.sh
           - run: echo $${{ job.status }}
