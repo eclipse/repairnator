@@ -24,13 +24,13 @@
             env:
               TEST_PATH: src/repairnator-realtime/
               TEST_LIST: "**"
-              run: bash ./.ci/ci-run-with-core.sh
+            run: bash ./.ci/ci-run-with-core.sh
 
           - name: Repairnator Maven Repair
             env:
               TEST_PATH: src/maven-repair/
               TEST_LIST: "**"
-              run: bash ./.ci/ci-maven-repair.sh
+            run: bash ./.ci/ci-maven-repair.sh
 
           - name: Repairnator Pipeline
             env:
