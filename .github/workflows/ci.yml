@@ -1,17 +1,16 @@
 name: repairnator-build
-
 on :
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
 
-  env:
-    GITHUB_OAUTH: ${{ secrets.GH_TOKEN }}
 
   jobs:
       build:
         runs-on: ubuntu-latest
+        env:
+          GITHUB_OAUTH: ${{ secrets.GH_TOKEN }}
 
         steps:
           - uses: actions/checkout@v3
