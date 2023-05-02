@@ -1,0 +1,52 @@
+name: GitHub Actions 4 Repairnator
+run-name: ${{ github.actor }} is running ${{ github.workflow }} for ${{ github.repository }}
+on :
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+    workflow_dispatch: true
+
+  jobs:
+      build:
+        runs-on: ubuntu-latest
+
+        steps:
+          - uses: actions/checkout@v3
+          - name: Set up JDK 1.8
+            uses: actions/setup-java@v1
+            with:
+              java-version: 1.8
+            run: |
+              java -version
+              javac -version
+          - name: Repairnator Core
+            env:
+              TEST_PATH: src/repairnator-core/
+            run: bash ./.ci/ci-run.sh
+
+          - name: Repairnator Realtime
+            env:
+              TEST_PATH: src/repairnator-realtime/
+              TEST_LIST: "**"
+              # token from a temporal GitHub account, will be removed after the test
+              GITHUB_OAUTH: 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
+              run: bash ./.ci/ci-run-with-core.sh
+
+          - name: Repairnator Maven Repair
+            env:
+              TEST_PATH: src/maven-repair/
+              TEST_LIST: "**"
+              # token from a temporal GitHub account, will be removed after the test
+              GITHUB_OAUTH: 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
+              run: bash ./.ci/ci-maven-repair.sh
+
+          - name: Repairnator Pipeline
+            env:
+              TEST_PATH: src/repairnator-pipeline/
+              TEST_LIST: "**"
+              # token from a temporal GitHub account, will be removed after the test
+              GITHUB_OAUTH: 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
+            run: bash ./.ci/ci-run-with-core.sh
+          - run: echo $${{ job.status }}
