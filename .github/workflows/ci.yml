@@ -1,4 +1,4 @@
-name: GitHub-Actions-4-Repairnator
+name: repairnator-build
 
 on :
   push:
