@@ -33,7 +33,7 @@ public class TestPipelineSoraldBot {
     @Test
     public void TestPipelineSoraldRepairTool() throws Exception {
         // temporary solution since upgrading to junit 5 wasn+t possible at the time
-        //FIXME: Do it with RetryingTest
+        //FIXME: Do it with RetryingTest(5)
         for(int i= 0; i < 5; i++) {
             try {
 
