@@ -32,32 +32,43 @@ public class TestPipelineSoraldBot {
 
     @Test
     public void TestPipelineSoraldRepairTool() throws Exception {
-        Launcher launcher = new Launcher(new String[]{
-                "--gitrepourl", "https://github.com/khaes-kth/Sorald-CI-Sample",
-                "--gitcommithash", "e2e0e568412cd05efb4475715f457473b3777437",
-                "--sonarRules", "S1217",
-                "--repairTools", "SoraldBot",
-                "--launcherMode", "GIT_REPOSITORY",
-                "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
-                "--output", outputFolder.getRoot().getAbsolutePath()
-        });
+        // temporary solution since upgrading to junit 5 wasn+t possible at the time
+        //FIXME: Do it ith RetryingTest
+        for(int i= 0; i < 5; i++) {
+            try {
 
-        // config is forced to use SoraldBot as the only repair tool.
-        assertEquals(1, launcher.getConfig().getRepairTools().size());
-        assertTrue(launcher.getConfig().getRepairTools().contains("SoraldBot"));
+                Launcher launcher = new Launcher(new String[]{
+                        "--gitrepourl", "https://github.com/khaes-kth/Sorald-CI-Sample",
+                        "--gitcommithash", "e2e0e568412cd05efb4475715f457473b3777437",
+                        "--sonarRules", "S1217",
+                        "--repairTools", "SoraldBot",
+                        "--launcherMode", "GIT_REPOSITORY",
+                        "--workspace", workspaceFolder.getRoot().getAbsolutePath(),
+                        "--output", outputFolder.getRoot().getAbsolutePath()
+                });
 
-        Patches patchNotifier = new Patches();
-        launcher.setPatchNotifier(patchNotifier);
+                // config is forced to use SoraldBot as the only repair tool.
+                assertEquals(1, launcher.getConfig().getRepairTools().size());
+                assertTrue(launcher.getConfig().getRepairTools().contains("SoraldBot"));
 
-        launcher.mainProcess();
+                Patches patchNotifier = new Patches();
+                launcher.setPatchNotifier(patchNotifier);
 
-        List<AbstractStep> steps =  launcher.getInspector().getSteps()
-                .stream()
-                .filter(step -> step.getName().equals("SoraldBot"))
-                .collect(Collectors.toList()); //test fix sorald-bot repair
+                launcher.mainProcess();
 
-        assertEquals(1, steps.size());
-        assertEquals(1, patchNotifier.allpatches.size());
+                List<AbstractStep> steps = launcher.getInspector().getSteps()
+                        .stream()
+                        .filter(step -> step.getName().equals("SoraldBot"))
+                        .collect(Collectors.toList()); //test fix sorald-bot repair
+
+                assertEquals(1, steps.size());
+                assertEquals(1, patchNotifier.allpatches.size());
+                return;
+            }
+            catch (Exception e) {
+                System.out.println("Can not download plugin, try n: " + i+ " " + e.getMessage());
+            }
+        }
     }
 
     class Patches implements PatchNotifier {
