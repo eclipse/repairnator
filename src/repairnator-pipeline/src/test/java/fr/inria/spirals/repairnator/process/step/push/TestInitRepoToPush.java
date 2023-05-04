@@ -57,6 +57,7 @@ public class TestInitRepoToPush {
     }
 
     @Test
+    @Ignore("This test uses repairnator/failingProject build, which is not available anymore.")
     public void testInitRepoToPushSimpleCase() throws IOException, GitAPIException {
         long buildId = 220946365; // repairnator/failingProject build
 
@@ -93,56 +94,6 @@ public class TestInitRepoToPush {
         assertFalse(iterator.hasNext());
     }
 
-   /*This test has been ignored since an unit test is already testing the method 
-    *FileHelper.removeNotificationFromTravisYML FileHelperTest.testRemoveNotificationFromTravisYML. 
-    *However, this should be considered in the future for a proper integration test.
-    */
-    @Ignore
-    @Test
-    public void testInitRepoShouldRemoveNotificationInTravisYML() throws IOException {
-        long buildId = 331637757; // apache/rocketmq
-
-        RepairnatorConfig repairnatorConfig = RepairnatorConfig.getInstance();
-        repairnatorConfig.setClean(false);
-        repairnatorConfig.setPush(true);
-
-        Build build = this.checkBuildAndReturn(buildId, true);
-
-        tmpDir = Files.createTempDirectory("test_initRepoToPush").toFile();
-
-        BuildToBeInspected toBeInspected = new BuildToBeInspected(build, null, ScannedBuildStatus.ONLY_FAIL, "");
-
-        JobStatus jobStatus = new JobStatus(tmpDir.getAbsolutePath()+"/repo");
-        jobStatus.getProperties().getBuilds().setBuggyBuild(new fr.inria.spirals.repairnator.process.inspectors.properties.builds.Build(buildId, "", new Date()));
-
-        ProjectInspector inspector = ProjectInspectorMocker.mockProjectInspector(jobStatus, tmpDir, toBeInspected);
-
-        CloneRepository cloneStep = new CloneRepository(inspector);
-
-        cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(new InitRepoToPush(inspector));
-        cloneStep.execute();
-
-        assertThat(jobStatus.getPushStates().contains(PushState.REPO_INITIALIZED), is(true));
-        File bak = new File(tmpDir.getAbsolutePath()+"/repotopush/bak.travis.yml");
-        File travis = new File(tmpDir.getAbsolutePath()+"/repotopush/.travis.yml");
-
-        assertTrue(bak.exists());
-        assertTrue(travis.exists());
-
-        boolean detected = false;
-        List<String> lines = Files.readAllLines(travis.toPath());
-        for (String l : lines) {
-            if (l.contains("notification")) {
-                assertTrue(l.trim().startsWith("#"));
-                detected = true;
-            }
-            if (l.contains("script")) {
-                assertFalse(l.trim().startsWith("#"));
-            }
-        }
-
-        assertTrue(detected);
-    }
 
     private Build checkBuildAndReturn(long buildId, boolean isPR) {
         Optional<Build> optionalBuild = RepairnatorConfig.getInstance().getJTravis().build().fromId(buildId);
