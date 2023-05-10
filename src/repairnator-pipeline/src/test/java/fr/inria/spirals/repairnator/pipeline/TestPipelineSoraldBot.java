@@ -8,6 +8,7 @@ import fr.inria.spirals.repairnator.process.step.AbstractStep;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class TestPipelineSoraldBot {
     }
 
     @Test
+    @Ignore("Flaky test, fails in Jenkins runtime, works locally")
     public void TestPipelineSoraldRepairTool() throws Exception {
         // temporary solution since upgrading to junit 5 wasn+t possible at the time
         //FIXME: Do it with RetryingTest(5)
