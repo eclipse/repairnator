@@ -11,7 +11,7 @@ public class AstorMojoTest extends BetterAbstractMojoTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		Process mvn_clean_test = Runtime.getRuntime().exec("mvn clean test", null,	new File(projectPath));
+		Process mvn_clean_test = Runtime.getRuntime().exec("mvn clean test", null, new File(projectPath));
 		mvn_clean_test.waitFor();
 	}
 

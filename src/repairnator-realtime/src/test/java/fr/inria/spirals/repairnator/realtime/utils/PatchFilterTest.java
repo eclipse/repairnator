@@ -18,8 +18,9 @@ public class PatchFilterTest {
     public void testSingleLineCommit() throws IOException {
         
         PatchFilter filter = new PatchFilter();
-        
-        GitHub github = GitHub.connectAnonymously();
+
+        //TODO: should use the credentials stored in Jenkins.
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -31,7 +32,7 @@ public class PatchFilterTest {
         
         int hunkDistance = 0;
         Map<String, String> rawFilesMap = new HashMap<>();
-        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap, repo);
         ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(1, hunks.size());
@@ -42,7 +43,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -55,7 +56,7 @@ public class PatchFilterTest {
         int hunkDistance = 0;
 
         Map<String, String> rawFilesMap = new HashMap<>();
-        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap, repo);
         ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(0, hunks.size());
@@ -66,7 +67,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -79,7 +80,7 @@ public class PatchFilterTest {
         int hunkDistance = 0;
 
         Map<String, String> rawFilesMap = new HashMap<>();
-        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap, repo);
         ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(3, hunks.size());
@@ -90,7 +91,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -103,7 +104,7 @@ public class PatchFilterTest {
         int hunkDistance = 0;
 
         Map<String, String> rawFilesMap = new HashMap<>();
-        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap, repo);
         ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(3, hunks.size());
@@ -114,7 +115,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -127,7 +128,7 @@ public class PatchFilterTest {
         int hunkDistance = 0;
 
         Map<String, String> rawFilesMap = new HashMap<>();
-        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap, repo);
         ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(10, hunks.size());
@@ -138,7 +139,7 @@ public class PatchFilterTest {
         
         PatchFilter filter = new PatchFilter();
         
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -151,7 +152,7 @@ public class PatchFilterTest {
         int hunkDistance = 0;
 
         Map<String, String> rawFilesMap = new HashMap<>();
-        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap, repo);
         ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
         
         assertEquals(0, hunks.size());
@@ -162,7 +163,7 @@ public class PatchFilterTest {
 
         PatchFilter filter = new PatchFilter();
 
-        GitHub github = GitHub.connectAnonymously();
+        GitHub github = GitHub.connect(null, System.getenv("GITHUB_OAUTH"));
         GHRepository repo;
         GHCommit commit;
 
@@ -175,17 +176,17 @@ public class PatchFilterTest {
         int hunkDistance = 0;
 
         Map<String, String> rawFilesMap = new HashMap<>();
-        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap);
+        ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, 3, rawFilesMap, repo);
         ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
 
         assertEquals(3, hunks.size());
 
-        ArrayList<SequencerCollectorPatch> patches25 = filter.getCommitPatches(commit, filterMultiFile, 25, rawFilesMap);
+        ArrayList<SequencerCollectorPatch> patches25 = filter.getCommitPatches(commit, filterMultiFile, 25, rawFilesMap, repo);
         ArrayList<SequencerCollectorHunk> hunks25 = filter.getHunks(patches25, filterMultiHunk, hunkDistance);
 
         assertEquals(1, hunks25.size());
 
-        ArrayList<SequencerCollectorPatch> patches200 = filter.getCommitPatches(commit, filterMultiFile, 200, rawFilesMap);
+        ArrayList<SequencerCollectorPatch> patches200 = filter.getCommitPatches(commit, filterMultiFile, 200, rawFilesMap, repo);
         ArrayList<SequencerCollectorHunk> hunks200 = filter.getHunks(patches200, filterMultiHunk, hunkDistance);
 
         assertEquals(0, hunks200.size());

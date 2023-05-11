@@ -25,15 +25,14 @@
             <name>tdurieux.github.io maven-repository</name>
             <url>https://tdurieux.github.io/maven-repository/releases/</url>
         </repository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
-        </repository>
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.5.0</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -52,8 +51,13 @@
         </dependency>
         <dependency>
             <groupId>se.kth.castor</groupId>
+            <artifactId>sorald-api</artifactId>
+            <version>0.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>se.kth.castor</groupId>
             <artifactId>sorald</artifactId>
-            <version>0.3.0</version>
+            <version>0.8.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -64,7 +68,7 @@
         <dependency>
             <groupId>com.github.spoonlabs</groupId>
             <artifactId>flacoco</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -76,6 +80,12 @@
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
             <version>1.135</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sonatype.oss</groupId>
+            <artifactId>oss-parent</artifactId>
+            <version>9</version>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>fr.inria.repairnator</groupId>
@@ -91,6 +101,10 @@
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.osgi.service</groupId>
+                    <artifactId>org.osgi.service.prefs</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -123,7 +137,8 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model-builder</artifactId>
-            <version>3.3.9</version>
+            <version>3.8.6</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>eu.stamp-project</groupId>
@@ -134,12 +149,22 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.osgi.service</groupId>
+                    <artifactId>org.osgi.service.prefs</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.inria.sacha.automaticRepair</groupId>
             <artifactId>astor</artifactId>
             <version>20190919</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.osgi.service</groupId>
+                    <artifactId>org.osgi.service.prefs</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.java-json-tools</groupId>
@@ -171,8 +196,20 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-simple</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.osgi.service</groupId>
+                    <artifactId>org.osgi.service.prefs</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <properties>
@@ -237,6 +274,12 @@
                     <artifactId>nopol</artifactId>
                     <!--Mar 18, 2021, 2:06 PM GMT-->
                     <version>689e97eab451a671378b3fd55f790a39ce0d21d3</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.osgi.service</groupId>
+                            <artifactId>org.osgi.service.prefs</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
@@ -256,6 +299,10 @@
                         <exclusion>
                             <groupId>com.sun</groupId>
                             <artifactId>tools</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.osgi.service</groupId>
+                            <artifactId>org.osgi.service.prefs</artifactId>
                         </exclusion>
                     </exclusions>
                 </dependency>

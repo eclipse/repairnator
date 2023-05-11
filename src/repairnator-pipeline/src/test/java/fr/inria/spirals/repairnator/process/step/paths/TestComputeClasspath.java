@@ -18,6 +18,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -52,6 +53,8 @@ public class TestComputeClasspath {
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testComputeClasspathWithSingleModuleProject() throws IOException {
         long buildId = 220925392; // repairnator/failingProject -> master
 
@@ -98,6 +101,8 @@ public class TestComputeClasspath {
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rerun repairnator/test-repairnator-bears/builds/225920529
     public void testComputeClasspathWithMultiModuleProject() throws IOException {
         long buggyBuildCandidateId = 225920529; // https://travis-ci.com/github/repairnator/test-repairnator-bears/builds/225920529
 

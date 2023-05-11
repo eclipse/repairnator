@@ -1,5 +1,6 @@
 package com.github.tdurieux.repair.maven.plugin;
 
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.factory.ArtifactFactory;

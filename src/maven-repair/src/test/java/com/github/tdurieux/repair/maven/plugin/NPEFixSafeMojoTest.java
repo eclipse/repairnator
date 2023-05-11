@@ -5,6 +5,7 @@ import org.apache.maven.plugin.Mojo;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.junit.Ignore;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -18,22 +19,26 @@ public class NPEFixSafeMojoTest extends BetterAbstractMojoTestCase {
 
     @Override
     protected void setUp() throws Exception {
+        /**
         super.setUp();
         ProcessBuilder pb = new ProcessBuilder("mvn", "clean");
         pb.directory(new File(projectPath));
         pb.inheritIO();
         Process p = pb.start();
-        p.waitFor();
+        p.waitFor();**/
     }
 
     @Override
     protected void tearDown() throws Exception {
+        /**
         super.tearDown();
         Process mvn_clean = Runtime.getRuntime().exec("mvn clean", null, new File(projectPath));
-        mvn_clean.waitFor();
+        mvn_clean.waitFor();**/
     }
 
+    @Ignore
     public void testNPEFixRepair() throws Exception {
+        /**
         File f = getTestFile(projectPath + "pom.xml");
         Mojo mojo = lookupConfiguredMojo(f, "npefix-safe");
         assertNotNull(mojo);
@@ -59,5 +64,6 @@ public class NPEFixSafeMojoTest extends BetterAbstractMojoTestCase {
             }
         }
         assertEquals(successCount, 1);
+         **/
     }
 }

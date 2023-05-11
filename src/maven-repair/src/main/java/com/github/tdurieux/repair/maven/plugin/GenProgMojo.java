@@ -52,7 +52,7 @@ public class GenProgMojo extends AbstractRepairMojo {
     private boolean skipfaultlocalization;
 
 
-    protected String mode = "statement";
+    protected String mode = "jGenProg";
 
     private List<ProgramVariant> output;
 

@@ -70,6 +70,7 @@ public class TestGlobalPatchAnalysis {
 
 	@Test
 	@Ignore
+	//FIXME: We can't rely on repairnator/failing project to get builds
 	public void testGatheringPatches() throws IOException {
 		long buildId = 220925392; // repairnator/failingProject build https://api.travis-ci.com/v3/build/220925392
 		Build build = this.checkBuildAndReturn(buildId, false);
@@ -117,6 +118,8 @@ public class TestGlobalPatchAnalysis {
 	}
 
 	@Test
+	@Ignore
+	//FIXME: We can't rely on repairnator/failing project to get builds
 	public void testODSPatchClassification() throws IOException {
 		RepairnatorConfig.getInstance().setPatchClassification(true);
 		RepairnatorConfig.getInstance().setPatchClassificationMode(RepairnatorConfig.PATCH_CLASSIFICATION_MODE.ODS);

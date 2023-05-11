@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-      label 'my-agent-pod'
+      inheritFrom 'my-agent-pod'
       yaml """
 apiVersion: v1
 kind: Pod
@@ -108,7 +108,7 @@ spec:
         }
       }
       options {
-        timeout(time: 3, unit: "HOURS")
+        timeout(time: 1, unit: "HOURS")
       }
     }
   }
