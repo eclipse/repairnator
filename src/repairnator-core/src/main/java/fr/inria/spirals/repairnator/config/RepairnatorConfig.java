@@ -199,6 +199,7 @@ public class RepairnatorConfig {
     public String getRunId() {
         return runId;
     }
+
     
     public void setListenerMode(String listenerMode) {
         for (LISTENER_MODE mode: LISTENER_MODE.values()) {
@@ -954,7 +955,7 @@ public class RepairnatorConfig {
 	}
 
 	public String getGitRepositoryIdCommit() {
-		return this.gitRepositoryIdCommit;
+		return this.gitCommitHash;
 	}
 
 	public void setGitRepositoryIdCommit(String gitRepositoryIdCommit) {
