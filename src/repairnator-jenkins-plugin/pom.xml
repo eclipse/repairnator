@@ -101,6 +101,7 @@
               <artifactId>maven-hpi-plugin</artifactId>
               <configuration>
                   <disabledTestInjection>true</disabledTestInjection>
+                  <minimumJavaVersion/>
               </configuration>
           </plugin>
           <plugin>

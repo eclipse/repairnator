@@ -20,10 +20,7 @@ import fr.spoonlabs.flacoco.api.result.Location;
 import fr.spoonlabs.flacoco.api.result.Suspiciousness;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
@@ -55,6 +52,8 @@ public class TestFlacocoLocalization {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testFlacocoLocalization() throws IOException {
         long buildId = 236072272; // repairnator/failingProject build
 

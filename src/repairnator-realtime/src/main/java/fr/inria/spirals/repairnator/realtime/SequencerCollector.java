@@ -71,7 +71,7 @@ public class SequencerCollector {
 
             Map<String, String> allRawFiles = new HashMap<>();
 
-            ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, contextSize, allRawFiles);
+            ArrayList<SequencerCollectorPatch> patches = filter.getCommitPatches(commit, filterMultiFile, contextSize, allRawFiles, repo);
             ArrayList<SequencerCollectorHunk> hunks = filter.getHunks(patches, filterMultiHunk, hunkDistance);
 
             if (hunks.size() > 0) {

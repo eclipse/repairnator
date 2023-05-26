@@ -16,6 +16,8 @@ import com.github.difflib.UnifiedDiffUtils;
 import com.github.difflib.patch.Patch;
 import org.apache.commons.io.IOUtils;
 import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHContent;
+import org.kohsuke.github.GHRepository;
 
 /**
  * Single-line-change filter.
@@ -180,7 +182,7 @@ public class PatchFilter {
      * if filterMultiFile is true, it will filter out multi-file commits
      * */
     public ArrayList<SequencerCollectorPatch>
-    getCommitPatches(GHCommit commit, boolean filterMultiFile, int contextSize, Map<String, String> rawFilesStore) throws IOException{
+    getCommitPatches(GHCommit commit, boolean filterMultiFile, int contextSize, Map<String, String> rawFilesStore, GHRepository repo ) throws IOException{
 
         ArrayList<SequencerCollectorPatch> ret = new ArrayList<>();
 
@@ -213,15 +215,13 @@ public class PatchFilter {
                     if(previousFilename != null && !previousFilename.isEmpty() && !previousFilename.equals(fullFilename)){
                         parentFilename = previousFilename;
                     }
+                    String changesCommit=commit.getParents().get(0).getSHA1();
+                    String pastCommit=commit.getSHA1();
+                    String filePath=parentFilename;
 
-                    String parentFileURL = RawURLGenerator.Generate(
-                            commit.getOwner().getFullName(),
-                            commit.getParents().get(0).getSHA1(),
-                            parentFilename
-                    );
 
-                    String changes = readFromURL(fileURL);
-                    String past = readFromURL(parentFileURL);
+                    String changes = readFileFromRepo(repo,filePath,changesCommit);
+                    String past =readFileFromRepo(repo,filePath,pastCommit);
 
                     rawFilesStore.put(fullFilename, past);
 
@@ -245,13 +245,21 @@ public class PatchFilter {
         return ret;
     }
 
-    String readFromURL(String urlStr){
+    /**
+     * Method to get a file from a GitHub repository using its URL path
+     * @param ref commit of reference
+     * @param path path of the file in the repo
+     * @param repo repository
+     * @return the data in the file as plain text
+     */
+    String readFileFromRepo(GHRepository repo,String path, String ref){
         String data;
         try {
-            URL u = new URL(urlStr);
-            data = IOUtils.toString(u,"UTF-8");
+            GHContent gChanges=repo.getFileContent(path,ref);
+            data= gChanges.getContent();
         }catch (Exception e){
-            throw new RuntimeException("Error while reading file from URL:" + urlStr);
+
+            throw new RuntimeException("Error while reading file from URL:" + path + " -- type: " + e.getClass().getName() +" --message "+e.getMessage()+" --cause "+ e.getCause().toString());
         }
         return data;
     }

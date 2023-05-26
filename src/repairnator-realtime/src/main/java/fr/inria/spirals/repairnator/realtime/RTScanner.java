@@ -114,7 +114,7 @@ public class RTScanner {
         LOGGER.info("Whitelist initialized with: "+this.whiteListedRepository.size()+" entries");
     }
 
-    /** repairnator can be configured with a initial black list */
+    /** repairnator can be configured with an initial black list */
     public void initBlackListedRepository(File blackListFile) {
         LOGGER.info("Init blacklist repository...");
         try {

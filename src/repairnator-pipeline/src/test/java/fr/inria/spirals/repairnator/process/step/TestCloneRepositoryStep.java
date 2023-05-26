@@ -17,6 +17,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -51,6 +52,8 @@ public class TestCloneRepositoryStep {
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testCloneMasterBuild() throws IOException {
         long buildId = 220946365; // repairnator/failingProject erroring-branch
 
@@ -86,6 +89,8 @@ public class TestCloneRepositoryStep {
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testCloneBuildWithSubmodule() throws IOException {
         long buildId = 220958889; // repairnator/failingProject test-with-submodule
 
