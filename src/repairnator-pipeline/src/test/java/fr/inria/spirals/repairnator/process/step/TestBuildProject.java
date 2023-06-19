@@ -16,6 +16,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -26,8 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by urli on 07/03/2017.
@@ -50,7 +50,10 @@ public class TestBuildProject {
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testBuildProject() throws IOException {
+        // slug y commit hash
         long buildId = 220946365; // repairnator/failingProject erroring-branch
 
         Build build = this.checkBuildAndReturn(buildId, false);
@@ -69,17 +72,19 @@ public class TestBuildProject {
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(buildStep);
         cloneStep.execute();
 
-        assertThat(buildStep.isShouldStop(), is(false));
+        assertFalse(buildStep.isShouldStop());
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(3));
+        assertEquals(stepStatusList.size(), 3);
         StepStatus statusBuild = stepStatusList.get(2);
-        assertThat(statusBuild.getStep(), is(buildStep));
+        assertEquals(statusBuild.getStep(), buildStep);
         for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
+            assertTrue(stepStatus.isSuccess());
         }
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
     public void testBuildProjectWithPomNotInRoot() throws IOException {
         long buildId = 220957920; // repairnator/failingProject other-directory-for-pom-file
 
@@ -99,14 +104,14 @@ public class TestBuildProject {
         cloneStep.addNextStep(new CheckoutBuggyBuild(inspector, true)).addNextStep(buildStep);
         cloneStep.execute();
 
-        assertThat(buildStep.isShouldStop(), is(false));
+        assertFalse(buildStep.isShouldStop());
         List<StepStatus> stepStatusList = jobStatus.getStepStatuses();
-        assertThat(stepStatusList.size(), is(3));
+        assertEquals(stepStatusList.size(),3);
         StepStatus statusBuild = stepStatusList.get(2);
-        assertThat(statusBuild.getStep(), is(buildStep));
+        assertEquals(statusBuild.getStep(), buildStep);
 
         for (StepStatus stepStatus : stepStatusList) {
-            assertThat(stepStatus.isSuccess(), is(true));
+            assertTrue(stepStatus.isSuccess());
         }
     }
 
@@ -115,9 +120,9 @@ public class TestBuildProject {
         assertTrue(optionalBuild.isPresent());
 
         Build build = optionalBuild.get();
-        assertThat(build, IsNull.notNullValue());
-        assertThat(buildId, Is.is(build.getId()));
-        assertThat(build.isPullRequest(), Is.is(isPR));
+        assertNotNull(build);
+        assertEquals(buildId, build.getId());
+        assertEquals(build.isPullRequest(), isPR);
 
         return build;
     }

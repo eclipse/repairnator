@@ -72,14 +72,19 @@ public class ComputeDir extends AbstractStep {
             this.visitedPomFiles.add(pomOfCurrentDirPath);
         }
 
-        Model model;
-        model = MavenHelper.readPomXml(pomOfCurrentDirPath, this.getInspector().getM2LocalPath());
-        if (model == null) {
-            this.addStepError("Error while building pom.xml model: no model has been retrieved.");
-            return null;
+        Model model = null;
+        try{
+            model = MavenHelper.readPomXml(pomOfCurrentDirPath, this.getInspector().getM2LocalPath());
+            if (model == null) {
+                this.addStepError("Error while building pom.xml model: no model has been retrieved.");
+                return null;
+            }
+        }catch (Exception e){
+                getLogger().info("can+t open pom");
         }
 
-        if (!wasDefaultDirFound) {
+
+        if (!wasDefaultDirFound && model.getBuild()!=null) {
             Build buildSection = model.getBuild();
             if (buildSection != null) {
                 if ((this.computeDirType == ComputeDirType.COMPUTE_SOURCE_DIR &&

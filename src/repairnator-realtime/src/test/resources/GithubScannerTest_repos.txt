@@ -1,1 +1,1 @@
-SpoonLabs/sorald
+castor-software/depclean

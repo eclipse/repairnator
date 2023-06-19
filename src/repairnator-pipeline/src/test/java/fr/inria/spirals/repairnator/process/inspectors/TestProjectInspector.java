@@ -30,6 +30,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.hamcrest.core.Is;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,7 +38,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.*;
@@ -75,6 +75,8 @@ public class TestProjectInspector {
     }
 
     @Test
+    @Ignore
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testPatchFailingProject() throws IOException, GitAPIException {
         long buildId = 220944190; // repairnator/failingProject only-one-failing
 
@@ -136,18 +138,21 @@ public class TestProjectInspector {
         assertThat(iterator.hasNext(), is(true));
 
         RevCommit commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("End of the Repairnator process"));
+        assertTrue(commit.getShortMessage().contains("End of the Repairnator process"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Automatic repair"));
+        assertTrue(commit.getShortMessage().contains("Automatic repair"));
 
         commit = iterator.next();
-        assertThat(commit.getShortMessage(), containsString("Bug commit"));
+        assertTrue(commit.getShortMessage().contains("Bug commit"));
 
         assertThat(iterator.hasNext(), is(false));
     }
 
     @Test
+    @Ignore
+    //FIXME: We can't rely on repairnator/failing project to get builds
+    //TODO: Add a test with a failing build from GitHub Actions
     public void testFailingProjectNotBuildable() throws IOException {
         long buildId = 220945185; // repairnator/failingProject only-one-failing
 

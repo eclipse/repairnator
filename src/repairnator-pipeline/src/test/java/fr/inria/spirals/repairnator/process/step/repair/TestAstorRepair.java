@@ -37,8 +37,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @Ignore
 public class TestAstorRepair {
@@ -60,7 +59,7 @@ public class TestAstorRepair {
 
 	@Test
 	public void testAstorJkali() throws IOException {
-		long buildId = 220950805; // repairnator/failingProject astor-jkali-failure
+		long buildId = 220950805; // repairnator/failingProject astor-jkali-failure restarted on Dec 2022
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -110,7 +109,7 @@ public class TestAstorRepair {
 
 	@Test
 	public void testAstorJMut() throws IOException {
-		long buildId = 220950959; // repairnator/failingProject math-85
+		long buildId = 220950959; // repairnator/failingProject math-85 restarted on 17/01/23
 
         Build build = this.checkBuildAndReturn(buildId, false);
 
@@ -139,7 +138,7 @@ public class TestAstorRepair {
 		assertThat(astorJMutRepair.isShouldStop(), is(false));
 
 		List<StepStatus> stepStatusList = inspector.getJobStatus().getStepStatuses();
-		assertThat(stepStatusList.size(), is(8));
+		assertEquals(8, stepStatusList.size());
 		StepStatus assertFixerStatus = stepStatusList.get(7);
 		assertThat(assertFixerStatus.getStep(), is(astorJMutRepair));
 
