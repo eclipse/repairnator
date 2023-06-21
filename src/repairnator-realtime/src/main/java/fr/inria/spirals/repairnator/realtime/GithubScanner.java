@@ -2,9 +2,7 @@ package fr.inria.spirals.repairnator.realtime;
 
 import fr.inria.spirals.repairnator.GithubInputBuild;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
-import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.step.feedback.sobo.SoboAdapter;
-import fr.inria.spirals.repairnator.process.step.feedback.sobo.SoboConstants;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.GithubAPICommitAdapter;
 import fr.inria.spirals.repairnator.realtime.githubapi.commits.models.SelectedCommit;
 import fr.inria.spirals.repairnator.realtime.utils.SOBOUtils;
@@ -16,10 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -31,9 +25,6 @@ import static fr.inria.spirals.repairnator.realtime.Constants.SORALD_NAME;
 
 public class GithubScanner {
     private final static Logger logger = LoggerFactory.getLogger(GithubScanner.class);
-    //TODO: You might not need this because the students won't have GA and
-    // this variable consider the time of the commit to prevent a "datarace"
-    // between GA and repairnator
     static long scanIntervalDelay = 60 * 60 * 1000; // 1 hour
     static long  frequency = 60 * 60 * 1000; // 1 hour
 
@@ -67,7 +58,6 @@ public class GithubScanner {
                 scanner.fetchAndProcessCommitsPeriodically(repos, fetchMode);}
         } else {
             List<SelectedCommit> selectedCommits = readSelectedCommitsFromFile();
-
             scanner.processSelectedCommits(selectedCommits);
         }
     }
@@ -154,21 +144,18 @@ public class GithubScanner {
         long endTime = System.currentTimeMillis() - scanIntervalDelay;
         long startTime = lastFetchedTime < 0 ? scanStartTime : lastFetchedTime;
 
-        //TODO: fix the overload in the fetch method
         List<SelectedCommit> commits = fetch(startTime, endTime, fetchMode, repos);
         lastFetchedTime = endTime;
         return commits;
     }
 
-    //TODO: ADD FEEDBACK STEP + SOBO-Bot integration
     public void setup() {
-        Set<String> repairTools = new HashSet();
-        Set<String> feedbackTools = new HashSet();
+        Set<String> repairTools = new HashSet<>();
+        Set<String> feedbackTools = new HashSet<>();
         String launcherMode=getEnvOrDefault("launcherMode", "REPAIR");
         RepairnatorConfig.getInstance().setGithubToken(System.getenv("GITHUB_OAUTH"));
 
         if (launcherMode.equals("FEEDBACK")){
-            // Donde se está llamando al Launcher?
             String feedbackTool = getEnvOrDefault("FEEDBACK_TOOL", "SoboBot");
             feedbackTools.add(feedbackTool);
             RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FEEDBACK);
@@ -241,18 +228,6 @@ public class GithubScanner {
             default:
                 return FetchMode.FAILED;
         }
-    }
-    private static String getPath(String drl, String whereIAm) {
-        System.out.println("Looking for :" + drl+ " in :" + whereIAm);
-        File dir = new File(whereIAm);
-        for(File e : dir.listFiles()) {
-            if(!e.isDirectory() && e.getName().equals(drl)) {return e.getPath();}
-            if(e.isDirectory()) {
-                String idiot = getPath(drl, e.getPath());
-                if(idiot != null) {return idiot;}
-            }
-        }
-        return null;
     }
 
     public enum FetchMode {
