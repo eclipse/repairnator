@@ -45,54 +45,7 @@ public class RunInspector4DefaultGit extends IRunInspector{
 	public void run(ProjectInspector inspector_in) {
         GitRepositoryProjectInspector inspector = (GitRepositoryProjectInspector) inspector_in;
 		if (inspector.getGitRepositoryUrl() != null) {
-		    if (System.getenv("launcherMode").equals(LauncherMode.FEEDBACK.name())){
-
-		        if(System.getenv("command").equals("true")){
-                    SoboBot feedbackStep=new SoboBot(inspector);
-                    feedbackStep.addNextStep(new GitRepositoryCommitPatch(inspector, CommitType.COMMIT_REPAIR_INFO))
-                            .addNextStep(new CheckoutPatchedBuild(inspector, true))
-                            .addNextStep(new BuildProject(inspector))
-                            .addNextStep(new TestProject(inspector))
-                            .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldPass(), true))
-                            .addNextStep(new GitRepositoryCommitPatch(inspector, CommitType.COMMIT_HUMAN_PATCH));
-
-                    AbstractStep finalStep = new ComputeSourceDir(inspector, false, true); // this step is used to compute code metrics on the project
-
-                    finalStep.
-                            addNextStep(new ComputeModules(inspector, false)).
-                            addNextStep(new WritePropertyFile(inspector)).
-                            addNextStep(new GitRepositoryCommitProcessEnd(inspector)).
-                            addNextStep(new GitRepositoryPushProcessEnd(inspector));
-                    feedbackStep.execute();
-
-
-                }
-                else {
-                    AbstractStep cloneRepo = new CloneRepository(inspector);
-
-
-                    SoboBot feedbackStep = new SoboBot();
-                    feedbackStep.setProjectInspector(inspector);
-                    cloneRepo.addNextStep(feedbackStep);
-                    cloneRepo.addNextStep(new GitRepositoryCommitPatch(inspector, CommitType.COMMIT_REPAIR_INFO))
-                            .addNextStep(new CheckoutPatchedBuild(inspector, true))
-                            .addNextStep(new BuildProject(inspector))
-                            .addNextStep(new TestProject(inspector))
-                            .addNextStep(new GatherTestInformation(inspector, true, new BuildShouldPass(), true))
-                            .addNextStep(new GitRepositoryCommitPatch(inspector, CommitType.COMMIT_HUMAN_PATCH));
-
-                    AbstractStep finalStep = new ComputeSourceDir(inspector, false, true); // this step is used to compute code metrics on the project
-
-                    finalStep.
-                            addNextStep(new ComputeModules(inspector, false)).
-                            addNextStep(new WritePropertyFile(inspector)).
-                            addNextStep(new GitRepositoryCommitProcessEnd(inspector)).
-                            addNextStep(new GitRepositoryPushProcessEnd(inspector));
-                    cloneRepo.execute();
-                }
-
-            }else{
-            AbstractStep cloneRepo = new CloneCheckoutBranchRepository(inspector);
+		    AbstractStep cloneRepo = new CloneCheckoutBranchRepository(inspector);
             
             // If we have experimental plugins, we need to add them here.
             String[] repos = RepairnatorConfig.getInstance().getExperimentalPluginRepoList();
@@ -162,7 +115,7 @@ public class RunInspector4DefaultGit extends IRunInspector{
                     serializer.serialize();
                 }
             }
-        } }else {
+        } else {
             inspector.getLogger().debug("Build " + inspector.getBuggyBuild().getId() + " is not a failing build.");
         }
 	}
