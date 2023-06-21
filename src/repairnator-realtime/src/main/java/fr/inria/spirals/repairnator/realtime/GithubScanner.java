@@ -199,8 +199,9 @@ public class GithubScanner {
 
     public void process(SelectedCommit commit) {
         String sha = commit.getCommitId();
-        if(System.getenv("FEEDBACK_TOOL").equals("SoboBot")){
-            String url = "https://gits-15.sys.kth.se/" + commit.getRepoName();
+        if(System.getenv("ENTERPRISE")!= null){
+            String API_URL = System.getenv("ENTERPRISE"); //example https://gits-15.sys.kth.se/
+            String url = API_URL + commit.getRepoName();
             runner.submitBuild(new GithubInputBuild(url, null, sha));
 
         }else{
