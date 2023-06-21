@@ -15,6 +15,7 @@ import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -64,7 +65,7 @@ public class SoboBot extends AbstractFeedbackStep {
         if (System.getenv("command").equals("true") ) {
 
             try {
-                SoboAdapter.getInstance(getInspector().getWorkspace()).readCommand(getInspector(), repoOwnerUserName, task);
+                SoboAdapter.getInstance(getInspector().getWorkspace()).readCommand(getInspector(), repoOwnerUserName, task, getInspector().getRepoSlug());
                 return StepStatus.buildSuccess(this);
             } catch (Exception e) {
                 getInspector().getLogger().info("can't read command");
@@ -178,7 +179,7 @@ public class SoboBot extends AbstractFeedbackStep {
      * @param repoName the slug of the student repository following the sintax inda-{year}/{user}-task-{n}
      * @return userName of the owner of the repo
      */
-    public String getUserName(String repoName){
+    public  String getUserName(String repoName){
             char[] chars = repoName.toCharArray();
             String user="";
             int index = repoName.indexOf("inda-");
