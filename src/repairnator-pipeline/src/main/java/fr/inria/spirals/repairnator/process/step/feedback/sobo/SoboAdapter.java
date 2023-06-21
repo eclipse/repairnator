@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import org.kohsuke.github.GitHub;
+import org.slf4j.Logger;
 
 import static org.kohsuke.github.GitHub.connectToEnterpriseWithOAuth;
 
@@ -48,6 +49,7 @@ public class SoboAdapter {
 
     private String commitSHA;
     private ProjectInspector inspector;
+    private Logger logger;
 
     public DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm, dd MMM uuuu");
     public LocalDateTime now = java.time.LocalDateTime.now();
@@ -75,6 +77,7 @@ public class SoboAdapter {
     public void readExitFile(String path, String commit, String ghUserCommitAuthor, String task, ProjectInspector inspector, Date commitDate )  {
         String workspace=System.getProperty("user.dir");
         this.inspector=inspector;
+        this.logger=inspector.getLogger();
         this.inspector.getLogger().info( "WORKSPACE "+ System.getProperty("user.dir"));
         Path relativizedPath= Paths.get(workspace).relativize(Paths.get(path));
         FileReader reader = null;
@@ -432,9 +435,10 @@ public class SoboAdapter {
         return null;
     }
 
-    public void readCommand(ProjectInspector inspector, String user, String task)  {
+    public void readCommand(ProjectInspector inspector, String user, String task, String slug)  {
         this.task=task;
         this.inspector=inspector;
+        this.logger=inspector.getLogger();
         GHIssue mainIssue=getCommandIssue(inspector,user);
         if (mainIssue!=null){
         List<GHIssueComment> commentList = getIssueComments(mainIssue);
@@ -447,12 +451,12 @@ public class SoboAdapter {
             inspector.getLogger().info(Arrays.toString(commandLine));
             if (commandLine.length>0 ){
                 String command=commandLine[0].toLowerCase();
-                if (command.equals(SoboConstants.HELP)) help(user, inspector, mainIssue);
+                if (command.equals(SoboConstants.HELP)) help(user,  mainIssue);
                 else if (command.equals(SoboConstants.STOP)) stop(user,task,mainIssue);
                 else if (command.equals(SoboConstants.GO)) go(user,task, mainIssue);
-                else if (command.equals(SoboConstants.MORE) ) more(inspector, mainIssue , commandLine, user , task);
-                else if (command.equals(SoboConstants.RULE)) rule(inspector, mainIssue , commandLine, user , task);
-                else if (honey_checker(comment.getBody())) honey_answer(inspector, mainIssue , commandLine, user , task) ;
+                else if (command.equals(SoboConstants.MORE) ) more( mainIssue , commandLine, slug,user , task);
+                else if (command.equals(SoboConstants.RULE)) rule(mainIssue , commandLine,slug, user , task);
+                else if (honey_checker(comment.getBody())) honey_answer( mainIssue , commandLine, user , task) ;
                 else {
                     cantReadCommand(mainIssue, Arrays.toString(commandLine),user);
                     inspector.getLogger().info("Can't read command");
@@ -460,6 +464,31 @@ public class SoboAdapter {
 
         }}}}
     }
+
+
+
+    public void analyzeCommand(String user, String slug, String task,Logger logger, GHIssueComment comment, GHIssue mainIssue) {
+        this.task=task;
+        this.logger=logger;
+        commands= connectToDB(user, "commands");
+        soboCL= connectToDB(user, "soboCL");
+        String[] commandLine = comment.getBody().split(System.lineSeparator())[0].split(" ");
+        logger.info(Arrays.toString(commandLine));
+        if (commandLine.length>0 ){
+            String command=commandLine[0].toLowerCase();
+            if (command.equals(SoboConstants.HELP)) help(user,  mainIssue);
+            else if (command.equals(SoboConstants.STOP)) stop(user,task,mainIssue);
+            else if (command.equals(SoboConstants.GO)) go(user,task, mainIssue);
+            else if (command.equals(SoboConstants.MORE) ) more( mainIssue , commandLine, slug,user , task);
+            else if (command.equals(SoboConstants.RULE)) rule(mainIssue , commandLine,slug, user , task);
+            else if (honey_checker(comment.getBody())) honey_answer( mainIssue , commandLine, user , task) ;
+            else {
+                cantReadCommand(mainIssue, Arrays.toString(commandLine),user);
+                logger.info("Can't read command");
+            }
+        }}
+
+
 
 
 
@@ -530,6 +559,52 @@ public class SoboAdapter {
         return commandIssue;
     }
 
+    public GHIssue getCommandIssue(String slug, String user, Logger logger) {
+        GitHub github = connectWithGH();
+        GHIssue commandIssue = null;
+        try {
+            GHRepository repo = github.getRepository(slug);
+            Iterator<GHIssue> issueIterable = repo.getIssues(GHIssueState.OPEN).iterator();
+            for (Iterator<GHIssue> it = issueIterable; it.hasNext(); ) {
+
+                GHIssue issue = it.next();
+                String title=issue.getTitle();
+                String login=issue.getUser().getLogin();
+                if (title.equals(SoboConstants.COMMAND_ISSUE_TITLE) && login.equals(System.getenv("login"))){
+                    commandIssue=issue;
+                    return commandIssue;
+                }
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.append("# 🤖: Hi @"+user+" \n");
+            String actualPath= System.getProperty("user.dir");
+            String templates= getPath("templates", actualPath);
+            Path pathHeader = Paths.get(templates + "/help.md");
+            try {
+                StringBuilder issueBody = new StringBuilder();
+                Files.lines(pathHeader, StandardCharsets.UTF_8).forEach(line -> {
+                    // replace all instances of {@user} with the student's name
+                    sb.append(line).append(System.lineSeparator());
+                });} catch (IOException e) {
+                e.printStackTrace();
+            }
+            sb.append("\n");
+            sb.append("🤖: More information on my Github account  [sobo-profile](https://gits-15.sys.kth.se/system-sobo/SOBO-Instructions)) \n");
+
+            sb.append("🤖: Let's start with \\help");
+
+            return repo.createIssue(SoboConstants.COMMAND_ISSUE_TITLE)
+                    .body(sb.toString()).create();
+
+        } catch (IOException e) {
+            logger.info("Not able to get the repo");
+        }
+
+        return commandIssue;
+    }
+
+
+
     public GHIssue getFeedbackAnalyzerIssue(ProjectInspector inspector) {
         GitHub github = connectWithGH();
 
@@ -579,6 +654,7 @@ public class SoboAdapter {
      */
     public GHIssueComment getLastCommand(List<GHIssueComment> comments) {
         int lastIndex = comments.size()-1;
+        if (lastIndex > -1){
         try {
             GHIssueComment comment = comments.get(lastIndex);
             String login = comment.getUser().getLogin();
@@ -595,7 +671,7 @@ public class SoboAdapter {
             }
         } catch (IOException e) {
             System.out.println("Can´t find comment's User");
-        }
+        }}
         return null;
     }
 
@@ -608,6 +684,8 @@ public class SoboAdapter {
                 Filters.eq("repo", repoName),
                 Filters.eq("issue", issueID)
         );
+        if (commands==null) commands= connectToDB(user, "commands");
+
 
         MongoIterable<Document> duplicate = commands.find(userRepoFilter);
         if(!duplicate.iterator().hasNext()){
@@ -619,7 +697,6 @@ public class SoboAdapter {
 
 
     public void addUserCommand(String command, String body, long time, String user, String repoName, long issueID){
-        ObjectId a = new ObjectId();
         commands.insertOne(new Document()
                 .append("command", command)
                 .append("body", body)
@@ -655,7 +732,7 @@ public class SoboAdapter {
     }
 
     public void addCLMessage(String command, String user, boolean result, String issueID ){
-        inspector.getLogger().info("Saving SOBO response");
+        logger.info("Saving SOBO response");
         soboCL.insertOne(new Document()
                 .append("command", command)
                 .append("success", result)
@@ -666,7 +743,7 @@ public class SoboAdapter {
 
     }
     public void addCLMOREMessage(String command, String user, boolean result, String issueID, String commit ){
-        inspector.getLogger().info("Saving SOBO response");
+        logger.info("Saving SOBO response");
         soboCL.insertOne(new Document()
                 .append("command", command)
                 .append("success", result)
@@ -678,7 +755,7 @@ public class SoboAdapter {
 
     }
     public void addCLRULEMessage(String command, String user, boolean result, String issueID, String rule ){
-        inspector.getLogger().info("Saving SOBO response");
+        logger.info("Saving SOBO response");
         soboCL.insertOne(new Document()
                 .append("command", command)
                 .append("success", result)
@@ -699,8 +776,8 @@ public class SoboAdapter {
     }
 
 
-    private void help(String user,ProjectInspector inspector, GHIssue mainIssue){
-        inspector.getLogger().info("Command : "+ SoboConstants.HELP);
+    private void help(String user, GHIssue mainIssue){
+        logger.info("Command : "+ SoboConstants.HELP);
         String actualPath= System.getProperty("user.dir");
         String templates= getPath("templates", actualPath);
         Path pathHeader = Paths.get(templates + "/help.md");
@@ -714,13 +791,13 @@ public class SoboAdapter {
             addCLMessage(SoboConstants.HELP, user,true,mainIssue.getNodeId());
         } catch (IOException e) {
             cantReadCommand(mainIssue, SoboConstants.HELP, user);
-            inspector.getLogger().info("Can't comment issue");
+            logger.info("Can't comment issue");
         }
 
     }
     private void stop(String user, String task, GHIssue mainIssue){
         this.users=connectToDB(user, UsersColl);
-        inspector.getLogger().info("Command : "+ SoboConstants.STOP);
+        logger.info("Command : "+ SoboConstants.STOP);
         users.findOneAndUpdate(
                 Filters.eq("ghID", user),
                 Updates.set(task, false));
@@ -735,12 +812,12 @@ public class SoboAdapter {
     }
     private void go(String user, String task, GHIssue mainIssue){
         this.users=connectToDB(user, UsersColl);
-        inspector.getLogger().info("Command : "+ SoboConstants.GO);
+        logger.info("Command : "+ SoboConstants.GO);
         users.findOneAndUpdate(
                 Filters.eq("ghID", user),
                 Updates.set(task, true));
         try {
-            inspector.getLogger().info("Sending message");
+            logger.info("Sending message");
             mainIssue.comment("Hello again! ");
             addCLMessage(SoboConstants.GO, user,true,mainIssue.getNodeId());
         } catch (IOException e) {
@@ -752,7 +829,7 @@ public class SoboAdapter {
 
 
 
-    private void more(ProjectInspector inspector, GHIssue mainIssue, String[] commandBody, String user, String task){
+    private void more(GHIssue mainIssue, String[] commandBody,String slug, String user, String task){
         StringBuilder comment = new StringBuilder();
         String commit= "NOT-VALID";
         try {
@@ -760,7 +837,7 @@ public class SoboAdapter {
 
             if (commandBody.length >1) {
                 commit= commandBody[1];
-                inspector.getLogger().info("Command : " + SoboConstants.MORE + " on commit : " + commit);
+                logger.info("Command : " + SoboConstants.MORE + " on commit : " + commit);
                 Bson userRepoFilter = Filters.and(
                         Filters.eq("commit", commit),
                         Filters.eq("user", user),
@@ -776,8 +853,8 @@ public class SoboAdapter {
                         String fPath = next.get("filePath").toString().replace("\\", "/");
                         String fileClickeable = "[" + next.get("filePath") + "](https://gits-15.sys.kth.se/";
                         if (fPath.contains("/")) {
-                            fileClickeable += inspector.getRepoSlug() + "/tree/" + commit + "/" + fPath + ")";
-                        } else fileClickeable += inspector.getRepoSlug() + "/blob/" + commit + "/" + fPath + ")";
+                            fileClickeable += slug + "/tree/" + commit + "/" + fPath + ")";
+                        } else fileClickeable += slug+ "/blob/" + commit + "/" + fPath + ")";
                         comment.append("|" + next.get("line") + " | " + fileClickeable + " |" + next.get("rule") + "\n");
                     }
                 } else comment.append("I don't have data about violations on commit: "+ commit);
@@ -788,13 +865,13 @@ public class SoboAdapter {
             addCLMOREMessage(SoboConstants.MORE, user, true, mainIssue.getNodeId(), commit);
             } catch (Exception e) {
             cantReadMORECommand(mainIssue, user, commit);
-            inspector.getLogger().info("Error while adding a comment");
+            logger.info("Error while adding a comment");
         }
 
 
 
     }
-    private void rule(ProjectInspector inspector, GHIssue mainIssue, String[] commandBody, String user, String task){
+    private void rule(GHIssue mainIssue, String[] commandBody, String user, String task, String slug){
         minedViolations= connectToDB(user, mineViolationColl);
         String rule="NOT-VALID";
         try {
@@ -802,7 +879,7 @@ public class SoboAdapter {
         if (commandBody.length>1) {
             rule=commandBody[1].toUpperCase();
             if  (Arrays.asList(SoboConstants.SOBO_RULES).contains(rule)) {
-            inspector.getLogger().info("Command : " + SoboConstants.RULE + " on rule : " + rule);
+            logger.info("Command : " + SoboConstants.RULE + " on rule : " + rule);
             Bson userRepoFilter = Filters.and(
                     Filters.eq("user", user),
                     Filters.eq("task", task),
@@ -829,21 +906,21 @@ public class SoboAdapter {
                     String fPath = next.get("filePath").toString().replace("\\", "/");
                     String fileClickeable = "[" + next.get("filePath") + "](https://gits-15.sys.kth.se/";
                     if (fPath.contains("/")) {
-                        fileClickeable += inspector.getRepoSlug() + "/tree/main/" + fPath + ")";
-                    } else fileClickeable += inspector.getRepoSlug() + "/blob/main/" + fPath + ")";
+                        fileClickeable += slug + "/tree/main/" + fPath + ")";
+                    } else fileClickeable += slug + "/blob/main/" + fPath + ")";
                     comment.append("|" + next.get("line") + " | " + fileClickeable + " |" + next.get("rule") + "\n");
                 }
             } else comment.append("I don't have data about rule " + rule + " on your last commit");
 
         }
             else {
-                comment.append("You need to give a valid rule so I can run the query on my database \n");
+                comment.append("You need to give a valid rule, so I can run the query on my database \n");
                 comment.append("Options: ").append(getEnvOrDefault("SONAR_RULES", SoboConstants.RULES_SLOT_1));
 
             }
         }
         else {
-            comment.append("You need to give a valid rule so I can run the query on my database \n");
+            comment.append("You need to give a valid rule, so I can run the query on my database \n");
             comment.append("Options: ").append(getEnvOrDefault("SONAR_RULES", SoboConstants.RULES_SLOT_1));
 
         }
@@ -852,20 +929,20 @@ public class SoboAdapter {
             addCLRULEMessage(SoboConstants.RULE, user, true, mainIssue.getNodeId(), rule);
         } catch (Exception e) {
             cantReadRULECommand(mainIssue, user, rule);
-            inspector.getLogger().info("Error while adding a comment");
+            logger.info("Error while adding a comment");
         }
 
 
     }
     private boolean honey_checker(String command) {
-        inspector.getLogger().info("Command HONEY: "+ command);
+        logger.info("Command HONEY: "+ command);
         for (String honey_com : SoboConstants.HONEY_COMMANDS ){
             if (command.contains(honey_com)) return true;
         }
         return false;
     }
 
-    private void honey_answer(ProjectInspector inspector, GHIssue mainIssue, String[] command, String user, String task) {
+    private void honey_answer(GHIssue mainIssue, String[] command, String user, String task) {
         String actualPath= System.getProperty("user.dir");
         String templates= getPath("templates", actualPath);
         Path pathHeader = Paths.get(templates + "/honey.md");
@@ -879,7 +956,7 @@ public class SoboAdapter {
             mainIssue.comment(issueBody.toString());
         } catch (IOException e) {
             cantReadCommand(mainIssue, Arrays.toString(command),user);
-            inspector.getLogger().info("Can't comment issue");
+            logger.info("Can't comment issue");
         }
     }
 
