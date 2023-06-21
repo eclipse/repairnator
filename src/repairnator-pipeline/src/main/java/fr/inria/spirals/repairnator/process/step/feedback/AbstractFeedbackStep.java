@@ -48,6 +48,11 @@ public abstract class AbstractFeedbackStep extends AbstractStep {
         super(null, false);
     }
 
+    public AbstractFeedbackStep(ProjectInspector inspector, boolean b) {
+        super(inspector,b);
+    }
+
+
     public void setProjectInspector(ProjectInspector inspector) {
         super.setProjectInspector(inspector);
         this.setName(this.getFeedbackToolName());
