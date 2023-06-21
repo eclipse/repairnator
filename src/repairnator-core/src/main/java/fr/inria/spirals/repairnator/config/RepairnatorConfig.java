@@ -59,7 +59,7 @@ public class RepairnatorConfig {
     }
    
     private String runId;
-    private LauncherMode launcherMode;
+    private LauncherMode launcherMode = LauncherMode.REPAIR;
 
     private String inputPath;
     private String outputPath;
