@@ -50,6 +50,7 @@ public class TestComputeTestDir {
         FileHelper.deleteFile(tmpDir);
     }
 
+    @Ignore("This test is ignored because it requires a valid JTravis project")
     @Test
     public void testComputeTestDirWithMultiModuleProject() throws IOException {
         long buggyBuildCandidateId = 225920529; // https://travis-ci.com/github/repairnator/test-repairnator-bears/builds/225920529
