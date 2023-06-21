@@ -93,11 +93,8 @@ public class BranchLauncher implements LauncherAPI{
 		}
 		else if(launcherMode.equals(LauncherMode.FEEDBACK.name())){
 			RepairnatorConfig.getInstance().setLauncherMode(LauncherMode.FEEDBACK);
-			return MainProcessFactory.getGithubMainProcess(args); //TODO: check if you need MainProcessFactory.getTravisMainProcess(args),
-																						// MainProcessFactory.getGithubMainProcess(args) or
-																						//MainProcessFactory.getPipelineListenerMainProcess(args);
+			return MainProcessFactory.getGithubMainProcess(args);
 		} else {
-			//edited by SB
 			LOGGER.warn("Unknown launcher mode. Please choose the following: REPAIR, BEARS, FEEDBACK, CHECKSTYLE, GIT_REPOSITORY, KUBERNETES_LISTENER, JENKINS_PLUGIN, FAULT_LOCALIZATION");
 			return null;
 		}
