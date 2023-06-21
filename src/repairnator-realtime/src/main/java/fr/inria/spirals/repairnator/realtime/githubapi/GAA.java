@@ -25,19 +25,30 @@ public class GAA {
             try {
             githubBuilder = githubBuilder.withOAuthToken(tokens[lastUsedToken++ % tokens.length]);
             } catch (Exception e) {
-                System.out.println("Repo not found in public Github");;
-            }
-            try{
-                return connectToEnterpriseWithOAuth("https://gits-15.sys.kth.se/api/v3", System.getenv("login"), System.getenv("GOAUTH"));
-            }catch (Exception e) {
-                System.out.println("Repo not found in KTH Enterprise Github");
+                System.out.println("Repo not found in public Github");
             }
         }
-        if (System.getenv("launcherMode").equals("FEEDBACK")){
+
+        return githubBuilder.build();
+    }
+
+    /**
+     * This method is used to connect to GitHub Enterprise
+     * example, KTH is https://gits-15.sys.kth.se/api/v3
+     * @param enterpriseAPI the Enterprise API
+     * @throws IOException if the connection fails
+     */
+    public static GitHub g(String enterpriseAPI) throws IOException {
+        GitHubBuilder githubBuilder = new GitHubBuilder();
+
+        if ((tokens == null || tokens.length == 0) && RepairnatorConfig.getInstance().getGithubToken() != null)
+            tokens = new String[]{RepairnatorConfig.getInstance().getGithubToken()};
+
+        if (tokens != null && tokens.length > 0){
             try{
-                return connectToEnterpriseWithOAuth("https://gits-15.sys.kth.se/api/v3", System.getenv("login"), System.getenv("GOAUTH"));
+                return connectToEnterpriseWithOAuth(enterpriseAPI, System.getenv("login"), System.getenv("GOAUTH"));
             }catch (Exception e) {
-                System.out.println("Repo not found in KTH Enterprise Github");
+                System.out.println("Repo not found in  Enterprise Github");
             }
         }
 
