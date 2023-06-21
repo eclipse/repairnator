@@ -34,7 +34,8 @@ public class GAA {
 
     /**
      * This method is used to connect to GitHub Enterprise
-     * example, KTH is https://gits-15.sys.kth.se/api/v3
+     * example, KTH is "https://gits-15.sys.kth.se" and you need to add
+     * "api/v3" see line 50
      * @param enterpriseAPI the Enterprise API
      * @throws IOException if the connection fails
      */
@@ -46,7 +47,7 @@ public class GAA {
 
         if (tokens != null && tokens.length > 0){
             try{
-                return connectToEnterpriseWithOAuth(enterpriseAPI, System.getenv("login"), System.getenv("GOAUTH"));
+                return connectToEnterpriseWithOAuth(enterpriseAPI+"api/v3", System.getenv("login"), System.getenv("GOAUTH"));
             }catch (Exception e) {
                 System.out.println("Repo not found in  Enterprise Github");
             }
