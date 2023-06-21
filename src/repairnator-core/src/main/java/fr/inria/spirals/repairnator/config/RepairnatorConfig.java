@@ -172,6 +172,8 @@ public class RepairnatorConfig {
 
     private boolean clean;
 
+    private boolean commandFunctionality;
+
     private static RepairnatorConfig instance;
 
     private RepairnatorConfig() {
@@ -1050,5 +1052,12 @@ public class RepairnatorConfig {
 
     public void setPatchFiltering(boolean patchFiltering) {
         this.patchFiltering = patchFiltering;
+    }
+
+    public boolean getCommandFunctionality(){
+        return commandFunctionality;
+    }
+    public void setCommandFunctionality(boolean command){
+        this.commandFunctionality = command;
     }
 }

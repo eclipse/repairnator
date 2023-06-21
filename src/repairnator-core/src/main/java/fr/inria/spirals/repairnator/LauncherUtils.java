@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator;
 
-import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -17,9 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by fermadeiral
@@ -109,7 +106,7 @@ public class LauncherUtils {
         // --tmpDirAsWorkSpace
         jsap.registerParameter(LauncherUtils.defineArgTmpDirAsWorkSpace());
 
-        // --sonarRules   TODO:might be useful for SOBO
+        // --sonarRules
         jsap.registerParameter(LauncherUtils.defineArgSonarRules());
 
         // --npeSelection
@@ -137,8 +134,10 @@ public class LauncherUtils {
         // --faultLocalization
         jsap.registerParameter(LauncherUtils.defineArgFaultLocalizationMode());
 
-        // --feedback TODO:SB
-        jsap.registerParameter(LauncherUtils.defineArgFeedbackMode());
+        // --commandFunctionality
+        jsap.registerParameter(LauncherUtils.defineArgCommandFunctionality());
+
+
 
         // --launcherMode
         jsap.registerParameter(LauncherUtils.defineArgLauncherMode());
@@ -176,6 +175,9 @@ public class LauncherUtils {
             config.setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
         } else if (LauncherUtils.getArgLauncherMode(arguments).equals("FEEDBACK")){ // TODO: add FEEDBACK variable
             config.setLauncherMode(LauncherMode.FEEDBACK);
+            config.setFeedbackTools(LauncherUtils.getArgFeedbackTools(arguments));
+            config.setCommandFunctionality(LauncherUtils.getArgCommandFunctionality(arguments));
+
         }
         else {
             config.setLauncherMode(LauncherMode.REPAIR);
@@ -389,16 +391,16 @@ public class LauncherUtils {
      * m
      * @return a switch, more info at  com.martiansoftware.jsap.Parameter
      */
-    public static Switch defineArgFeedbackMode() {
-        Switch sw = new Switch("feedback");
-        sw.setLongFlag("feedback");
+    public static Switch defineArgCommandFunctionality() {
+        Switch sw = new Switch("commandFunctionality");
+        sw.setLongFlag("commandFunctionality");
         sw.setDefault("false");
-        sw.setHelp("This mode allows to use repairnator to analyze commits and return feedback about violations");
+        sw.setHelp("This will let you use the command functionality on the tool");
         return sw;
     }
 
-    public static boolean getArgFeedbackMode(JSAPResult arguments) {
-        return arguments.getBoolean("feedback");
+    public static boolean getArgCommandFunctionality(JSAPResult arguments) {
+        return arguments.getBoolean("commandFunctionality");
     }
 
     public static String getArgLauncherMode(JSAPResult arguments) {
@@ -413,6 +415,9 @@ public class LauncherUtils {
         opt.setDefault("");
         opt.setHelp("Specify the feedback tools for this launch.");
         return opt;
+    }
+    public static Set<String> getArgFeedbackTools(JSAPResult arguments) {
+        return Collections.singleton(arguments.getString("feedbackTools"));
     }
 
     private static FlaggedOption defineArgLauncherMode() {
