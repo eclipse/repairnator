@@ -41,17 +41,12 @@ public class SimplePipelineRunner implements PipelineRunner {
                 if(System.getenv("command").equals("true")){
 
                     GithubInputBuild githubInputBuild = (GithubInputBuild) b;
-                    String  gitUrl = githubInputBuild.getUrl(), workspace = System.getenv().containsKey("WORKSPACE_FOLDER") ? System.getenv("WORKSPACE_FOLDER") :
-                                    tmpWorkspaceFolder.toAbsolutePath().toString(),
-                            output = System.getenv().containsKey("OUTPUT_FOLDER") ? System.getenv("OUTPUT_FOLDER") :
-                                    tmpOutputFolder.toAbsolutePath().toString();
+                    String  gitUrl = githubInputBuild.getUrl();
 
                     List<String> launcherConfig = new ArrayList<String>(Arrays.asList(
                             "--gitrepourl", gitUrl,
                             "--feedbackTools", SOBO_NAME,
-                            "--launcherMode", LauncherMode.FEEDBACK.name(),
-                            "--workspace", workspace,
-                            "--output", output));
+                            "--launcherMode", LauncherMode.FEEDBACK.name()));
 
 
                     try {
@@ -73,7 +68,7 @@ public class SimplePipelineRunner implements PipelineRunner {
                     List<String> launcherConfig = new ArrayList<String>(Arrays.asList(
                             "--gitrepourl", gitUrl,
                             "--gitcommithash", gitCommit,
-                            "--sonarRules", "S109",
+                            "--sonarRules", sonarRules,
                             "--feedbackTools", SOBO_NAME,
                             "--launcherMode", LauncherMode.FEEDBACK.name(),
                             "--workspace", workspace,
