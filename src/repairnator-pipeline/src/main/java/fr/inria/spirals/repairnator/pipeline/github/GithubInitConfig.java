@@ -26,9 +26,13 @@ public class GithubInitConfig implements IInitConfig {
 
         LauncherUtils.initCommonConfig(getConfig(), arguments);
         GitRepositoryLauncherUtils.initGitConfig(getConfig(), arguments, jsap);
+        // To make sure that the list of feedback tools are added in the correct launcherMode
+        if (arguments.getString("launcherMode").equals("FEEDBACK")) {
+            getConfig().setFeedbackTools(new HashSet<>(Arrays.asList(arguments.getStringArray("feedbackTools"))));
+        }else {
 
-        getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
-
+            getConfig().setRepairTools(new HashSet<>(Arrays.asList(arguments.getStringArray("repairTools"))));
+        }
         getConfig().setWorkspacePath(arguments.getString("workspace"));
     }
 

@@ -18,6 +18,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -46,6 +47,8 @@ public class TestComputePlugins {
         FileHelper.deleteFile(tmpDir);
     }
 
+
+    @Ignore("Test on Travis, not valid project")
     @Test
     public void testComputePluginsWithSingleModuleProject() throws IOException {
         long buggyBuildCandidateId = 224442109; // repairnator/failingProject -> plugins
@@ -80,6 +83,7 @@ public class TestComputePlugins {
         assertThat(jobStatus.getProperties().getProjectMetrics().getNumberPlugins(), is(1));
     }
 
+    @Ignore("Test on Travis, not valid project")
     @Test
     public void testComputePluginsWithNoPlugin() throws IOException {
         long buggyBuildCandidateId = 224246334; // repairnator/failingProject -> master

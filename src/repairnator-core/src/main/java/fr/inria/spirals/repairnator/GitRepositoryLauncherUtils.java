@@ -44,6 +44,7 @@ public class GitRepositoryLauncherUtils {
         }
 
         config.setGitRepositoryUrl(GitRepositoryLauncherUtils.getArgGitRepositoryUrl(arguments));
+        String branch = GitRepositoryLauncherUtils.getArgGitRepositoryBranch(arguments);
         config.setGitRepositoryBranch(GitRepositoryLauncherUtils.getArgGitRepositoryBranch(arguments));
         config.setGitRepositoryIdCommit(GitRepositoryLauncherUtils.getArgGitRepositoryIdCommit(arguments));
         config.setGitRepositoryPullRequest(GitRepositoryLauncherUtils.getArgGitRepositoryPullRequest(arguments));

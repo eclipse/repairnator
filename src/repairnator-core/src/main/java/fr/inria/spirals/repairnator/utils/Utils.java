@@ -29,6 +29,10 @@ public class Utils {
     public static final String POM_FILE = "pom.xml";
 
     public static final char COMMA = ',';
+    public static Logger allinria = (Logger) LoggerFactory.getLogger("fr.inria");
+
+
+    public static Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
 
     public static String getHostname() {
         try {
@@ -64,16 +68,12 @@ public class Utils {
     }
 
     public static void setLoggersLevel(Level level) {
-        Logger allinria = (Logger) LoggerFactory.getLogger("fr.inria");
         allinria.setLevel(level);
-
-        Logger jgit = (Logger) LoggerFactory.getLogger("org.eclipse.jgit");
         jgit.setLevel(Level.WARN);
     }
 
     public static Level getLoggersLevel() {
-        Logger allinria = (Logger) LoggerFactory.getLogger("fr.inria");
-        return allinria.getLevel();
+        return jgit.getLevel();
     }
 
     public static String getValue(List<Object> value, int index) {

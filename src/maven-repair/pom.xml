@@ -150,7 +150,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20160810</version>
+            <version>20180813</version>
         </dependency>
         <dependency>
             <groupId>fr.inria.repairnator</groupId>

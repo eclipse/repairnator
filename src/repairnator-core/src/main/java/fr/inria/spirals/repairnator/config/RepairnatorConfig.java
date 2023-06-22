@@ -9,15 +9,14 @@ import org.kohsuke.github.GitHub;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by urli on 08/03/2017.
  */
 public class RepairnatorConfig {
+
+
     public enum PIPELINE_MODE {
         DOCKER("fr.inria.spirals.repairnator.realtime.DockerPipelineRunner"),
         KUBERNETES("fr.inria.spirals.repairnator.realtime.ActiveMQPipelineRunner"),
@@ -96,6 +95,7 @@ public class RepairnatorConfig {
     private String githubToken;
     private String projectsToIgnoreFilePath;
     private Set<String> repairTools;
+    private Set<String> feedbackTools;
     private String githubUserName;
     private String githubUserEmail;
     private String[] experimentalPluginRepoList;
@@ -112,7 +112,7 @@ public class RepairnatorConfig {
     private String gitRepositoryUrl;
     private String gitRepositoryBranch;
     private String gitRepositoryIdCommit;
-    private boolean gitRepositoryFirstCommit;
+    private boolean gitRepositoryFirstCommit = false;
     private Integer gitRepositoryPullRequest;
 
     private String[] sonarRules;
@@ -172,10 +172,13 @@ public class RepairnatorConfig {
 
     private boolean clean;
 
+    private boolean commandFunctionality;
+
     private static RepairnatorConfig instance;
 
     private RepairnatorConfig() {
         this.repairTools = new HashSet<>();
+        this.feedbackTools = new HashSet<>();
     }
 
     public void readFromFile() throws RepairnatorConfigException {
@@ -189,7 +192,7 @@ public class RepairnatorConfig {
     }
 
     public static RepairnatorConfig getInstance() {
-        if (instance == null) {
+    if (instance == null) {
             instance = new RepairnatorConfig();
         }
         return instance;
@@ -198,6 +201,7 @@ public class RepairnatorConfig {
     public String getRunId() {
         return runId;
     }
+
     
     public void setListenerMode(String listenerMode) {
         for (LISTENER_MODE mode: LISTENER_MODE.values()) {
@@ -654,6 +658,13 @@ public class RepairnatorConfig {
     public void setRepairTools(Set<String> repairTools) {
         this.repairTools = repairTools;
     }
+    public Set<String> getFeedbackTools() {
+        return feedbackTools;
+    }
+    public void setFeedbackTools(Set<String> feedbackTools) {
+        this.feedbackTools = feedbackTools;
+    }
+
 
     public boolean isBearsDelimiter() {
         return bearsDelimiter;
@@ -946,7 +957,7 @@ public class RepairnatorConfig {
 	}
 
 	public String getGitRepositoryIdCommit() {
-		return this.gitRepositoryIdCommit;
+		return this.gitCommitHash;
 	}
 
 	public void setGitRepositoryIdCommit(String gitRepositoryIdCommit) {
@@ -970,9 +981,21 @@ public class RepairnatorConfig {
     }
 
     public String getGitRepositoryId() {
-		return getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
-				(getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
-				(isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+        try {
+            String repoId= getGitRepositoryUrl().split("https://gits-15.sys.kth.se/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
+                    (getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
+                    (isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+            return repoId;
+
+        } catch (Exception e) {
+            System.out.println("Repo ot found in KTH Github server");
+        }
+        String repoId= getGitRepositoryUrl().split("https://github.com/",2)[1].replace(".git","").replace("/", "-") + "-" + (getGitRepositoryBranch() != null ? getGitRepositoryBranch() : "master") +
+                (getGitRepositoryIdCommit() != null ? "-" + getGitRepositoryIdCommit() : "") +
+                (isGitRepositoryFirstCommit() ? "-firstCommit" : "");
+        return repoId;
+
+
     }
 
     public String getJTravisEndpoint() {
@@ -1029,5 +1052,12 @@ public class RepairnatorConfig {
 
     public void setPatchFiltering(boolean patchFiltering) {
         this.patchFiltering = patchFiltering;
+    }
+
+    public boolean getCommandFunctionality(){
+        return commandFunctionality;
+    }
+    public void setCommandFunctionality(boolean command){
+        this.commandFunctionality = command;
     }
 }

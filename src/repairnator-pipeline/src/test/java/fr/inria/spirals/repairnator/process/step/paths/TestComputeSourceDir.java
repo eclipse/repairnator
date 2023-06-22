@@ -51,6 +51,7 @@ public class TestComputeSourceDir {
         FileHelper.deleteFile(tmpDir);
     }
 
+    @Ignore("Test uses Travis, we do not have a travis project to test with.")
     @Test
     public void testComputeSourceDir() throws IOException {
         long buildId = 224246334; // repairnator/failingProject -> master
@@ -88,6 +89,7 @@ public class TestComputeSourceDir {
         assertThat(jobStatus.getRepairSourceDir(), is(new File[] {new File(repoDir.getAbsolutePath()+"/src/main/java").getCanonicalFile()}));
     }
 
+    @Ignore("Test uses Travis, we do not have a travis project to test with.")
     @Test
     public void testComputeSourceDirWithMultiModuleProject() throws IOException {
         long buildId = 224264992; // repairnator/failingProject -> multi-module
@@ -131,6 +133,7 @@ public class TestComputeSourceDir {
         }));
     }
 
+    @Ignore("Test uses Travis, we do not have a travis project to test with.")
     @Test
     public void testComputeSourceDirWithMultiModuleProject2() throws IOException {
         long buildId = 224120644; // hs-web/hsweb-framework build
@@ -188,7 +191,7 @@ public class TestComputeSourceDir {
 
     
     // fixme: the test is not passing anymore when executing the whole test suite
-    @Ignore
+    @Ignore("Test uses Travis, we do not have a travis project to test with.")
     @Test
     public void testComputeSourceDirWithReflexiveReferences() throws IOException {
         long buildId = 345990212;

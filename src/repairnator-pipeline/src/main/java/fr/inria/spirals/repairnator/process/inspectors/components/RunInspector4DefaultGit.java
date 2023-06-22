@@ -1,18 +1,17 @@
 package fr.inria.spirals.repairnator.process.inspectors.components;
 
+import fr.inria.spirals.repairnator.LauncherUtils;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
 import fr.inria.spirals.repairnator.notifier.AbstractNotifier;
 import fr.inria.spirals.repairnator.notifier.ErrorNotifier;
+import fr.inria.spirals.repairnator.pipeline.Launcher;
 import fr.inria.spirals.repairnator.pipeline.RepairToolsManager;
 import fr.inria.spirals.repairnator.process.git.GitHelper;
-import fr.inria.spirals.repairnator.process.step.AbstractStep;
-import fr.inria.spirals.repairnator.process.step.AddExperimentalPluginRepo;
-import fr.inria.spirals.repairnator.process.step.BuildProject;
-import fr.inria.spirals.repairnator.process.step.CloneCheckoutBranchRepository;
-import fr.inria.spirals.repairnator.process.step.TestProject;
-import fr.inria.spirals.repairnator.process.step.WritePropertyFile;
+import fr.inria.spirals.repairnator.process.step.*;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutPatchedBuild;
 import fr.inria.spirals.repairnator.process.step.checkoutrepository.CheckoutType;
+import fr.inria.spirals.repairnator.process.step.feedback.AbstractFeedbackStep;
+import fr.inria.spirals.repairnator.process.step.feedback.sobo.SoboBot;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldFail;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.BuildShouldPass;
 import fr.inria.spirals.repairnator.process.step.gatherinfo.GatherTestInformation;
@@ -30,6 +29,7 @@ import fr.inria.spirals.repairnator.serializer.AbstractDataSerializer;
 import fr.inria.spirals.repairnator.process.inspectors.ProjectInspector;
 import fr.inria.spirals.repairnator.process.inspectors.GitRepositoryProjectInspector;
 
+import fr.inria.spirals.repairnator.states.LauncherMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public class RunInspector4DefaultGit extends IRunInspector{
 	public void run(ProjectInspector inspector_in) {
         GitRepositoryProjectInspector inspector = (GitRepositoryProjectInspector) inspector_in;
 		if (inspector.getGitRepositoryUrl() != null) {
-            AbstractStep cloneRepo = new CloneCheckoutBranchRepository(inspector);
+		    AbstractStep cloneRepo = new CloneCheckoutBranchRepository(inspector);
             
             // If we have experimental plugins, we need to add them here.
             String[] repos = RepairnatorConfig.getInstance().getExperimentalPluginRepoList();

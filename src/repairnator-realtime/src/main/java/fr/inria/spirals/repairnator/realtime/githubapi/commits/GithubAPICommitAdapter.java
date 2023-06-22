@@ -83,7 +83,10 @@ public class GithubAPICommitAdapter {
                 System.out.println("Checking commits for: " + repo.getName() + " " + cnt.incrementAndGet() + " from "
                         + repositories.size()
                         + " " + new Date(intervalStart));
-                boolean isMaven = false;
+                //boolean isMaven = false;
+                /**
+                 * //TODO: Add a variable to check for maven in case is necessary
+
                 for (GHTreeEntry treeEntry : repo.getTree("HEAD").getTree()) {
                     if (treeEntry.getPath().equals("pom.xml")) {
                         isMaven = true;
@@ -94,6 +97,8 @@ public class GithubAPICommitAdapter {
                 if (!isMaven) {
                     return;
                 }
+                 *
+                 */
 
                 selectedCommits.addAll(GithubAPICommitAdapter.getInstance()
                         .getSelectedCommits(repo, intervalStart, intervalEnd, fetchMode));

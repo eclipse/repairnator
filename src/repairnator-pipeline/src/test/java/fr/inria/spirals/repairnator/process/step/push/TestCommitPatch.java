@@ -20,6 +20,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -54,6 +55,7 @@ public class TestCommitPatch {
         FileHelper.deleteFile(tmpDir);
     }
 
+    @Ignore("This test is ignore because requires a valid JTravis repository")
     @Test
     public void testCommitRepairInfo() throws IOException, GitAPIException {
         long buildId = 220946365; // repairnator/failingProject build

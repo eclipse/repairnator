@@ -1,6 +1,5 @@
 package fr.inria.spirals.repairnator;
 
-import ch.qos.logback.classic.Level;
 import com.martiansoftware.jsap.*;
 import com.martiansoftware.jsap.stringparsers.FileStringParser;
 import fr.inria.spirals.repairnator.config.RepairnatorConfig;
@@ -17,9 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by fermadeiral
@@ -137,6 +134,17 @@ public class LauncherUtils {
         // --faultLocalization
         jsap.registerParameter(LauncherUtils.defineArgFaultLocalizationMode());
 
+        // --commandFunctionality
+        jsap.registerParameter(LauncherUtils.defineArgCommandFunctionality());
+
+
+
+        // --launcherMode
+        jsap.registerParameter(LauncherUtils.defineArgLauncherMode());
+
+        // --feedbackTools
+        jsap.registerParameter(LauncherUtils.defineArgFeedbackTools());
+
         // --patchClassification
         jsap.registerParameter(LauncherUtils.defineArgPatchClassification());
         // --patchClassificationMode
@@ -150,7 +158,11 @@ public class LauncherUtils {
         // --odsPath
         jsap.registerParameter(LauncherUtils.defineArgODSPath());
 
+
+
     }
+
+
 
     public static void initCommonConfig(RepairnatorConfig config, JSAPResult arguments) {
         if (LauncherUtils.getArgBearsMode(arguments)) {
@@ -161,16 +173,24 @@ public class LauncherUtils {
             config.setLauncherMode(LauncherMode.SEQUENCER_REPAIR);
         } else if (LauncherUtils.getArgFaultLocalizationMode(arguments)) {
             config.setLauncherMode(LauncherMode.FAULT_LOCALIZATION);
-        } else {
+        } else if (LauncherUtils.getArgLauncherMode(arguments).equals("FEEDBACK")){ // TODO: add FEEDBACK variable
+            config.setLauncherMode(LauncherMode.FEEDBACK);
+            config.setFeedbackTools(LauncherUtils.getArgFeedbackTools(arguments));
+            config.setCommandFunctionality(LauncherUtils.getArgCommandFunctionality(arguments));
+
+        }
+        else {
             config.setLauncherMode(LauncherMode.REPAIR);
         }
 
-        if (LauncherUtils.getArgDebug(arguments)) {
+
+        /**if (LauncherUtils.getArgDebug(arguments)) {
             config.setDebug(true);
             Utils.setLoggersLevel(Level.DEBUG);
         } else {
             Utils.setLoggersLevel(Level.INFO);
         }
+         */
         config.setClean(true);
         config.setRunId(LauncherUtils.getArgRunId(arguments));
         config.setGithubToken(LauncherUtils.getArgGithubOAuth(arguments));
@@ -366,6 +386,49 @@ public class LauncherUtils {
     public static boolean getArgBearsMode(JSAPResult arguments) {
         return arguments.getBoolean("bears");
     }
+
+    /**
+     * m
+     * @return a switch, more info at  com.martiansoftware.jsap.Parameter
+     */
+    public static Switch defineArgCommandFunctionality() {
+        Switch sw = new Switch("commandFunctionality");
+        sw.setLongFlag("commandFunctionality");
+        sw.setDefault("false");
+        sw.setHelp("This will let you use the command functionality on the tool");
+        return sw;
+    }
+
+    public static boolean getArgCommandFunctionality(JSAPResult arguments) {
+        return arguments.getBoolean("commandFunctionality");
+    }
+
+    public static String getArgLauncherMode(JSAPResult arguments) {
+            return arguments.getString("launcherMode");
+    }
+
+
+    private static FlaggedOption defineArgFeedbackTools() {
+        FlaggedOption opt = new FlaggedOption("feedbackTools");
+        opt.setLongFlag("feedbackTools");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("");
+        opt.setHelp("Specify the feedback tools for this launch.");
+        return opt;
+    }
+    public static Set<String> getArgFeedbackTools(JSAPResult arguments) {
+        return Collections.singleton(arguments.getString("feedbackTools"));
+    }
+
+    private static FlaggedOption defineArgLauncherMode() {
+        FlaggedOption opt = new FlaggedOption("launcherMode");
+        opt.setLongFlag("launcherMode");
+        opt.setStringParser(JSAP.STRING_PARSER);
+        opt.setDefault("REPAIR");
+        opt.setHelp("Specify the launcherMode for this launch.");
+        return opt;
+    }
+
 
     public static FlaggedOption defineArgRunId() {
         FlaggedOption opt = new FlaggedOption("runId");

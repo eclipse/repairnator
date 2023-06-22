@@ -304,7 +304,7 @@ public abstract class AbstractStep {
                 }
             }
 
-            this.addStepError("RepairNator was unable to found a pom.xml in the repository. It will stop now.");
+            this.addStepError("Repairnator was unable to found a pom.xml in the repository. It will stop now.");
             this.shouldStop = true;
         }
     }

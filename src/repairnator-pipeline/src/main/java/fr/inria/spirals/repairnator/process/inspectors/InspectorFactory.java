@@ -30,6 +30,14 @@ public class InspectorFactory {
 			case SEQUENCER_REPAIR:
 				inspector.setIRunInspector(new RunInspector4SequencerRepair());
 				break;
+			case FEEDBACK:
+				if (RepairnatorConfig.getInstance().getCommandFunctionality()){
+					inspector.setIRunInspector(new RunInspector4FeedbackGit(true));
+				}
+				else {
+					inspector.setIRunInspector(new RunInspector4FeedbackGit());
+					}
+				break;
 			default:
 				inspector.setIRunInspector(new RunInspector4DefaultGit());
 				break;

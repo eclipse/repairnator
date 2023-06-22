@@ -6,6 +6,11 @@ package fr.inria.spirals.repairnator.states;
  * Launcher modes that can be used to run Repairnator.
  */
 public enum LauncherMode {
+	/**
+	 * FEEDBACK: This mode allows to use Repairnator to analyze a repository and return feedback about it.
+	 */
+	//NOTTODO: add FEEDBACK, modify by SB
+	FEEDBACK,
 
 	/**
 	 * REPAIR: This mode allows to use Repairnator to analyze bugs present in a Continuous Integration build.

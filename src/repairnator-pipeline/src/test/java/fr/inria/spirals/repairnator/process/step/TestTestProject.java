@@ -16,6 +16,7 @@ import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -48,6 +49,7 @@ public class TestTestProject {
         FileHelper.deleteFile(tmpDir);
     }
 
+    @Ignore("Test on Travis, not valid project")
     @Test
     public void testTestProjectWhenFailing() throws IOException {
         long buildId = 220951452; // repairnator/failingProject
@@ -79,6 +81,7 @@ public class TestTestProject {
         }
     }
 
+    @Ignore("Test on Travis, not valid project")
     @Test
     public void testTestProjectWhenErroring() throws IOException {
         long buildId = 220946365; // repairnator/failingProject erroring-branch
@@ -110,6 +113,7 @@ public class TestTestProject {
         }
     }
 
+    @Ignore("Test on Travis, not valid project")
     @Test
     public void testTestProjectWhenNotFailing() throws IOException {
         long buildId = 225938152; // https://travis-ci.com/github/repairnator/TestingProject/builds/225938152
