@@ -55,20 +55,6 @@ spec:
           timeout(time: 15, unit: "MINUTES")
       }
     }
-     stage('repairnator-pipeline'){
-          environment {
-            TEST_PATH="src/repairnator-pipeline/"
-            TEST_LIST="**"
-          }
-          steps {
-            container('maven') {
-              sh 'bash ./.ci/ci-run-with-core.sh'
-            }
-          }
-          options {
-            timeout(time: 1, unit: "HOURS")
-          }
-        }
     stage('repairnator-realtime'){
       environment {
         TEST_PATH="src/repairnator-realtime/"
@@ -111,7 +97,20 @@ spec:
         timeout(time: 30, unit: "MINUTES")
       }
     }
-
+    stage('repairnator-pipeline'){
+      environment {
+        TEST_PATH="src/repairnator-pipeline/"
+        TEST_LIST="**"
+      }
+      steps {
+        container('maven') {
+          sh 'bash ./.ci/ci-run-with-core.sh'
+        }
+      }
+      options {
+        timeout(time: 1, unit: "HOURS")
+      }
+    }
   }
   post {
     always {
