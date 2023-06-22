@@ -59,7 +59,7 @@ public class SoboAdapter {
     private String commandColl="commands";
     private String AMColl="soboAM";
     private String CLColl="soboCL";
-    private String UsersColl="KTHUsers";
+    private String UsersColl="Users";
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
     public SoboAdapter(String tmpdir){
