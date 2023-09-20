@@ -124,9 +124,21 @@ This repository is organized as follows:
 
 ## Academic bibliographic references
 
+[SOBO: A Feedback Bot to Nudge Code Quality in Programming Courses](http://arxiv.org/pdf/2303.07187) (IEEE Software, 2023, [doi:10.1109/ms.2023.3298729](https://doi.org/10.1109/ms.2023.3298729))
+```bibtex
+@article{2303.07187,
+ title = {SOBO: A Feedback Bot to Nudge Code Quality in Programming Courses},
+ journal = {IEEE Software},
+ year = {2023},
+ doi = {10.1109/ms.2023.3298729},
+ author = {Sofia Bobadilla and Richard Glassey and Alexandre Bergel and Martin Monperrus},
+ url = {http://arxiv.org/pdf/2303.07187},
+}
+```
+
 "[A Software Repair Bot based on Continual Learning](http://arxiv.org/pdf/2012.06824)"  In IEEE Software, 2021. ([doi:10.1109/ms.2021.3070743](https://doi.org/10.1109/ms.2021.3070743))
 
-```
+```bibtex
 @article{arXiv-2012.06824,
  title = {A Software Repair Bot based on Continual Learning},
  author = {Benoit Baudry and Zimin Chen and Khashayar Etemadi and Han Fu and Davide Ginelli and Steve Kommrusch and Matias Martinez and Martin Monperrus and Javier Ron and He Ye and Zhongxing Yu},
@@ -139,7 +151,7 @@ This repository is organized as follows:
 
 "[Repairnator patches programs automatically](https://ubiquity.acm.org/article.cfm?id=3349589)", In Ubiquity, Association for Computing Machinery, vol. July, no. 2, pp. 1-12, 2019. 
 
-```
+```bibtex
 @article{monperrus:hal-02267512,
  title = {Repairnator patches programs automatically},
  author = {Monperrus, Martin and Urli, Simon and Durieux, Thomas and Martinez, Martin and Baudry, Benoit and Seinturier, Lionel},
@@ -156,7 +168,7 @@ This repository is organized as follows:
 
 "[How to Design a Program Repair Bot? Insights from the Repairnator Project](https://hal.inria.fr/hal-01691496/file/SEIP_63_Camera-Ready-no-copyright.pdf)", In 40th International Conference on Software Engineering, Track Software Engineering in Practice, pp. 95-104, 2018. 
 
-```
+```bibtex
 @inproceedings{urli:hal-01691496,
  title = {How to Design a Program Repair Bot? Insights from the Repairnator Project},
  author = {Urli, Simon and Yu, Zhongxing and Seinturier, Lionel and Monperrus, Martin},
@@ -171,7 +183,7 @@ This repository is organized as follows:
 
 "[Bears: An Extensible Java Bug Benchmark for Automatic Program Repair Studies](https://arxiv.org/pdf/1901.06024)", In SANER 2019 - 26th IEEE International Conference on Software Analysis, Evolution and Reengineering, 2019. 
 
-```
+```bibtex
 @inproceedings{madeiral:hal-01990052,
  title = {Bears: An Extensible Java Bug Benchmark for Automatic Program Repair Studies},
  author = {Madeiral, Fernanda and Urli, Simon and Maia, Marcelo and Monperrus, Martin},
